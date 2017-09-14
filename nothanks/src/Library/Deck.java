@@ -2,13 +2,11 @@ package Library;
 
 import java.util.ArrayList;
 
-public class Deck {
-
-    private static ArrayList<Integer> Cards = new ArrayList<Integer>(32);
+public class Deck extends ArrayList<Card> {
     
-    Deck() {
+    public Deck() {
         for(int i = 3; i <= 35; i++) {
-            Cards.add(i);
+        	this.add(new Card(i));
         }
     }
 }

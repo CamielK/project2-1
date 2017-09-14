@@ -3,13 +3,23 @@ package Library;
 import java.util.ArrayList;
 
 public class Board {
+	
+	private static Board board;
 
-    private static int CurrentCard = 0;
-    private static int CurrentChips = 0;
-    private static Deck CardDeck = null;
+    private int currentCard = 0;
+    private int currentChips = 0;
+    private Deck cardDeck = null;
 
-    Board(){
-        CardDeck = new Deck();
+    private Board() {
+        cardDeck = new Deck();
     }
+    
+    public static Board getInstance() {
+		if (board == null) {
+			return (board = new Board());
+		} else {
+			return board;
+		}
+	}
 
 }
