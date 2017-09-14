@@ -21,4 +21,5 @@ public class Deck extends ArrayList<Card> {
             System.out.print(this.get(i) + " ");
         }
     }
+    //Test
 }
