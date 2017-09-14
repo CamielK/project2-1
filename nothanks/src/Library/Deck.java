@@ -3,7 +3,12 @@ package Library;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+/**
+ * 
+ * @author 
+ *
+ * Class containing the Deck
+ */
 public class Deck extends ArrayList<Card> {
 
     /**
@@ -13,6 +18,11 @@ public class Deck extends ArrayList<Card> {
         for(int i = 3; i <= 35; i++) {
         	this.add(new Card(i));
         }
+        shuffleCards();
+        printCards();
+        sort();
+        System.out.println();
+        printCards();
     }
 
     /**
@@ -21,13 +31,30 @@ public class Deck extends ArrayList<Card> {
     private void shuffleCards(){
         Collections.shuffle(this);
     }
-
+    
     /**
      * prints out the cards contained in the deck in ascending index order
      */
     private void printCards(){
         for (int i = 0; i <= 32; i++) {
-            System.out.print(this.get(i) + " ");
+            System.out.print(this.get(i).getNumber() + ", ");
         }
     }
+    
+    /**
+     * mock sort algorithm
+     */
+    public void sort() {
+		int temp;
+		for(int i=1; i<this.size(); i++) {
+			for(int j=0; j<this.size()-i; j++) {
+				if(this.get(j).getNumber()>this.get(j+1).getNumber()) {
+					temp=this.get(j).getNumber();
+					this.get(j).setNumber(this.get(j+1).getNumber());
+					this.get(j+1).setNumber(temp);
+				}
+				
+			}
+		}
+	}
 }
