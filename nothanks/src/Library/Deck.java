@@ -57,7 +57,11 @@ public class Deck extends ArrayList<Card> {
 			}
 		}
 	}
-    
+
+	public Integer getNumCards() {
+        return this.size();
+    }
+
     public Card removeCards(int number) {
     	for(int i = 0; i < number; i++) {
     		this.remove(i);

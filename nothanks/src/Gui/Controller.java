@@ -1,5 +1,6 @@
 package Gui;
 
+import Library.Board;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,8 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 import java.util.ResourceBundle;
-
-import Library.Board;
 
 public class Controller implements Initializable {
 
@@ -21,7 +20,6 @@ public class Controller implements Initializable {
 
     // Inputs
     @FXML private Button takeCardBtn;
-    @FXML private Button takeChipsBtn;
     @FXML private Button tossChipBtn;
 
     @Override
@@ -31,10 +29,6 @@ public class Controller implements Initializable {
 
     @FXML protected void takeCard(ActionEvent event) {
     	Board.getInstance().giveCard();
-    }
-    
-    @FXML protected void takeChips(ActionEvent event) {
-    	Board.getInstance().giveChips();
     }
     
     @FXML protected void tossChip(ActionEvent event) {
