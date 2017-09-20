@@ -9,9 +9,9 @@ import javafx.scene.layout.GridPane;
 
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+import Library.Board;
 
-    private static int clickCount = 0;
+public class Controller implements Initializable {
 
     // Main grid
     @FXML private GridPane grid;
@@ -20,16 +20,24 @@ public class Controller implements Initializable {
     @FXML private Label clickLbl;
 
     // Inputs
-    @FXML private Button clickBtn;
+    @FXML private Button takeCardBtn;
+    @FXML private Button takeChipsBtn;
+    @FXML private Button tossChipBtn;
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
         // init method is run when fxml is finished loading
     }
 
-    // Click example
-    @FXML protected void clickExample(ActionEvent event) {
-        clickCount++;
-        clickLbl.setText("Clicked "+clickCount+" times!");
+    @FXML protected void takeCard(ActionEvent event) {
+    	Board.getInstance().giveCard();
+    }
+    
+    @FXML protected void takeChips(ActionEvent event) {
+    	Board.getInstance().giveChips();
+    }
+    
+    @FXML protected void tossChip(ActionEvent event) {
+    	Board.getInstance().tossChip();
     }
 }
