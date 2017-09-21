@@ -1,9 +1,8 @@
 package Library;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import Helper.Logger;
+
+import java.util.ArrayList;
 
 public class Board {
 	
@@ -153,6 +152,10 @@ public class Board {
 		System.out.println(csvProgress);
 
 		logger.write(csvProgress);
+	}
+
+	public Player getCurrentPlayer () {
+		return this.currentPlayer;
 	}
 
 	public ArrayList<Player> getPlayers() {
