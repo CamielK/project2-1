@@ -1,13 +1,22 @@
 package Gui;
 
+import Library.Board;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class BoardGui {
 
-    public BoardGui(){
+/**
+ * Created by gabriellapascha on 9/14/17.
+ */
+public class Board_Gui extends JPanel{
+
+
+    public Board_Gui(){
         //create the frame
         JFrame f = new JFrame("No Thanks!");
         f.getContentPane().setBackground(Color.black);
@@ -15,13 +24,19 @@ public class BoardGui {
         //Create the panel with the chip in the middle of the frame, and take all button
         JPanel chip_center = new chip();// create Jpanel
         chip_center.setBounds(640,265,215,265);
-        JLabel num_chips =new JLabel("55"); //text inside chip must be edited to call number of current chips
+        JLabel num_chips =new JLabel("number"); //text inside chip must be edited to call number of current chips
         num_chips.setFont(new Font("Serif", Font.BOLD, 85));
         num_chips.setForeground(new Color(255, 197, 24));
         chip_center.setLayout(null);//make it possible to rearrange
         num_chips.setBounds(58,58,100,100);
         JButton take =new JButton("Take all"); //button
         take.setBounds(50,200,100,50);
+        take.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Board.getInstance().giveCard();
+            }
+        });
         chip_center.add(num_chips);
         chip_center.add(take);
         chip_center.setBackground(Color.black);
@@ -32,7 +47,7 @@ public class BoardGui {
         Card_In_Play.setBounds(425,265,215,265);
         Card_In_Play.setBackground(new Color(255, 197, 24));
         Card_In_Play.setBorder(new LineBorder(new Color(255, 230, 142),10));
-        JLabel card_Play_text =new JLabel("35", SwingConstants.CENTER);//text inside current card must be edited to call number of current card
+        JLabel card_Play_text =new JLabel(""+Board.getInstance().getCurrentCard().getNumber(), SwingConstants.CENTER);//text inside current card must be edited to call number of current card
         Card_In_Play.setLayout(null);
         card_Play_text.setBounds(0,0,215,265);
         card_Play_text.setFont(new Font("Serif",Font.BOLD,115));
@@ -99,4 +114,7 @@ public class BoardGui {
         }
 
     }
+
+
 }
+
