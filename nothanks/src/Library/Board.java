@@ -96,10 +96,10 @@ public class Board {
 		winners.add(players.get(0));
 
 		for(int i = 1; i < players.size(); i++) {
-			if(winners.get(0).getScore() > players.get(i).getScore()) {
+			if((winners.get(0).getScore()-winners.get(0).getChips()) > (players.get(i).getScore()-players.get(i).getChips())) {
 				winners = new ArrayList<Player>();
 				winners.add(players.get(i));
-			} else if(winners.get(0).getScore() == players.get(i).getScore()) {
+			} else if((winners.get(0).getScore()-winners.get(0).getChips()) == (players.get(i).getScore()-players.get(i).getChips())) {
 				winners.add(players.get(i));
 			}
 		}
@@ -107,7 +107,7 @@ public class Board {
 		StringBuilder winnersString = new StringBuilder();
 		winnersString.append("Winners are: \n");
 		for(Player winner : winners) {
-			winnersString.append("Player " + winner.getID() + " with a score of " + winner.getScore() + "\n");
+			winnersString.append("Player " + winner.getID() + " with a score of " + (winner.getScore()-winner.getChips()) + " ( "+winner.getScore()+" card points - "+winner.getChips()+" chips)\n");
 		}
 		return winnersString.toString();
 	}
