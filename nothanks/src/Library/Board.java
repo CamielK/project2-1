@@ -168,4 +168,8 @@ public class Board {
 	public ArrayList<Player> getPlayers() {
 		return this.players;
 	}
+	
+	public void reset() {
+		board = new Board();
+	}
 }
