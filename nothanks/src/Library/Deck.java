@@ -23,6 +23,7 @@ public class Deck extends ArrayList<Card> {
         //sort();
         //System.out.println();
         //printCards();
+        removeCards(9);
     }
 
     /**

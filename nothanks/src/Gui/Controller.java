@@ -25,6 +25,7 @@ public class Controller implements Initializable {
     @FXML private Label currentPlayerCards;
     @FXML private Label currentPlayerChips;
     @FXML private Label currentPlayerLbl;
+    @FXML private Label cardsLeftLbl;
 
     // Inputs
     @FXML private Button takeCardBtn;
@@ -43,6 +44,7 @@ public class Controller implements Initializable {
     
     @FXML protected void tossChip(ActionEvent event) {
     	Board.getInstance().tossChip();
+    	updateInterface();
     }
 
     private void updateInterface() {
@@ -52,6 +54,7 @@ public class Controller implements Initializable {
     }
 
     private void updateCurrentCardAndChips() {
+        cardsLeftLbl.setText("Cards left: " + String.valueOf(Board.getInstance().getNumCardsLeft()));
         currentCardLbl.setText("Current card: " + String.valueOf(Board.getInstance().getCurrentCard().getNumber()));
         currentChipsLbl.setText("Current chips: " + String.valueOf(Board.getInstance().getCurrentChips()));
     }
@@ -66,14 +69,14 @@ public class Controller implements Initializable {
         ArrayList<Player> players = Board.getInstance().getPlayers();
         StringBuilder scoreboard = new StringBuilder();
         for (int i=0; i < players.size(); i++) {
-            scoreboard.append("player " +  players.get(i).getID() + ": " + players.get(i).getScore());
+            scoreboard.append("Player " +  players.get(i).getID() + ". Score: " + players.get(i).getScore());
+            scoreboard.append(". Cards: ["+showCards(players.get(i).getCards())+"]");
             scoreboard.append("\n");
         }
         scores.setText(scoreboard.toString());
     }
 
     private String showCards(ArrayList<Card> cards){
-        System.out.println("debug: " + cards.size());
         String cardString = "";
         for (int i = 0; i < cards.size(); i++) {
             cardString += cards.get(i).getNumber();

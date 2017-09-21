@@ -19,13 +19,14 @@
         <Label fx:id="scores" text="" ></Label>
     </HBox>
 
-    <Label fx:id="currentCardLbl" text="Current card: " GridPane.columnIndex="2" GridPane.rowIndex="1" />
+    <Label fx:id="cardsLeftLbl" text="Cards left: " GridPane.columnIndex="2" GridPane.rowIndex="1" />
+    <Label fx:id="currentCardLbl" text="Current card: " GridPane.columnIndex="2" GridPane.rowIndex="2" />
     <Label fx:id="currentChipsLbl" text="Current chips: " GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
-    <Button fx:id="takeCardBtn" onAction="#takeCard" text="Take Card" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+    <Button fx:id="takeCardBtn" onAction="#takeCard" text="Take Card" GridPane.columnIndex="4" GridPane.rowIndex="2" />
     <Button fx:id="tossChipBtn" onAction="#tossChip" text="Toss Chip" GridPane.columnIndex="4" GridPane.rowIndex="3" />
 
-    <VBox fx:id="currentPlayerBox" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5" >
+    <VBox fx:id="currentPlayerBox" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="5" >
         <Label fx:id="currentPlayerLbl" text="" ></Label>
         <Label fx:id="currentPlayerCards" text="" ></Label>
         <Label fx:id="currentPlayerChips" text="" ></Label>

@@ -79,6 +79,10 @@ public class Board {
     		nextTurn();
     	}
     }
+
+    public Integer getNumCardsLeft() {
+    	return this.cardDeck.getNumCards();
+	}
     
     public void win() {
     	ArrayList<Player> winners = new ArrayList<Player>();
@@ -98,6 +102,7 @@ public class Board {
     		System.out.print("Player " + winner.getID() + " with a score of " + winner.getScore() + " ");
     	}
     	System.out.println("");
+    	logger.getInstance().write("ENDOFGAME");
     }
     
     public int getCurrentChips() {
@@ -127,6 +132,8 @@ public class Board {
 	 */
 	public void logGameProgress(boolean pickedCard) {
 		String csvProgress = "";
+
+		//Format: pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
 
 		// Classifier
 		if (pickedCard) csvProgress += "1,";
