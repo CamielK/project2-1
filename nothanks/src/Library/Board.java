@@ -50,7 +50,7 @@ public class Board {
     	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
-    public void giveCard() {
+    public void giveCardChips() {
     	logGameProgress(true);
 
     	players.get(currentPlayer).addCard(currentCard);

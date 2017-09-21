@@ -1,6 +1,7 @@
 package Library;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Player {
 	private int chips;
@@ -30,5 +31,22 @@ public class Player {
 	
 	public void addCard(Card card) {
 		cards.add(card);
+		calculateScore();
+	}
+	
+	public void calculateScore() {
+		Collections.sort(cards);
+		
+		Card scoreCard = cards.get(0);
+		this.score = scoreCard.getNumber();
+		for(Card card : cards) {
+			if(card == scoreCard)
+				continue;
+			
+			if(card.getNumber() - scoreCard.getNumber() != 1) {
+				this.score += card.getNumber();
+			}
+			scoreCard = card;
+		}
 	}
 }
