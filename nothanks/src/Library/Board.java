@@ -14,6 +14,7 @@ public class Board {
     private ArrayList<Player> players;
 
 	private int currentChips = 0;
+	private boolean isFinished = false;
     private Player currentPlayer;
 
     private Board() {
@@ -85,26 +86,34 @@ public class Board {
 	}
     
     public void win() {
-    	ArrayList<Player> winners = new ArrayList<Player>();
-    	winners.add(players.get(0));
-    	
-    	for(int i = 1; i < players.size(); i++) {
-    		if(winners.get(0).getScore() < players.get(i).getScore()) {
-    			winners = new ArrayList<Player>();
-    			winners.add(players.get(i));
-    		} else if(winners.get(0).getScore() == players.get(i).getScore()) {
-    			winners.add(players.get(i));
-    		}
-    	}
-    	
-    	System.out.print("Winners are: ");
-    	for(Player winner : winners) {
-    		System.out.print("Player " + winner.getID() + " with a score of " + winner.getScore() + " ");
-    	}
-    	System.out.println("");
+    	System.out.println(getWinners());
     	logger.getInstance().write("ENDOFGAME");
+    	isFinished = true;
     }
-    
+
+    public String getWinners() {
+		ArrayList<Player> winners = new ArrayList<Player>();
+		winners.add(players.get(0));
+
+		for(int i = 1; i < players.size(); i++) {
+			if(winners.get(0).getScore() < players.get(i).getScore()) {
+				winners = new ArrayList<Player>();
+				winners.add(players.get(i));
+			} else if(winners.get(0).getScore() == players.get(i).getScore()) {
+				winners.add(players.get(i));
+			}
+		}
+
+		StringBuilder winnersString = new StringBuilder();
+		winnersString.append("Winners are: \n");
+		for(Player winner : winners) {
+			winnersString.append("Player " + winner.getID() + " with a score of " + winner.getScore() + "\n");
+		}
+		return winnersString.toString();
+	}
+
+    public boolean getIsFinished() { return isFinished; }
+
     public int getCurrentChips() {
     	return currentChips;
     }
@@ -167,5 +176,9 @@ public class Board {
 
 	public ArrayList<Player> getPlayers() {
 		return this.players;
+	}
+
+	public static void reset() {
+		board = new Board();
 	}
 }
