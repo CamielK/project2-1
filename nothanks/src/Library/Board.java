@@ -96,7 +96,7 @@ public class Board {
 		winners.add(players.get(0));
 
 		for(int i = 1; i < players.size(); i++) {
-			if(winners.get(0).getScore() < players.get(i).getScore()) {
+			if(winners.get(0).getScore() > players.get(i).getScore()) {
 				winners = new ArrayList<Player>();
 				winners.add(players.get(i));
 			} else if(winners.get(0).getScore() == players.get(i).getScore()) {
