@@ -49,4 +49,8 @@ public class Player {
 			scoreCard = card;
 		}
 	}
+
+	public Integer getScore() {
+		return this.score;
+	}
 }
