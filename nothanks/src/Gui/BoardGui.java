@@ -24,7 +24,7 @@ public class Board_Gui extends JPanel{
         //Create the panel with the chip in the middle of the frame, and take all button
         JPanel chip_center = new chip();// create Jpanel
         chip_center.setBounds(640,265,215,265);
-        JLabel num_chips =new JLabel("number"); //text inside chip must be edited to call number of current chips
+        JLabel num_chips =new JLabel(""+Board.getInstance().getCurrentChips()); //text inside chip must be edited to call number of current chips
         num_chips.setFont(new Font("Serif", Font.BOLD, 85));
         num_chips.setForeground(new Color(255, 197, 24));
         chip_center.setLayout(null);//make it possible to rearrange
@@ -72,6 +72,12 @@ public class Board_Gui extends JPanel{
         player_chips.setLayout(null);//make it possible to rearrange
         num_chips_p.setBounds(58,58,100,100);
         JButton toss =new JButton("Toss Chip");
+        toss.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Board.getInstance().tossChip();
+            }
+        });
         toss.setBounds(50,0,100,50);
         player_chips.add(num_chips_p);
         player_chips.add(toss);
