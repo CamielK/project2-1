@@ -62,7 +62,12 @@ public class Controller implements Initializable {
     private void updateCurrentPlayer() {
         currentPlayerLbl.setText("Player " + Board.getInstance().getCurrentPlayer().getID() + "'s turn:");
         currentPlayerCards.setText("Your cards: [" + showCards(Board.getInstance().getCurrentPlayer().getCards()) + "]");
-        currentPlayerChips.setText("Current chips: " + Board.getInstance().getCurrentPlayer().getChips());
+
+        Integer playerChips = Board.getInstance().getCurrentPlayer().getChips();
+        if (playerChips <= 0) {
+            tossChipBtn.setDisable(true);
+        } else tossChipBtn.setDisable(false);
+        currentPlayerChips.setText("Current chips: " + playerChips);
     }
 
     private void updateScoreboard() {
