@@ -30,8 +30,7 @@ public class Card implements Comparable<Card> {
 		this.number = number;
 	}
 
-	public int compareTo(Card cardToCompare)
-	{	
+	public int compareTo(Card cardToCompare) {	
 		if(this.getNumber() > cardToCompare.getNumber())
 			return 1;
 		else if(this.getNumber() < cardToCompare.getNumber())

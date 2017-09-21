@@ -1,8 +1,9 @@
 package Library;
 
-import Helper.Logger;
-
 import java.util.ArrayList;
+import java.util.Collections;
+
+import Helper.Logger;
 
 public class Board {
 	
@@ -14,7 +15,7 @@ public class Board {
     private ArrayList<Player> players;
 
 	private int currentChips = 0;
-    private int currentPlayer = 0;
+    private Player currentPlayer;
 
     private Board() {
     	logger = Logger.getInstance();
@@ -26,8 +27,9 @@ public class Board {
         for(int i = 0; i < 3; i++) {
     		players.add(new Player(11));
     	}
+        currentPlayer = players.get(0);
         
-        System.out.println("It's Player " + currentPlayer + "'s turn!");
+        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
     }
     
@@ -40,37 +42,63 @@ public class Board {
 	}
     
     public void nextTurn() {
-    	if(currentPlayer + 1 >= players.size()) {
-    		currentPlayer = 0;
+    	if(players.indexOf(currentPlayer) + 1 >= players.size()) {
+    		currentPlayer = players.get(0);
     	} else {
-    		currentPlayer++;
+    		currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
     	}
     	
-    	System.out.println("It's Player " + currentPlayer + "'s turn!");
+    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
     	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
     public void giveCardChips() {
     	logGameProgress(true);
 
-    	players.get(currentPlayer).addCard(currentCard);
-    	currentCard = cardDeck.removeCards(1);
+    	currentPlayer.addCard(currentCard);
 
-		players.get(currentPlayer).addChips(currentChips);
+		currentPlayer.addChips(currentChips);
 		currentChips = 0;
 
     	System.out.println("Current Card is " + currentCard.getNumber());
+    	
+    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
+    	if(cardDeck.getNumCards() <= 0) {
+    		win();
+    		return;
+    	}
+    	currentCard = cardDeck.removeCards(1);
+    	
     	nextTurn();
     }
     
     public void tossChip() {
     	logGameProgress(false);
 
-    	Player player = players.get(currentPlayer);
-    	if(player.addChips(-1)) {
+    	if(currentPlayer.addChips(-1)) {
     		currentChips++;
     		nextTurn();
     	}
+    }
+    
+    public void win() {
+    	ArrayList<Player> winners = new ArrayList<Player>();
+    	winners.add(players.get(0));
+    	
+    	for(int i = 1; i < players.size(); i++) {
+    		if(winners.get(0).getScore() < players.get(i).getScore()) {
+    			winners = new ArrayList<Player>();
+    			winners.add(players.get(i));
+    		} else if(winners.get(0).getScore() == players.get(i).getScore()) {
+    			winners.add(players.get(i));
+    		}
+    	}
+    	
+    	System.out.print("Winners are: ");
+    	for(Player winner : winners) {
+    		System.out.print("Player " + winner.getID() + " with a score of " + winner.getScore() + " ");
+    	}
+    	System.out.println("");
     }
     
     public int getCurrentChips() {
