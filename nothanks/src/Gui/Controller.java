@@ -28,7 +28,7 @@ public class Controller implements Initializable {
     }
 
     @FXML protected void takeCard(ActionEvent event) {
-    	Board.getInstance().giveCard();
+    	Board.getInstance().giveCardChips();
     }
     
     @FXML protected void tossChip(ActionEvent event) {
