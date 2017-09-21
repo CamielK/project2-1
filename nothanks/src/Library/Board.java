@@ -126,4 +126,8 @@ public class Board {
 
 		logger.write(csvProgress);
 	}
+
+	public ArrayList<Player> getPlayers() {
+		return this.players;
+	}
 }
