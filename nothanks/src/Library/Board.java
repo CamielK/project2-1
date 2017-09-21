@@ -143,10 +143,14 @@ public class Board {
 		// Players state
 		for (int i=0; i < players.size(); i++) {
 			csvProgress += players.get(i).getChips()  + "," +
-					players.get(i).getCards().size();
+					players.get(i).getCards().size() + "," +
+					players.get(i).getScore() + ",";
 			//TODO: use range of cards instead of num cards (e.g. player has 3 cards in range 3-10, 1 cards in range 10-20 and 2 cards in range 10-35)
 		}
 
+		// Strip last comma
+		csvProgress = csvProgress.substring(0, csvProgress.length()-1);
+		System.out.println(csvProgress);
 
 		logger.write(csvProgress);
 	}
