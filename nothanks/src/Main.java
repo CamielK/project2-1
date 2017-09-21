@@ -1,20 +1,25 @@
-import Gui.BoardGui;
 import Library.Board;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	
-	private static Board board;
-	
+
+    private static Board board;
+
     public static void main(String[] args) {
-    	board = Board.getInstance();
+        board = Board.getInstance();
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        new BoardGui();
+        Parent root = FXMLLoader.load(getClass().getResource("Gui/Interface.fxml"));
+        primaryStage.setTitle("No thanks!");
+        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.show();
     }
 
 }
