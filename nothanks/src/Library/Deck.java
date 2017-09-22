@@ -12,7 +12,7 @@ import java.util.Collections;
 public class Deck extends ArrayList<Card> {
 
     /**
-     * Construct the Deck and initialise the Cards from 3-35
+     * Construct the Deck and initialize the Cards from 3-35
      */
     public Deck() {
         for(int i = 3; i <= 35; i++) {
@@ -20,41 +20,60 @@ public class Deck extends ArrayList<Card> {
         }
         shuffleCards();
         printCards();
-        sort();
-        System.out.println();
-        printCards();
+        //sort();
+        //System.out.println();
+        //printCards();
+        removeCards(9);
     }
 
     /**
-     * shuffels the cards in the deck
+     * Shuffles the cards in the deck
      */
     private void shuffleCards(){
         Collections.shuffle(this);
     }
     
     /**
-     * prints out the cards contained in the deck in ascending index order
+     * Prints out the cards contained in the deck in ascending index order
      */
     private void printCards(){
-        for (int i = 0; i <= 32; i++) {
+        for (int i = 0; i < this.size(); i++) {
             System.out.print(this.get(i).getNumber() + ", ");
         }
+        System.out.println("");
     }
     
     /**
-     * mock sort algorithm
+     * Mock sort algorithm
      */
     public void sort() {
 		int temp;
-		for(int i=1; i<this.size(); i++) {
-			for(int j=0; j<this.size()-i; j++) {
-				if(this.get(j).getNumber()>this.get(j+1).getNumber()) {
+		for(int i = 1; i < this.size(); i++) {
+			for(int j = 0; j < this.size() - i; j++) {
+				if(this.get(j).getNumber() > this.get(j + 1).getNumber()) {
 					temp=this.get(j).getNumber();
-					this.get(j).setNumber(this.get(j+1).getNumber());
-					this.get(j+1).setNumber(temp);
+					this.get(j).setNumber(this.get(j + 1).getNumber());
+					this.get(j + 1).setNumber(temp);
 				}
-				
 			}
 		}
 	}
+
+	public int getNumCards() {
+        return this.size();
+    }
+
+    public Card removeCards(int number) {
+    	if(this.size() == 1) {
+    		Card lastCard = this.get(0);
+    		this.remove(0);
+    		return lastCard;
+    	}
+    	
+    	for(int i = 0; i < number; i++) {
+    		this.remove(i);
+    	}
+    	
+    	return this.get(0);
+    }
 }

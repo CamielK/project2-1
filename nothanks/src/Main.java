@@ -1,4 +1,4 @@
-import Library.Deck;
+import Library.Board;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,11 +7,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	private static Deck deck;
-	
+    private static Board board;
+
     public static void main(String[] args) {
-    	deck = new Deck();
-    	
+        board = Board.getInstance();
         launch(args);
     }
 
@@ -19,7 +18,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("Gui/Interface.fxml"));
         primaryStage.setTitle("No thanks!");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
 
