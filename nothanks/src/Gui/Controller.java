@@ -1,6 +1,7 @@
 package Gui;
 
 import Gui.Dialog.RulesDialog;
+import Gui.Dialog.WinnerDialog;
 import Helper.CardSpriteReader;
 import Library.Board;
 import Library.Card;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static java.lang.Integer.valueOf;
+import static java.lang.System.out;
 
 public class Controller implements Initializable {
 
@@ -43,12 +45,10 @@ public class Controller implements Initializable {
     @FXML private Label currentPlayerChips;
     @FXML private Label currentPlayerLbl;
     @FXML private Label cardsLeftLbl;
-    @FXML private Label resultsLbl;
 
     // Inputs
     @FXML private Button takeCardBtn;
     @FXML private Button tossChipBtn;
-    @FXML private Button resetBtn;
     @FXML private Button rulesBtn;
 
     // Graphics
@@ -80,11 +80,6 @@ public class Controller implements Initializable {
     
     @FXML protected void tossChip(ActionEvent event) {
     	Board.getInstance().tossChip();
-    	updateInterface();
-    }
-
-    @FXML protected void reset(ActionEvent event) {
-    	Board.reset();
     	updateInterface();
     }
 
@@ -145,14 +140,17 @@ public class Controller implements Initializable {
             takeCardBtn.setDisable(true);
             tossChipBtn.setDisable(true);
             currentPlayerBox.setVisible(false);
-            resetBtn.setVisible(true);
-            resultsLbl.setText(Board.getInstance().getWinners());
+
+            // Call winner dialog
+            new WinnerDialog((Stage) cardsLeftLbl.getScene().getWindow());
+
+            // Reset game when winnerdialog returns
+            Board.reset();
+            updateInterface();
         } else {
             takeCardBtn.setDisable(false);
             tossChipBtn.setDisable(false);
             currentPlayerBox.setVisible(true);
-            resetBtn.setVisible(false);
-            resultsLbl.setText("");
             cardsLeftLbl.setText("Cards left: " + String.valueOf(Board.getInstance().getNumCardsLeft()));
             currentCardLbl.setText("Current card: " + String.valueOf(Board.getInstance().getCurrentCard().getNumber()));
             currentChipsLbl.setText("Current chips: " + String.valueOf(Board.getInstance().getCurrentChips()));
