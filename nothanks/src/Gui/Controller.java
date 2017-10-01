@@ -2,7 +2,7 @@ package Gui;
 
 import Gui.Dialog.RulesDialog;
 import Gui.Dialog.WinnerDialog;
-import Helper.CardSpriteReader;
+import Gui.Graphics.CardGfx;
 import Library.Board;
 import Library.Card;
 import Library.Player;
@@ -24,12 +24,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static java.lang.Integer.valueOf;
-import static java.lang.System.out;
 
 public class Controller implements Initializable {
 
@@ -54,6 +54,7 @@ public class Controller implements Initializable {
     // Graphics
     @FXML private ImageView deckImg;
     @FXML private ImageView activeCardImg;
+    @FXML private ImageView playerDeckImg;
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
@@ -67,6 +68,7 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()));
     }
 
     @FXML protected void rules(ActionEvent event) {
@@ -76,6 +78,7 @@ public class Controller implements Initializable {
     @FXML protected void takeCard(ActionEvent event) {
         Board.getInstance().giveCardChips();
         updateInterface();
+        flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()));
     }
     
     @FXML protected void tossChip(ActionEvent event) {
@@ -97,7 +100,7 @@ public class Controller implements Initializable {
             try {
                 // Load image sources
                 Image cardImgSource = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/back_flipped.png")), null);
-                Image newCardImgSource = SwingFXUtils.toFXImage(CardSpriteReader.getInstance().getFlippedCard(cardNumber), null);
+                Image newCardImgSource = SwingFXUtils.toFXImage(CardGfx.getInstance().getFlippedCard(cardNumber), null);
                 activeCardImg.setImage(cardImgSource);
 
                 // Rotate back of card
@@ -154,8 +157,6 @@ public class Controller implements Initializable {
             cardsLeftLbl.setText("Cards left: " + String.valueOf(Board.getInstance().getNumCardsLeft()));
             currentCardLbl.setText("Current card: " + String.valueOf(Board.getInstance().getCurrentCard().getNumber()));
             currentChipsLbl.setText("Current chips: " + String.valueOf(Board.getInstance().getCurrentChips()));
-
-            flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()));
         }
     }
 
@@ -168,6 +169,13 @@ public class Controller implements Initializable {
             tossChipBtn.setDisable(true);
         } else tossChipBtn.setDisable(false);
         currentPlayerChips.setText("Current chips: " + playerChips);
+
+        // Load deck graphics
+        BufferedImage deck = CardGfx.getInstance().renderPlayerDeck(Board.getInstance().getCurrentPlayer().getCards());
+        if (deck != null) {
+            Image playerDeck = SwingFXUtils.toFXImage(deck, null);
+            playerDeckImg.setImage(playerDeck);
+        }
     }
 
     private void updateScoreboard() {

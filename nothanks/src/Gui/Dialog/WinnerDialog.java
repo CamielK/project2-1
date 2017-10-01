@@ -55,6 +55,7 @@ public class WinnerDialog {
         // Stack buttons
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER);
+        hbox.setSpacing(5);
         hbox.getChildren().addAll(okay, quit);
 
         // Create and show new dialog with error messages

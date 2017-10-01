@@ -1,24 +1,27 @@
-package Helper;
+package Gui.Graphics;
+
+import Library.Card;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
-public class CardSpriteReader {
+public class CardGfx {
 
-    private static CardSpriteReader spriteReader;
+    private static CardGfx spriteReader;
 
     private BufferedImage spriteSheet;
 
-    private String path = "../Gui/Images/cards.png";
+    private String path = "../Images/cards.png";
     private Integer heightOffset = 17;
     private Integer widthOffset = 17;
     private Integer cardHeight = 254;
     private Integer cardWidth = 182;
 
-    private CardSpriteReader() {
+    private CardGfx() {
         // Load spritesheet
         try {
             URL imgUrl = getClass().getResource(this.path);
@@ -28,12 +31,55 @@ public class CardSpriteReader {
         }
     }
 
-    public static CardSpriteReader getInstance() {
+    public static CardGfx getInstance() {
         if (spriteReader == null) {
-            return (spriteReader = new CardSpriteReader());
+            return (spriteReader = new CardGfx());
         } else {
             return spriteReader;
         }
+    }
+
+    /**
+     * Returns an image of all the cards in the given arraylist
+     *
+     * @param cards Sorted list of cards owned by player
+     * @return BufferedImage
+     */
+    public BufferedImage renderPlayerDeck(ArrayList<Card> cards) {
+        if (cards.size() == 0) return null;
+
+        // Find stacks of concurrent cards
+        int maxHeight = 0;
+        ArrayList<ArrayList> stacks = new ArrayList<ArrayList>();
+        ArrayList<Integer> stack = new ArrayList<Integer>();
+        for (int x = 0; x < cards.size(); x++) {
+            if (stack.size() == 0) {
+                stack.add(cards.get(x).getNumber());
+            } else if (cards.get(x).getNumber() - stack.get(stack.size()-1) > 1) {
+                stacks.add(stack);
+                if (stack.size() > maxHeight) maxHeight = stack.size();
+                stack = new ArrayList<>();
+                stack.add(cards.get(x).getNumber());
+            } else {
+                stack.add(cards.get(x).getNumber());
+            }
+        }
+        if (stack.size() != 0) stacks.add(stack);
+
+        // Init image
+        BufferedImage image = new BufferedImage(stacks.size() * (cardWidth+widthOffset), cardHeight + maxHeight*(heightOffset*2), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+
+        // Draw stacks on player deck
+        for (int x = 0; x < stacks.size(); x++) {
+            ArrayList<Integer> substack = stacks.get(x);
+            for (int y = 0; y < substack.size(); y++) {
+                g2d.drawImage(getSourceSprite(substack.get(y)), x*(widthOffset+cardWidth), y*(heightOffset*2), null);
+            }
+        }
+        g2d.dispose();
+
+        return image;
     }
 
     /**
