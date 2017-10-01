@@ -24,18 +24,16 @@
         <Button fx:id="tossChipBtn" onAction="#tossChip" text="Toss Chip" />
     </VBox>
 
-    <VBox fx:id="currentPlayerBox" alignment="CENTER_LEFT" GridPane.columnSpan="10" GridPane.columnIndex="0" GridPane.rowIndex="5" >
-        <Label fx:id="currentPlayerLbl" text="" ></Label>
-        <Label fx:id="currentPlayerCards" text="" ></Label>
-        <Label fx:id="currentPlayerChips" text="" ></Label>
-    </VBox>
-    <ImageView fx:id="playerDeckImg" fitHeight="120" preserveRatio="true" GridPane.valignment="TOP" GridPane.columnSpan="8" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+    <Label fx:id="currentPlayerLbl" styleClass="header" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="8" />
+
+    <ImageView fx:id="playerDeckImg" fitHeight="120" preserveRatio="true" GridPane.valignment="TOP" GridPane.columnSpan="12" GridPane.columnIndex="0" GridPane.rowIndex="6" />
 
     <ImageView fx:id="deckImg" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="3"/>
     <ImageView fx:id="activeCardImg" fitHeight="165.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="BOTTOM" GridPane.columnIndex="6" GridPane.rowIndex="3"/>
-    <ImageView fx:id="activeChipImg" fitHeight="80.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="BOTTOM" GridPane.columnIndex="7" GridPane.rowIndex="3"/>
+    <ImageView fx:id="activeChipImg" fitHeight="70.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="BOTTOM" GridPane.columnIndex="7" GridPane.rowIndex="3"/>
 
-
-    <Button fx:id="rulesBtn" onAction="#rules" text="Show rules" GridPane.columnIndex="10" GridPane.rowIndex="16"/>
-
+    <HBox GridPane.columnIndex="7" GridPane.rowIndex="10" spacing="5">
+        <Button fx:id="rulesBtn" onAction="#rules" text="Show rules" />
+        <Button fx:id="quitBtn" styleClass="error-button" onAction="#quit" text="Quit" />
+    </HBox>
 </GridPane>

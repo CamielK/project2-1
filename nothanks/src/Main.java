@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
@@ -22,7 +23,10 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.show();
+
     }
 
 }

@@ -9,6 +9,7 @@ import Library.Card;
 import Library.Player;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -36,12 +37,9 @@ public class Controller implements Initializable {
 
     // Main grid
     @FXML private GridPane grid;
-    @FXML private VBox currentPlayerBox;
 
     // Labels
     @FXML private Label scores;
-    @FXML private Label currentPlayerCards;
-    @FXML private Label currentPlayerChips;
     @FXML private Label currentPlayerLbl;
 
     // Inputs
@@ -76,6 +74,10 @@ public class Controller implements Initializable {
 
     @FXML protected void rules(ActionEvent event) {
         new RulesDialog((Stage) rulesBtn.getScene().getWindow());
+    }
+
+    @FXML protected void quit(ActionEvent event) {
+        Platform.exit();
     }
 
     @FXML protected void takeCard(ActionEvent event) {
@@ -142,7 +144,7 @@ public class Controller implements Initializable {
         if (Board.getInstance().getIsFinished()) {
             takeCardBtn.setDisable(true);
             tossChipBtn.setDisable(true);
-            currentPlayerBox.setVisible(false);
+            currentPlayerLbl.setVisible(false);
             playerDeckImg.setVisible(false);
 
             // Call winner dialog
@@ -154,7 +156,7 @@ public class Controller implements Initializable {
         } else {
             takeCardBtn.setDisable(false);
             tossChipBtn.setDisable(false);
-            currentPlayerBox.setVisible(true);
+            currentPlayerLbl.setVisible(true);
             playerDeckImg.setVisible(true);
 
             Image chipImgSource = SwingFXUtils.toFXImage(ChipGfx.getInstance().getChipGfx(Board.getInstance().getCurrentChips()), null);
@@ -164,13 +166,12 @@ public class Controller implements Initializable {
 
     private void updateCurrentPlayer() {
         currentPlayerLbl.setText("Player " + Board.getInstance().getCurrentPlayer().getID() + "'s turn:");
-        currentPlayerCards.setText("Your cards: [" + showCards(Board.getInstance().getCurrentPlayer().getCards()) + "]");
+        currentPlayerLbl.setStyle("-fx-font-size: 24px; -fx-fill: #3b7b84;");
 
         Integer playerChips = Board.getInstance().getCurrentPlayer().getChips();
         if (playerChips <= 0) {
             tossChipBtn.setDisable(true);
         } else tossChipBtn.setDisable(false);
-        currentPlayerChips.setText("Current chips: " + playerChips);
 
         // Load deck graphics
         BufferedImage deck = CardGfx.getInstance().renderPlayerDeck(Board.getInstance().getCurrentPlayer().getCards(), playerChips);
@@ -191,6 +192,7 @@ public class Controller implements Initializable {
             scoreboard.append("\n");
         }
         scores.setText(scoreboard.toString());
+        scores.setStyle("-fx-font-size: 20px; -fx-fill: #4ebec6;");
     }
 
     private String showCards(ArrayList<Card> cards){
