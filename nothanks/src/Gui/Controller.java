@@ -3,6 +3,7 @@ package Gui;
 import Gui.Dialog.RulesDialog;
 import Gui.Dialog.WinnerDialog;
 import Gui.Graphics.CardGfx;
+import Gui.Graphics.ChipGfx;
 import Library.Board;
 import Library.Card;
 import Library.Player;
@@ -38,13 +39,10 @@ public class Controller implements Initializable {
     @FXML private VBox currentPlayerBox;
 
     // Labels
-    @FXML private Label currentCardLbl;
-    @FXML private Label currentChipsLbl;
     @FXML private Label scores;
     @FXML private Label currentPlayerCards;
     @FXML private Label currentPlayerChips;
     @FXML private Label currentPlayerLbl;
-    @FXML private Label cardsLeftLbl;
 
     // Inputs
     @FXML private Button takeCardBtn;
@@ -54,6 +52,7 @@ public class Controller implements Initializable {
     // Graphics
     @FXML private ImageView deckImg;
     @FXML private ImageView activeCardImg;
+    @FXML private ImageView activeChipImg;
     @FXML private ImageView playerDeckImg;
 
     @Override
@@ -63,8 +62,12 @@ public class Controller implements Initializable {
 
         // init graphics
         try {
+            // todo: move to DeckGfx
             Image deckImgSource = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/deck.png")), null);
             deckImg.setImage(deckImgSource);
+
+            Image chipImgSource = SwingFXUtils.toFXImage(ChipGfx.getInstance().getChipGfx(0), null);
+            activeChipImg.setImage(chipImgSource);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,7 +107,7 @@ public class Controller implements Initializable {
                 activeCardImg.setImage(cardImgSource);
 
                 // Rotate back of card
-                RotateTransition rotator = new RotateTransition(Duration.millis(800), activeCardImg);
+                RotateTransition rotator = new RotateTransition(Duration.millis(600), activeCardImg);
                 rotator.setAxis(Rotate.Y_AXIS);
                 rotator.setFromAngle(0);
                 rotator.setToAngle(90);
@@ -113,7 +116,7 @@ public class Controller implements Initializable {
                 rotator.play();
 
                 // Switch image source at halfway point
-                Thread.sleep(800);
+                Thread.sleep(600);
                 activeCardImg.setImage(newCardImgSource);
 
                 // Finish rotation
@@ -137,15 +140,13 @@ public class Controller implements Initializable {
 
     private void updateCurrentCardAndChips() {
         if (Board.getInstance().getIsFinished()) {
-            cardsLeftLbl.setText("Game is finished!");
-            currentCardLbl.setText("");
-            currentChipsLbl.setText("");
             takeCardBtn.setDisable(true);
             tossChipBtn.setDisable(true);
             currentPlayerBox.setVisible(false);
+            playerDeckImg.setVisible(false);
 
             // Call winner dialog
-            new WinnerDialog((Stage) cardsLeftLbl.getScene().getWindow());
+            new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
 
             // Reset game when winnerdialog returns
             Board.reset();
@@ -154,9 +155,10 @@ public class Controller implements Initializable {
             takeCardBtn.setDisable(false);
             tossChipBtn.setDisable(false);
             currentPlayerBox.setVisible(true);
-            cardsLeftLbl.setText("Cards left: " + String.valueOf(Board.getInstance().getNumCardsLeft()));
-            currentCardLbl.setText("Current card: " + String.valueOf(Board.getInstance().getCurrentCard().getNumber()));
-            currentChipsLbl.setText("Current chips: " + String.valueOf(Board.getInstance().getCurrentChips()));
+            playerDeckImg.setVisible(true);
+
+            Image chipImgSource = SwingFXUtils.toFXImage(ChipGfx.getInstance().getChipGfx(Board.getInstance().getCurrentChips()), null);
+            activeChipImg.setImage(chipImgSource);
         }
     }
 
@@ -171,10 +173,12 @@ public class Controller implements Initializable {
         currentPlayerChips.setText("Current chips: " + playerChips);
 
         // Load deck graphics
-        BufferedImage deck = CardGfx.getInstance().renderPlayerDeck(Board.getInstance().getCurrentPlayer().getCards());
+        BufferedImage deck = CardGfx.getInstance().renderPlayerDeck(Board.getInstance().getCurrentPlayer().getCards(), playerChips);
         if (deck != null) {
             Image playerDeck = SwingFXUtils.toFXImage(deck, null);
             playerDeckImg.setImage(playerDeck);
+        } else {
+            playerDeckImg.setImage(null);
         }
     }
 

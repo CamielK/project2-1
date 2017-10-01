@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CardGfx {
 
@@ -45,11 +46,11 @@ public class CardGfx {
      * @param cards Sorted list of cards owned by player
      * @return BufferedImage
      */
-    public BufferedImage renderPlayerDeck(ArrayList<Card> cards) {
-        if (cards.size() == 0) return null;
+    public BufferedImage renderPlayerDeck(ArrayList<Card> cards, Integer chips) {
+        if (cards.size() == 0 && chips == null) return null;
 
         // Find stacks of concurrent cards
-        int maxHeight = 0;
+        int maxHeight = 1;
         ArrayList<ArrayList> stacks = new ArrayList<ArrayList>();
         ArrayList<Integer> stack = new ArrayList<Integer>();
         for (int x = 0; x < cards.size(); x++) {
@@ -57,28 +58,41 @@ public class CardGfx {
                 stack.add(cards.get(x).getNumber());
             } else if (cards.get(x).getNumber() - stack.get(stack.size()-1) > 1) {
                 stacks.add(stack);
-                if (stack.size() > maxHeight) maxHeight = stack.size();
                 stack = new ArrayList<>();
                 stack.add(cards.get(x).getNumber());
             } else {
                 stack.add(cards.get(x).getNumber());
             }
+            if (stack.size() > maxHeight) maxHeight = stack.size();
         }
         if (stack.size() != 0) stacks.add(stack);
 
         // Init image
-        BufferedImage image = new BufferedImage(stacks.size() * (cardWidth+widthOffset), cardHeight + maxHeight*(heightOffset*2), BufferedImage.TYPE_INT_ARGB);
+        int deckWidth = stacks.size() * (cardWidth+widthOffset);
+        int deckHeight = cardHeight + maxHeight*(heightOffset*2);
+        BufferedImage chipImg = null;
+        if (chips != null) {
+            chipImg = ChipGfx.getInstance().getChipGfx(chips);
+            deckWidth += chipImg.getWidth();
+        }
+        BufferedImage image = new BufferedImage(deckWidth, deckHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
 
         // Draw stacks on player deck
         for (int x = 0; x < stacks.size(); x++) {
             ArrayList<Integer> substack = stacks.get(x);
+            Collections.reverse(substack);
             for (int y = 0; y < substack.size(); y++) {
                 g2d.drawImage(getSourceSprite(substack.get(y)), x*(widthOffset+cardWidth), y*(heightOffset*2), null);
             }
         }
-        g2d.dispose();
 
+        // draw optional chips
+        if (chips != null) {
+            g2d.drawImage(chipImg, deckWidth-chipImg.getWidth(), 0, chipImg.getWidth()/3, chipImg.getHeight()/3, null);
+        }
+
+        g2d.dispose();
         return image;
     }
 
