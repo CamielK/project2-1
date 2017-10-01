@@ -1,18 +1,31 @@
 package Gui;
 
+import Helper.CardSpriteReader;
 import Library.Board;
 import Library.Card;
 import Library.Player;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
+import javax.imageio.ImageIO;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import static java.lang.Integer.valueOf;
 
 public class Controller implements Initializable {
 
@@ -35,10 +48,22 @@ public class Controller implements Initializable {
     @FXML private Button tossChipBtn;
     @FXML private Button resetBtn;
 
+    // Graphics
+    @FXML private ImageView deckImg;
+    @FXML private ImageView activeCardImg;
+
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
         // init method is run when fxml is finished loading
         updateInterface();
+
+        // init graphics
+        try {
+            Image deckImgSource = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/deck.png")), null);
+            deckImg.setImage(deckImgSource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML protected void takeCard(ActionEvent event) {
@@ -62,6 +87,49 @@ public class Controller implements Initializable {
         updateScoreboard();
     }
 
+    // remove old card to player and flip a new card
+    private void flipNewCard(Integer cardNumber) {
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+            try {
+                // Load image sources
+                Image cardImgSource = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/back_flipped.png")), null);
+                Image newCardImgSource = SwingFXUtils.toFXImage(CardSpriteReader.getInstance().getFlippedCard(cardNumber), null);
+                activeCardImg.setImage(cardImgSource);
+
+                // Rotate back of card
+                RotateTransition rotator = new RotateTransition(Duration.millis(800), activeCardImg);
+                rotator.setAxis(Rotate.Y_AXIS);
+                rotator.setFromAngle(0);
+                rotator.setToAngle(90);
+                rotator.setInterpolator(Interpolator.LINEAR);
+                rotator.setCycleCount(1);
+                rotator.play();
+
+                // Switch image source at halfway point
+                Thread.sleep(800);
+                activeCardImg.setImage(newCardImgSource);
+
+                // Finish rotation
+                RotateTransition rotatorFront = new RotateTransition(Duration.millis(800), activeCardImg);
+                rotatorFront.setAxis(Rotate.Y_AXIS);
+                rotatorFront.setFromAngle(90);
+                rotatorFront.setToAngle(0);
+                rotatorFront.setInterpolator(Interpolator.LINEAR);
+                rotatorFront.setCycleCount(1);
+                rotatorFront.play();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+            }
+        };
+        new Thread(sleeper).start();
+
+    }
+
     private void updateCurrentCardAndChips() {
         if (Board.getInstance().getIsFinished()) {
             cardsLeftLbl.setText("Game is finished!");
@@ -81,6 +149,8 @@ public class Controller implements Initializable {
             cardsLeftLbl.setText("Cards left: " + String.valueOf(Board.getInstance().getNumCardsLeft()));
             currentCardLbl.setText("Current card: " + String.valueOf(Board.getInstance().getCurrentCard().getNumber()));
             currentChipsLbl.setText("Current chips: " + String.valueOf(Board.getInstance().getCurrentChips()));
+
+            flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()));
         }
     }
 
