@@ -1,5 +1,6 @@
 package Gui;
 
+import Gui.Dialog.RulesDialog;
 import Helper.CardSpriteReader;
 import Library.Board;
 import Library.Card;
@@ -18,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
@@ -47,6 +49,7 @@ public class Controller implements Initializable {
     @FXML private Button takeCardBtn;
     @FXML private Button tossChipBtn;
     @FXML private Button resetBtn;
+    @FXML private Button rulesBtn;
 
     // Graphics
     @FXML private ImageView deckImg;
@@ -64,6 +67,10 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML protected void rules(ActionEvent event) {
+        new RulesDialog((Stage) rulesBtn.getScene().getWindow());
     }
 
     @FXML protected void takeCard(ActionEvent event) {

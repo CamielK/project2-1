@@ -65,7 +65,6 @@ public class CardSpriteReader {
 
         // Find sprite coordinates
         int spriteX = widthOffset;
-        System.out.println(cardNum%10);
         if (cardNum%10 != 0) spriteX = (cardNum%10) * (widthOffset+cardWidth+widthOffset) - cardWidth-widthOffset;
         else if (cardNum%10 == 0) spriteX = 1961;
 
