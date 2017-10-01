@@ -7,7 +7,7 @@
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
 
 <GridPane fx:controller="Gui.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
@@ -15,22 +15,27 @@
 
     <!--<gridLinesVisible>true</gridLinesVisible>-->
 
-    <HBox fx:id="scoreboardBox" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0" >
+    <HBox fx:id="scoreboardBox" alignment="CENTER_LEFT" minWidth="400" GridPane.columnSpan="10" GridPane.columnIndex="0" GridPane.rowIndex="0" >
         <Label fx:id="scores" text="" ></Label>
     </HBox>
 
-    <Label fx:id="cardsLeftLbl" text="Cards left: " GridPane.columnIndex="2" GridPane.rowIndex="1" />
-    <Label fx:id="currentCardLbl" text="Current card: " GridPane.columnIndex="2" GridPane.rowIndex="2" />
-    <Label fx:id="currentChipsLbl" text="Current chips: " GridPane.columnIndex="2" GridPane.rowIndex="3" />
-    <Label fx:id="resultsLbl" text="" GridPane.columnIndex="0" GridPane.columnSpan="5" GridPane.rowIndex="5" />
+    <VBox GridPane.columnIndex="4" GridPane.rowIndex="3" spacing="5">
+        <Button fx:id="takeCardBtn" onAction="#takeCard" text="Take Card" />
+        <Button fx:id="tossChipBtn" onAction="#tossChip" text="Toss Chip" />
+    </VBox>
 
-    <Button fx:id="takeCardBtn" onAction="#takeCard" text="Take Card" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-    <Button fx:id="tossChipBtn" onAction="#tossChip" text="Toss Chip" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-    <Button fx:id="resetBtn" onAction="#reset" text="Play again!" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-
-    <VBox fx:id="currentPlayerBox" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="5" >
+    <VBox fx:id="currentPlayerBox" alignment="CENTER_LEFT" GridPane.columnSpan="10" GridPane.columnIndex="0" GridPane.rowIndex="5" >
         <Label fx:id="currentPlayerLbl" text="" ></Label>
         <Label fx:id="currentPlayerCards" text="" ></Label>
         <Label fx:id="currentPlayerChips" text="" ></Label>
     </VBox>
+    <ImageView fx:id="playerDeckImg" fitHeight="120" preserveRatio="true" GridPane.valignment="TOP" GridPane.columnSpan="8" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+
+    <ImageView fx:id="deckImg" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="3"/>
+    <ImageView fx:id="activeCardImg" fitHeight="165.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="BOTTOM" GridPane.columnIndex="6" GridPane.rowIndex="3"/>
+    <ImageView fx:id="activeChipImg" fitHeight="80.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="BOTTOM" GridPane.columnIndex="7" GridPane.rowIndex="3"/>
+
+
+    <Button fx:id="rulesBtn" onAction="#rules" text="Show rules" GridPane.columnIndex="10" GridPane.rowIndex="16"/>
+
 </GridPane>
