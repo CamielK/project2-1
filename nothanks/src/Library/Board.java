@@ -53,8 +53,11 @@ public class Board {
     }
     
     public void giveCardChips() {
-    	logGameProgress(true);
-
+    	if(cardDeck.getNumCards() <= 0) {
+    		win();
+    		return;
+    	}
+    	
     	currentPlayer.addCard(currentCard);
 
 		currentPlayer.addChips(currentChips);
@@ -63,10 +66,7 @@ public class Board {
     	System.out.println("Current Card is " + currentCard.getNumber());
     	
     	System.out.println("Cards in deck: " + cardDeck.getNumCards());
-    	if(cardDeck.getNumCards() <= 0) {
-    		win();
-    		return;
-    	}
+    	logGameProgress(true);
     	currentCard = cardDeck.removeCards(1);
     	
     	nextTurn();
