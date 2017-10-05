@@ -53,15 +53,16 @@ public class Board {
     }
     
     public void giveCardChips() {
-    	if(cardDeck.getNumCards() <= 0) {
-    		win();
-    		return;
-    	}
+
     	
     	currentPlayer.addCard(currentCard);
-
 		currentPlayer.addChips(currentChips);
 		currentChips = 0;
+
+		if(cardDeck.getNumCards() <= 1) {
+			win();
+			return;
+		}
 
     	System.out.println("Current Card is " + currentCard.getNumber());
     	
