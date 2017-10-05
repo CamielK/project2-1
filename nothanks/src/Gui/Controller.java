@@ -129,6 +129,10 @@ public class Controller implements Initializable {
                 rotatorFront.setCycleCount(1);
                 rotatorFront.play();
 
+                // Make sure card image is drawn
+                Thread.sleep(850);
+                activeCardImg.setImage(newCardImgSource);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

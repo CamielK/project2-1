@@ -54,7 +54,6 @@ public class Board {
     
     public void giveCardChips() {
 
-    	
     	currentPlayer.addCard(currentCard);
 		currentPlayer.addChips(currentChips);
 		currentChips = 0;
