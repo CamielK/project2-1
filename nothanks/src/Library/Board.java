@@ -25,7 +25,7 @@ public class Board {
         
         //Temporary way to add players
         for(int i = 0; i < 3; i++) {
-    		players.add(new Player(11));
+    		players.add(new Player(11, i + 1));
     	}
         currentPlayer = players.get(0);
         
