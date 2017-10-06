@@ -154,7 +154,6 @@ public class Board {
 				cardDeck.getNumCards() + ",";
 		//TODO: use range of cards instead of num cards (e.g. there is 5 cards left in range 3-10, 2 cards left in range 10-20 and 4 cards left in range 10-35)
 
-
 		// Players state
 		for (int i=0; i < players.size(); i++) {
 			csvProgress += players.get(i).getChips()  + "," +

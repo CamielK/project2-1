@@ -52,6 +52,9 @@ public class Controller implements Initializable {
     @FXML private ImageView activeChipImg;
     @FXML private ImageView playerDeckImg;
 
+    private static Image cardBackside;
+    private static ArrayList<Task<Void>> activeTasks = new ArrayList<Task<Void>>();
+
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
         // init method is run when fxml is finished loading
@@ -65,6 +68,8 @@ public class Controller implements Initializable {
 
             Image chipImgSource = SwingFXUtils.toFXImage(ChipGfx.getInstance().getChipGfx(0), null);
             activeChipImg.setImage(chipImgSource);
+
+            cardBackside = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/back_flipped.png")), null);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,14 +103,18 @@ public class Controller implements Initializable {
 
     // remove old card to player and flip a new card
     private void flipNewCard(Integer cardNumber) {
+        for (int i = 0; i < activeTasks.size(); i++) {
+            activeTasks.get(i).cancel();
+        }
+
+        // Load image sources
+        Image newCardImgSource = SwingFXUtils.toFXImage(CardGfx.getInstance().getFlippedCard(cardNumber), null);
+        activeCardImg.setImage(cardBackside);
+
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
             try {
-                // Load image sources
-                Image cardImgSource = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/back_flipped.png")), null);
-                Image newCardImgSource = SwingFXUtils.toFXImage(CardGfx.getInstance().getFlippedCard(cardNumber), null);
-                activeCardImg.setImage(cardImgSource);
 
                 // Rotate back of card
                 RotateTransition rotator = new RotateTransition(Duration.millis(600), activeCardImg);
@@ -116,7 +125,7 @@ public class Controller implements Initializable {
                 rotator.setCycleCount(1);
                 rotator.play();
 
-                // Switch image source at halfway point
+                // Switch image source at halfway point if rotator is still running
                 Thread.sleep(600);
                 activeCardImg.setImage(newCardImgSource);
 
@@ -129,18 +138,25 @@ public class Controller implements Initializable {
                 rotatorFront.setCycleCount(1);
                 rotatorFront.play();
 
-                // Make sure card image is drawn
+                // Make sure card image is drawn if rotator is still running
                 Thread.sleep(850);
                 activeCardImg.setImage(newCardImgSource);
 
             } catch (InterruptedException e) {
+                // Ignore sleep interruptions (threads may be cancelled)
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
             }
         };
-        new Thread(sleeper).start();
 
+        // Start animation thread
+        activeTasks.add(sleeper);
+        if (activeTasks.size() > 1) new Thread(sleeper).start();
+        else {
+            activeCardImg.setImage(newCardImgSource); // Skip animation on first run
+        }
     }
 
     private void updateCurrentCardAndChips() {
