@@ -1,4 +1,3 @@
-import Library.Board;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,10 +7,7 @@ import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
-    private static Board board;
-
     public static void main(String[] args) {
-        board = Board.getInstance();
         launch(args);
     }
 

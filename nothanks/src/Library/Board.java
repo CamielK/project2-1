@@ -1,8 +1,8 @@
 package Library;
 
-import Helper.Logger;
-
 import java.util.ArrayList;
+
+import Helper.Logger;
 
 public class Board {
 	

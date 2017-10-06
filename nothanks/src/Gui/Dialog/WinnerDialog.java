@@ -1,5 +1,8 @@
 package Gui.Dialog;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import Gui.Graphics.CardGfx;
 import Library.Board;
 import Library.Player;
@@ -19,9 +22,6 @@ import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 //show help dialog with information about prototype app
 public class WinnerDialog {
