@@ -9,6 +9,7 @@ import Library.Card;
 import Library.Player;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -19,7 +20,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -36,12 +36,9 @@ public class Controller implements Initializable {
 
     // Main grid
     @FXML private GridPane grid;
-    @FXML private VBox currentPlayerBox;
 
     // Labels
     @FXML private Label scores;
-    @FXML private Label currentPlayerCards;
-    @FXML private Label currentPlayerChips;
     @FXML private Label currentPlayerLbl;
 
     // Inputs
@@ -54,6 +51,9 @@ public class Controller implements Initializable {
     @FXML private ImageView activeCardImg;
     @FXML private ImageView activeChipImg;
     @FXML private ImageView playerDeckImg;
+
+    private static Image cardBackside;
+    private static ArrayList<Task<Void>> activeTasks = new ArrayList<Task<Void>>();
 
     @Override
     public void initialize(java.net.URL location, ResourceBundle resources) {
@@ -68,6 +68,8 @@ public class Controller implements Initializable {
 
             Image chipImgSource = SwingFXUtils.toFXImage(ChipGfx.getInstance().getChipGfx(0), null);
             activeChipImg.setImage(chipImgSource);
+
+            cardBackside = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/back_flipped.png")), null);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,6 +78,10 @@ public class Controller implements Initializable {
 
     @FXML protected void rules(ActionEvent event) {
         new RulesDialog((Stage) rulesBtn.getScene().getWindow());
+    }
+
+    @FXML protected void quit(ActionEvent event) {
+        Platform.exit();
     }
 
     @FXML protected void takeCard(ActionEvent event) {
@@ -97,14 +103,18 @@ public class Controller implements Initializable {
 
     // remove old card to player and flip a new card
     private void flipNewCard(Integer cardNumber) {
+        for (int i = 0; i < activeTasks.size(); i++) {
+            activeTasks.get(i).cancel();
+        }
+
+        // Load image sources
+        Image newCardImgSource = SwingFXUtils.toFXImage(CardGfx.getInstance().getFlippedCard(cardNumber), null);
+        activeCardImg.setImage(cardBackside);
+
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
             try {
-                // Load image sources
-                Image cardImgSource = SwingFXUtils.toFXImage(ImageIO.read(getClass().getResource("Images/back_flipped.png")), null);
-                Image newCardImgSource = SwingFXUtils.toFXImage(CardGfx.getInstance().getFlippedCard(cardNumber), null);
-                activeCardImg.setImage(cardImgSource);
 
                 // Rotate back of card
                 RotateTransition rotator = new RotateTransition(Duration.millis(600), activeCardImg);
@@ -115,7 +125,7 @@ public class Controller implements Initializable {
                 rotator.setCycleCount(1);
                 rotator.play();
 
-                // Switch image source at halfway point
+                // Switch image source at halfway point if rotator is still running
                 Thread.sleep(600);
                 activeCardImg.setImage(newCardImgSource);
 
@@ -128,24 +138,36 @@ public class Controller implements Initializable {
                 rotatorFront.setCycleCount(1);
                 rotatorFront.play();
 
+                // Make sure card image is drawn if rotator is still running
+                Thread.sleep(850);
+                activeCardImg.setImage(newCardImgSource);
+
             } catch (InterruptedException e) {
+                // Ignore sleep interruptions (threads may be cancelled)
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
             }
         };
-        new Thread(sleeper).start();
 
+        // Start animation thread
+        activeTasks.add(sleeper);
+        if (activeTasks.size() > 1) new Thread(sleeper).start();
+        else {
+            activeCardImg.setImage(newCardImgSource); // Skip animation on first run
+        }
     }
 
     private void updateCurrentCardAndChips() {
         if (Board.getInstance().getIsFinished()) {
             takeCardBtn.setDisable(true);
             tossChipBtn.setDisable(true);
-            currentPlayerBox.setVisible(false);
+            currentPlayerLbl.setVisible(false);
             playerDeckImg.setVisible(false);
 
             // Call winner dialog
+            updateScoreboard();
             new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
 
             // Reset game when winnerdialog returns
@@ -154,7 +176,7 @@ public class Controller implements Initializable {
         } else {
             takeCardBtn.setDisable(false);
             tossChipBtn.setDisable(false);
-            currentPlayerBox.setVisible(true);
+            currentPlayerLbl.setVisible(true);
             playerDeckImg.setVisible(true);
 
             Image chipImgSource = SwingFXUtils.toFXImage(ChipGfx.getInstance().getChipGfx(Board.getInstance().getCurrentChips()), null);
@@ -164,13 +186,12 @@ public class Controller implements Initializable {
 
     private void updateCurrentPlayer() {
         currentPlayerLbl.setText("Player " + Board.getInstance().getCurrentPlayer().getID() + "'s turn:");
-        currentPlayerCards.setText("Your cards: [" + showCards(Board.getInstance().getCurrentPlayer().getCards()) + "]");
+        currentPlayerLbl.setStyle("-fx-font-size: 24px; -fx-fill: #3b7b84;");
 
         Integer playerChips = Board.getInstance().getCurrentPlayer().getChips();
         if (playerChips <= 0) {
             tossChipBtn.setDisable(true);
         } else tossChipBtn.setDisable(false);
-        currentPlayerChips.setText("Current chips: " + playerChips);
 
         // Load deck graphics
         BufferedImage deck = CardGfx.getInstance().renderPlayerDeck(Board.getInstance().getCurrentPlayer().getCards(), playerChips);
@@ -191,6 +212,7 @@ public class Controller implements Initializable {
             scoreboard.append("\n");
         }
         scores.setText(scoreboard.toString());
+        scores.setStyle("-fx-font-size: 20px; -fx-fill: #4ebec6;");
     }
 
     private String showCards(ArrayList<Card> cards){

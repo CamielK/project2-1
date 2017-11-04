@@ -73,7 +73,7 @@ public class CardGfx {
         BufferedImage chipImg = null;
         if (chips != null) {
             chipImg = ChipGfx.getInstance().getChipGfx(chips);
-            deckWidth += chipImg.getWidth();
+            deckWidth += chipImg.getWidth()/3;
         }
         BufferedImage image = new BufferedImage(deckWidth, deckHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
@@ -89,7 +89,7 @@ public class CardGfx {
 
         // draw optional chips
         if (chips != null) {
-            g2d.drawImage(chipImg, deckWidth-chipImg.getWidth(), 0, chipImg.getWidth()/3, chipImg.getHeight()/3, null);
+            g2d.drawImage(chipImg, deckWidth-(chipImg.getWidth()/3), 0, chipImg.getWidth()/3, chipImg.getHeight()/3, null);
         }
 
         g2d.dispose();

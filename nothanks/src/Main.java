@@ -1,17 +1,13 @@
-import Library.Board;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
-    private static Board board;
-
     public static void main(String[] args) {
-        board = Board.getInstance();
         launch(args);
     }
 
@@ -22,6 +18,8 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.show();
     }
 

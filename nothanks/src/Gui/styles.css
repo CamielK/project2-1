@@ -1,5 +1,10 @@
 .root {
-    -fx-background-color: #E0E0E0;
+    /*-fx-background-color: #E0E0E0;*/
+    -fx-background-image: url("Images/background.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 800 600;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
 }
 
 .text {
@@ -22,16 +27,16 @@
     -fx-font-size: 12px;
     -fx-padding: 10 20 10 20;
 
-    -fx-min-width: 100px;
+    -fx-min-width: 110px;
 }
 .button Text {
     -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
 }
 
-/*.root {*/
-    /*-fx-background-image: url("../Resources/Images/background.jpg");*/
-    /*-fx-background-repeat: stretch;*/
-    /*-fx-background-size: 900 506;*/
-    /*-fx-background-position: center center;*/
-    /*-fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);*/
-/*}*/
+.error-button {
+    -fx-background-color:
+            #b25555,
+            linear-gradient(#8f484a 0%, #a35c61 20%, #b63c32 100%),
+            linear-gradient(#dc493c, #b62e35),
+            radial-gradient(center 50% 0%, radius 100%, rgba(148, 77, 70, 0.9), rgba(255,255,255,0));
+}

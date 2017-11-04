@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Player {
-	private static int idIncrement;
 	private int id;
 	private int chips;
 	private int score;
 	private ArrayList<Card> cards;
 	
-	public Player(int chips) {
-		id = ++idIncrement;
+	public Player(int chips, int id) {
 		this.chips = chips;
+		this.id = id;
 		cards = new ArrayList<Card>();
 	}
 	

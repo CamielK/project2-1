@@ -1,15 +1,15 @@
 package Gui.Graphics;
 
-import com.sun.javafx.scene.text.TextLayout;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.font.FontRenderContext;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 public class ChipGfx {
 
@@ -52,8 +52,8 @@ public class ChipGfx {
         Graphics2D g2d = image.createGraphics();
 
         // Draw number of chips on image
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 200));
-        g2d.setColor(new Color(25, 29, 34));
+        g2d.setFont(new Font("TimesRoman", Font.BOLD, 200));
+        g2d.setColor(new Color(61, 50, 76));
         if (chips < 10) g2d.drawString(chips.toString(), textWidthOffsetOneDigit, textHeightOffset);
         else g2d.drawString(chips.toString(), textWidthOffsetTwoDigit, textHeightOffset);
         g2d.dispose();
