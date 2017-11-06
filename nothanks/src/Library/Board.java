@@ -2,7 +2,6 @@ package Library;
 
 import Helper.Logger;
 import Library.AI.RandomAI.RandomAI;
-
 import java.util.ArrayList;
 
 public class Board {

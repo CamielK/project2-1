@@ -1,15 +1,15 @@
 package Gui.Graphics;
 
-import com.sun.javafx.scene.text.TextLayout;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.font.FontRenderContext;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 public class ChipGfx {
 
