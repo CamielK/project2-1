@@ -1,6 +1,7 @@
 package Library;
 
 import Helper.Logger;
+import Library.AI.RandomAI.RandomAI;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,12 @@ public class Board {
     		players.add(new Player(11, i + 1));
     	}
         currentPlayer = players.get(0);
-        
+
+		// TEMP: Init second player as AI player
+//		players.get(0).SetAIAgent(new RandomAI());
+		players.get(1).SetAIAgent(new RandomAI());
+//		players.get(2).SetAIAgent(new RandomAI());
+
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
     }

@@ -73,7 +73,7 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()));
+        flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()), true);
     }
 
     @FXML protected void rules(ActionEvent event) {
@@ -85,24 +85,49 @@ public class Controller implements Initializable {
     }
 
     @FXML protected void takeCard(ActionEvent event) {
+        processTakeCard(true);
+    }
+
+    private void processTakeCard(boolean animate) {
         Board.getInstance().giveCardChips();
         updateInterface();
-        flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()));
+        flipNewCard(valueOf(Board.getInstance().getCurrentCard().getNumber()), animate);
     }
     
     @FXML protected void tossChip(ActionEvent event) {
-    	Board.getInstance().tossChip();
-    	updateInterface();
+        processTossChip();
+    }
+
+    private void processTossChip() {
+        Board.getInstance().tossChip();
+        updateInterface();
     }
 
     private void updateInterface() {
         updateCurrentPlayer();
         updateCurrentCardAndChips();
         updateScoreboard();
+
+        // Get AI move if next player is AI
+        if (Board.getInstance().getCurrentPlayer().isAI()) {
+            System.out.println("Current player is AI agent. Retrieving AI move...");
+            boolean move = Board.getInstance().getCurrentPlayer().GetAIMove();
+            System.out.println("AI move: '" + move + "'.");
+
+            if (move) processTakeCard(false);
+            else if (!move) processTossChip();
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     // remove old card to player and flip a new card
-    private void flipNewCard(Integer cardNumber) {
+    private void flipNewCard(Integer cardNumber, boolean animate) {
         for (int i = 0; i < activeTasks.size(); i++) {
             activeTasks.get(i).cancel();
         }
@@ -153,9 +178,9 @@ public class Controller implements Initializable {
 
         // Start animation thread
         activeTasks.add(sleeper);
-        if (activeTasks.size() > 1) new Thread(sleeper).start();
+        if (activeTasks.size() > 1 && animate) new Thread(sleeper).start();
         else {
-            activeCardImg.setImage(newCardImgSource); // Skip animation on first run
+            activeCardImg.setImage(newCardImgSource); // Skip animation on first run or if animate is set to false
         }
     }
 
