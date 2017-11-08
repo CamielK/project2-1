@@ -3,14 +3,12 @@ package Uct;
 public class Node {
 
 	private int cardValue, timesVisited, gamesWon;
-	private static boolean visited;
-	private Node[] children;
+	private boolean visited;
+	private Node[] children = null;
 	private Node parent;
 	
 	//Nodes for Subtree
 	public Node(){
-		if(children == null)children = new Node[0];
-		
 	}
 	
 	//Nodes for Supertree

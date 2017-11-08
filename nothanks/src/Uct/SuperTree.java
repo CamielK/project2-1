@@ -1,120 +1,216 @@
 package Uct;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Formatter;
+import java.util.Scanner;
 
 public class SuperTree {
 	public static void main(String[] args){
-		Node root = new Node(3);
+		Node root = new Node(0);
+		Node child1 = new Node(1);
+		Node child2 = new Node(2);
+		Node child3 = new Node(3);
 		Node child4 = new Node(4);
 		Node child5 = new Node(5);
 		Node child6 = new Node(6);
-		root.addChild(child4);
-		root.addChild(child5);
-		root.addChild(child6);
+		Node child7 = new Node(7);
+		Node child8 = new Node(8);
+		Node child9 = new Node(9);
+		Node child10 = new Node(10);
+		Node child11 = new Node(11);
+		Node child12 = new Node(12);
 		
-		child4.addChild(child5);
-		child4.addChild(child6);
+		root.addChild(child1);
+		root.addChild(child2);
+		root.addChild(child3);
 		
-		child5.addChild(child6);
+		child1.addChild(child4);
+		child1.addChild(child5);
+		child1.addChild(child6);
 		
-		preOrder(root);
+		child2.addChild(child7);
+		child2.addChild(child8);
+		child2.addChild(child9);
+
+		child3.addChild(child10);
+		child3.addChild(child11);
+		child3.addChild(child12);
+
+		//saveSuperTree(root);
+		SuperTree temp = loadSuperTree();
+		preOrder(temp.getRoot());
+		System.out.println(tree);
+		saveSuperTree(temp.getRoot());
+
 	}
-		private Node root;
+		private static Node root;
 		private int amountOfNodes;
-		private String postOrder, preOrder;
-		
-		public static void inOrder(Node v){
-			boolean flagOpen = false, flagClosed = false, flagOr = false;		
-			for(int i = 0; i < v.getChildren().length; i++){
-				if(v.getChildren()[i] != null){
-					inOrder(v.getChildren()[i]);
-				}
-			}
-			visit(v);
-		}
-		
-		public static Node visit(Node v) {
-			System.out.print(" " + v.getCardValue() + " ");
-			return v;
-		}
+		private static String preOrder = "", tree = "";
+		private static String path = "nothanks/src/Uct/SuperTree.txt";
+		private static File f = new File(path);
+		private static Formatter x = null;
+		private static Scanner s;
 		
 		public SuperTree(Node root){
-			postOrder = " ";
 			preOrder = " ";
 			this.root = root;
 			amountOfNodes = 1;
 		}
-		
-		public static void preOrder(Node v){
-			visitPre(v);
-			for(int i = 0; i < v.getChildren().length; i++){
-				if(v.getChildren()[i] != null){
-					preOrder(v.getChildren()[i]);
+		/**
+		 * Load the Tree from a txt File.
+		 * @return
+		 */
+		public static SuperTree loadSuperTree(){
+			SuperTree tempSuperTree = null;
+			String loadTree = "";
+			String[] regex;
+			initScanner();
+			if(s.hasNext())loadTree += s.nextLine();
+				System.out.println(loadTree);
+			regex = loadTree.split("\\s");
+			//regex = loadTree.split("(?=>)|(?=<)");
+				for(int i = 0; i<regex.length;i++) System.out.println(regex[i]);
+			tempSuperTree = new SuperTree(new Node(0));
+			Node parentNode = tempSuperTree.getRoot();
+			for(int i = 1; i < regex.length; i++){
+				if(regex[i].equals(">")){
+					Node currentNode = new Node(Integer.parseInt(regex[i+1]));
+					tempSuperTree.addNode(parentNode, currentNode);
+					parentNode = currentNode;
+					i++;
+				}
+				else if(regex[i].equals("<")){
+					parentNode = parentNode.getParent();
+				}
+				else{
+					parentNode = parentNode.getParent();
+					Node currentNode = new Node(Integer.parseInt(regex[i]));
+					System.out.println("CurrentNode: " + currentNode.getCardValue());
+					tempSuperTree.addNode(parentNode, currentNode);
+					parentNode = currentNode;
 				}
 			}
-			//if(v.leftChild != null) preOrder(v.leftChild);
-			//if(v.rightChild != null) preOrder(v.rightChild);
-		}
-
-		public static void visitPre(Node v){
-			System.out.print(v.getCardValue() + " ");
+			return tempSuperTree;
 		}
 		
-		public void postOrder(Node v){
-		//	if(v.leftChild != null){
-		//		postOrder(v.leftChild);
-		//	}
-		//	if(v.rightChild != null){
-		//		postOrder(v.rightChild);
-		//	}
-		//	visitPost(v);
-		}
-		
-		public void visitPost(Node v){
-		//	postOrder += (v.getElem() + " ");
-		}
-		
-/*		
-		public E visit(Node v) {
-			System.out.print(" " + v.getElem() + " ");
-			return v.getElem();
-		}
-		
-		public void print(){
-			System.out.println("PostOrder: " + postOrder);
-			System.out.println("PreOrder:  " + preOrder);
-		}
-		
-		public void inOrderCompute(Node v, boolean x, boolean y){
-			if(v.leftChild != null){
-				inOrder(v.leftChild);
+	/*for(int i = 1; i<regex.length; i++){
+				if(regex[i].contains("> ")){
+					String[] currentValue = regex[i].split("(> )| ( )");
+					for(int j = 0; j<currentValue.length; j++){
+						if(currentValue[j].matches(".*\\d\\s\\d.*")){
+							String[] siblings = currentValue[j].split("\\s");
+							for(int k = 0; k<currentValue.length; k++){
+								Node currentNode = new Node(Integer.parseInt(siblings[k]));
+								tempSuperTree.addNode(parentNode, currentNode);
+								parentNode = currentNode;
+							}
+						}	
+						else{
+							Node currentNode = new Node(Integer.parseInt(currentValue[1]));
+							tempSuperTree.addNode(parentNode, currentNode);
+							parentNode = currentNode;
+						}
+					}
+				}
+				if(regex[i].contains("< ")){
+					String[] currentValue = regex[i].split("< ");
+						
+					for(int j = 1; j<currentValue.length; j++){
+						Node currentNode = new Node(Integer.parseInt(currentValue[j]));
+						parentNode = tempSuperTree.getParent(parentNode);
+						tempSuperTree.addNode(parentNode, currentNode);
+						parentNode = currentNode;	
+					}
+				}					
 			}
-			compute(v);
-			if(v.rightChild != null){
-				inOrder(v.rightChild);
+			//tempSuperTree = new SuperTree(new Node(Integer.parseInt(regex[0])));
+			saveSuperTree(tempSuperTree.getRoot());		
+			return tempSuperTree;
+		}
+	
+		/**
+		 * Add a child node to the supertree
+		 * 
+		 * @param parent parent of the added node
+		 * @param child	currently added node
+		 */
+		public void addNode(Node parent, Node child){
+			parent.addChild(child);
+		}
+		
+		/**
+		 * 
+		 * @param child
+		 * @return
+		 */
+		public Node getParent(Node child){
+			return child.getParent();
+		}
+		
+		/**
+		 * 
+		 * @return
+		 */
+		public Node getRoot(){
+			return root;
+		}
+		
+		//need to make sure String doesnt become too big --> rather add small bits to txt file
+		/**
+		 * 
+		 * @param root
+		 */
+		public static void saveSuperTree(Node root){
+			tree = "";
+			preOrder(root);
+			initFormatter();
+			x.format(tree);
+			x.close();
+		}
+		
+		/**
+		 * 
+		 */
+		public static void initFormatter(){
+			try {
+				x = new Formatter(f);
+			}
+			catch (FileNotFoundException e) {
+				e.printStackTrace();
 			}
 		}
 		
-		public boolean compute(Node v){
-			if(v.getElem() == "->"){
-				if(!compute(v.getLeftChild()))return true;
-				else if(compute(v.getRightChild()))return true;
-				else return false;
+		/**
+		 * 
+		 */
+		public static void initScanner(){
+			try {
+				s = new Scanner(f);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 			}
-			if(v.getElem() == "or"){
-				if(compute(v.getLeftChild()) || compute(v.getRightChild()))return true;
-				else return false;
+		}
+		
+		/**
+		 * 
+		 * @param v
+		 */
+		public static void preOrder(Node v){
+			tree += (v.getCardValue() + " ");
+			if(v.getChildren().length != 0){
+				tree += ("> ");
 			}
-			if(v.getElem() == "xor"){
-				if(compute(v.getLeftChild()) == compute(v.getRightChild()))return false;
-				else return true;
-			}	
-			if(v.getElem() == "and"){
-				if(compute(v.getLeftChild()) && compute(v.getRightChild()))return true;
-				else return false;
+			/*if(v.getChildren().length == 0 && v.getParent().getChildren().length > 1){
+				tree += ", ";
+			}*/
+			for(int i = 0; i < v.getChildren().length; i++){
+				if(v.getChildren().length != 0){
+					preOrder(v.getChildren()[i]);
+				}
+				if(v.getChildren().length == i+1){
+					tree += ("< ");
+				}
 			}
-			if(v.getElem() == "X")return false; 
-			if(v.getElem() == "Y")return true;
-			return false;
-		}	
-		*/
+		}		
 }
