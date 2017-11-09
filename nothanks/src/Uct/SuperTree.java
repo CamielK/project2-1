@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class SuperTree {
 	public static void main(String[] args){
-		Node root = new Node(0);
+		/*Node root = new Node(0);
 		Node child1 = new Node(1);
 		Node child2 = new Node(2);
 		Node child3 = new Node(3);
@@ -36,12 +36,27 @@ public class SuperTree {
 		child3.addChild(child10);
 		child3.addChild(child11);
 		child3.addChild(child12);
-
+        */
+		
+		
 		//saveSuperTree(root);
 		SuperTree temp = loadSuperTree();
 		preOrder(temp.getRoot());
 		System.out.println(tree);
 		saveSuperTree(temp.getRoot());
+		
+		Node[] layer1 = temp.getRoot().getChildren();
+		Node[] layer2L = layer1[0].getChildren();
+		Node[] layer2M = layer1[1].getChildren();
+		Node[] layer2R = layer1[2].getChildren();
+		System.out.println(temp.getRoot().getCardValue());
+		for(int i = 0; i<layer1.length; i++)System.out.println(layer1[i].getCardValue());
+		System.out.println();
+		for(int i = 0; i<layer2L.length; i++)System.out.println(layer2L[i].getCardValue());
+		System.out.println();
+		for(int i = 0; i<layer2M.length; i++)System.out.println(layer2M[i].getCardValue());
+		System.out.println();
+		for(int i = 0; i<layer2R.length; i++)System.out.println(layer2R[i].getCardValue());
 
 	}
 		private static Node root;
@@ -67,10 +82,7 @@ public class SuperTree {
 			String[] regex;
 			initScanner();
 			if(s.hasNext())loadTree += s.nextLine();
-				System.out.println(loadTree);
 			regex = loadTree.split("\\s");
-			//regex = loadTree.split("(?=>)|(?=<)");
-				for(int i = 0; i<regex.length;i++) System.out.println(regex[i]);
 			tempSuperTree = new SuperTree(new Node(0));
 			Node parentNode = tempSuperTree.getRoot();
 			for(int i = 1; i < regex.length; i++){
@@ -94,47 +106,6 @@ public class SuperTree {
 			return tempSuperTree;
 		}
 		
-	/*for(int i = 1; i<regex.length; i++){
-				if(regex[i].contains("> ")){
-					String[] currentValue = regex[i].split("(> )| ( )");
-					for(int j = 0; j<currentValue.length; j++){
-						if(currentValue[j].matches(".*\\d\\s\\d.*")){
-							String[] siblings = currentValue[j].split("\\s");
-							for(int k = 0; k<currentValue.length; k++){
-								Node currentNode = new Node(Integer.parseInt(siblings[k]));
-								tempSuperTree.addNode(parentNode, currentNode);
-								parentNode = currentNode;
-							}
-						}	
-						else{
-							Node currentNode = new Node(Integer.parseInt(currentValue[1]));
-							tempSuperTree.addNode(parentNode, currentNode);
-							parentNode = currentNode;
-						}
-					}
-				}
-				if(regex[i].contains("< ")){
-					String[] currentValue = regex[i].split("< ");
-						
-					for(int j = 1; j<currentValue.length; j++){
-						Node currentNode = new Node(Integer.parseInt(currentValue[j]));
-						parentNode = tempSuperTree.getParent(parentNode);
-						tempSuperTree.addNode(parentNode, currentNode);
-						parentNode = currentNode;	
-					}
-				}					
-			}
-			//tempSuperTree = new SuperTree(new Node(Integer.parseInt(regex[0])));
-			saveSuperTree(tempSuperTree.getRoot());		
-			return tempSuperTree;
-		}
-	
-		/**
-		 * Add a child node to the supertree
-		 * 
-		 * @param parent parent of the added node
-		 * @param child	currently added node
-		 */
 		public void addNode(Node parent, Node child){
 			parent.addChild(child);
 		}
