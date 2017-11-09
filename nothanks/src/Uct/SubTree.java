@@ -21,12 +21,16 @@ public class SubTree {
 		Node child10 = new Node(10);
 		Node child11 = new Node(11);
 		Node child12 = new Node(12);
+		Node child13 = new Node(13);
+		Node child14 = new Node(14);
 		
 		root.addLeftChild(child1);
 		root.addRightChild(child2);
 		
 		child1.addLeftChild(child11);
 		child1.addRightChild(child12);
+		
+		child12.addRightChild(child13);
 		
 		child2.addLeftChild(child3);
 		child2.addRightChild(child4);
@@ -120,7 +124,7 @@ public class SubTree {
 				tempSubTree = new SubTree(new Node(Integer.parseInt(regex[0])));
 				Node parentNode = tempSubTree.getRoot();
 				for(int i = 1; i < regex.length; i++){
-					
+					System.out.println(regex[i]);
 					if(regex[i].equals(">")){
 						Node currentNode = new Node(Integer.parseInt(regex[i+2]));
 						if(regex[i+1].equals("L")){
@@ -132,17 +136,18 @@ public class SubTree {
 						parentNode = currentNode;
 						i=i+2;
 					}
-					else{
+					if(regex[i].equals("R")){
+						System.out.println("R: " + regex[i] + " " + regex[i+1]);
+						parentNode = parentNode.getParent();
+						Node currentNode = new Node(Integer.parseInt(regex[i+1]));
+						parentNode.addRightChild(currentNode);
+						parentNode = currentNode;
+						i++;
+					}
+					if(regex[i].equals("<")){
 						parentNode = parentNode.getParent();
 					}
-					
-					if(regex[i].equals("L")){
 						
-					}
-					
-					else if(regex[i].equals("R")){
-						
-					}	
 				}
 				return tempSubTree;
 			}
@@ -194,19 +199,16 @@ public class SubTree {
 		
 		public static void preOrder(Node v){
 			tree += (v.getCardValue() + " ");
+			if(v.getLeftChild() == null && v.getRightChild() != null)tree += "> ";
 			if(v.getLeftChild() != null){
 				tree += "> ";
 				tree += "L ";
-				System.out.print("L ");
 				preOrder(v.getLeftChild());
 			}
 			if(v.getRightChild() != null){
 				tree += "R ";
-				System.out.print("R ");		
 				preOrder(v.getRightChild());
-				tree += "< ";
-				System.out.print("> ");		
-				
+				tree += "< ";	
 			}
 		}
 }
