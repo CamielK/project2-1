@@ -2,7 +2,7 @@ package Uct;
 
 public class Edge {
 
-	private Vertex parent, child;
+	private Node parent, child;
 	private int move;
 	
 	/**
@@ -13,7 +13,7 @@ public class Edge {
 	 * @param child child node of the edge
 	 * @param move type of move (0=take card, 1=toss chip)
 	 */
-	public Edge(Vertex parent, Vertex child, int move){
+	public Edge(Node parent, Node child, int move){
 		this.parent = parent;
 		this.child = child;
 	}
@@ -23,7 +23,7 @@ public class Edge {
 	 * @param parent parent node of the edge
 	 * @param child child node of the edge
 	 */
-	public Edge(Vertex parent, Vertex child){
+	public Edge(Node parent, Node child){
 		this.parent = parent;
 		this.child = child;
 	}
@@ -51,7 +51,7 @@ public class Edge {
 	 * 
 	 * @param child child node
 	 */
-	public void setChild(Vertex child){
+	public void setChild(Node child){
 		this.child = child;
 	}
 	
@@ -60,7 +60,7 @@ public class Edge {
 	 * 
 	 * @return child node of the edge
 	 */
-	public Vertex getChild(){
+	public Node getChild(){
 		return child;
 	}
 	
@@ -69,7 +69,7 @@ public class Edge {
 	 * 
 	 * @param parent parent node
 	 */
-	public void setParent(Vertex parent){
+	public void setParent(Node parent){
 		this.parent = parent;
 	}
 	
@@ -78,7 +78,7 @@ public class Edge {
 	 * 
 	 * @return parent node
 	 */
-	public Vertex getParent(){
+	public Node getParent(){
 		return parent;
 	}
 }
