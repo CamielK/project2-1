@@ -26,6 +26,10 @@ public class Player {
 	public void SetAIAgent(AIInterface agent) {
 		this.agent = agent;
 	}
+	
+	public AIInterface getAgent(){
+		return agent;
+	}
 
 	/**
 	 * Returns true if the player has been initialized as an AI agent

@@ -33,7 +33,6 @@ public class Board {
 //		players.get(0).SetAIAgent(new RandomAI());
 		players.get(1).SetAIAgent(new RandomAI());
 //		players.get(2).SetAIAgent(new RandomAI());
-
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
     }

@@ -1,58 +1,67 @@
 package Uct;
 
-public class Node {
+import java.io.Serializable;
+import java.util.ArrayList;
 
-	private int cardValue, timesVisited, gamesWon;
-	private boolean visited;
-	private Node[] children = null;
-	private Node parent, leftChild, rightChild;
+public class Node implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
-	//Nodes for Subtree
+	private int cardValue, timesPlayed, gamesWon;
+	private double winrate;
+	private boolean visited;
+	private ArrayList<Node> children = null;
+	private Node parent;
+	//True -> take card; False -> toss chip;
+	private boolean takeCard;
+	
 	public Node(){
-		leftChild = null;
-		rightChild = null;
+		children = new ArrayList<Node>();
+		winrate = 0;
 	}
 	
-	//Nodes for Supertree
-	public Node(int cardValue){
-		if(children == null)children = new Node[0];
-		this.cardValue = cardValue;
+	public void setCardValue(int cardValue){
+		
+	}
+	
+	
+	public void addGame(boolean win){
+		if(win){
+			gamesWon++;
+		}
+		timesPlayed++;
+	}
+	
+	public boolean getVisited(){
+		return visited;
+	}
+	
+	public void visit(){
+		visited = true;
+	}
+	
+	public boolean takeCard(){
+		return takeCard;
+	}
+	
+	public double getWinrate(){
+		return winrate;
 	}
 	
 	public int getCardValue(){
 		return cardValue;
 	}
 	
-	public void addLeftChild(Node leftChild){
-		this.leftChild = leftChild;
-		leftChild.setParent(this);
-	}
-	
-	public void addRightChild(Node rightChild){
-		this.rightChild = rightChild;
-		rightChild.setParent(this);
-	}
-	
 	public void addChild(Node child){
-		Node[] newChildren = new Node[children.length+1];
-		for(int i = 0; i<children.length; i++) newChildren[i]=children[i];
-		newChildren[children.length] = child;
-		children = newChildren;
-		child.setParent(this);
+		children.add(child);
 	}
 	
-	public Node[] getChildren(){
+	public ArrayList<Node> getChildren(){
 		return children;
 	}
-	
-	public Node getLeftChild(){
-		return this.leftChild;
-	}
-	
-	public Node getRightChild(){
-		return this.rightChild;
-	}
-	
+		
 	public void setParent(Node parent){
 		this.parent = parent;
 	}

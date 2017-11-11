@@ -16,6 +16,16 @@ public class SuperTree {
 		public SuperTree(Node root){
 			this.root = root;
 		}
+		
+		public SubTree addSubTree(Node addSubHere, SubTree subTree){
+			
+			for(int i = 0; i<addSubHere.getChildren().length; i++){
+				addSubHere.getChildren()[i].setParent(subTree.getUnifierNode());
+			}
+			subTree.getRoot().setParent(addSubHere);	
+			return subTree;
+		}
+		
 		/**
 		 * Load the Tree from a txt File.
 		 * @return
@@ -27,8 +37,10 @@ public class SuperTree {
 			initScanner();
 			if(s.hasNext())loadTree += s.nextLine();
 			regex = loadTree.split("\\s");
+			if(regex[0].isEmpty())return new SuperTree(new Node(40));
 			for(int i = 0; i< regex.length;i++)System.out.print(regex[i] + " ");
-			tempSuperTree = new SuperTree(new Node(0));
+			tempSuperTree = new SuperTree(new Node(Integer.parseInt(regex[0])));
+			//tempSuperTree = new SuperTree(new Node(0));
 			Node parentNode = tempSuperTree.getRoot();
 			for(int i = 1; i < regex.length; i++){
 				if(regex[i].equals(">")){
@@ -43,7 +55,6 @@ public class SuperTree {
 				else{
 					parentNode = parentNode.getParent();
 					Node currentNode = new Node(Integer.parseInt(regex[i]));
-					System.out.println("CurrentNode: " + currentNode.getCardValue());
 					tempSuperTree.addNode(parentNode, currentNode);
 					parentNode = currentNode;
 				}
@@ -88,6 +99,25 @@ public class SuperTree {
 		
 		/**
 		 * 
+		 * @param v
+		 */
+		public void preOrder(Node v){
+			tree += (v.getCardValue() + " ");
+			if(v.getChildren().length != 0){
+				tree += ("> ");
+			}
+			for(int i = 0; i < v.getChildren().length; i++){
+				if(v.getChildren().length != 0){
+					preOrder(v.getChildren()[i]);
+				}
+				if(v.getChildren().length == i+1){
+					tree += ("< ");
+				}
+			}
+		}
+		
+		/**
+		 * 
 		 */
 		public void initFormatter(){
 			try {
@@ -106,25 +136,6 @@ public class SuperTree {
 				s = new Scanner(f);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-			}
-		}
-		
-		/**
-		 * 
-		 * @param v
-		 */
-		public void preOrder(Node v){
-			tree += (v.getCardValue() + " ");
-			if(v.getChildren().length != 0){
-				tree += ("> ");
-			}
-			for(int i = 0; i < v.getChildren().length; i++){
-				if(v.getChildren().length != 0){
-					preOrder(v.getChildren()[i]);
-				}
-				if(v.getChildren().length == i+1){
-					tree += ("< ");
-				}
 			}
 		}		
 }

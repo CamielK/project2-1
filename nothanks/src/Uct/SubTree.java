@@ -6,17 +6,27 @@ import java.util.Formatter;
 import java.util.Scanner;
 
 public class SubTree {
-	public static void main(String[] args){		
-	}
+		/*
+	 	* Add method get Leafs
+	 	*/
+
+		private UnifierNode lastLeaf;
 		private Node root;
 		private String tree = "";
-		private String path = "nothanks/src/Uct/SubTree.txt";
-		private File f = new File(path);
-		private Formatter x = null;
+		private String path = "nothanks/src/Uct/SubTree";
+		private File f;
+		private Formatter x;
 		private Scanner s;
+		private static int id = 0;
 		
 		public SubTree(Node root){
 			this.root = root;
+			this.lastLeaf = new UnifierNode();
+			
+			path += (id + ".txt");
+			f = new File(path);
+			id++;
+			System.out.println(path);
 		}
 		
 		public void addLeftChild(Node parent, Node child){
@@ -25,6 +35,14 @@ public class SubTree {
 		
 		public void addRightChild(Node parent, Node child){
 			parent.addChild(child);
+		}
+		
+		public void assUnifierNode(UnifierNode lastLeaf){
+			this.lastLeaf = lastLeaf;
+		}
+		
+		public UnifierNode getUnifierNode(){
+			return lastLeaf;
 		}
 		
 		
@@ -43,8 +61,8 @@ public class SubTree {
 		 */
 		public void saveSubTree(){
 			tree = "";
-			preOrder(this.root);
 			initFormatter();
+			preOrder(this.root);
 			x.format(tree);
 			x.close();
 		}
@@ -58,14 +76,16 @@ public class SubTree {
 			String loadTree = "";
 			String[] regex;
 			initScanner();
+			System.out.println(f.getAbsolutePath());
 			if(s.hasNext())loadTree += s.nextLine();
+			System.out.println("Load: " + loadTree);
 			regex = loadTree.split("\\s");
-			System.out.println(regex);
+			System.out.println("Regex: ");
+			for(int i = 0; i < regex.length;i++)System.out.println("R:"+regex[i]);
 			if(!regex[0].isEmpty()){
 				tempSubTree = new SubTree(new Node(Integer.parseInt(regex[0])));
 				Node parentNode = tempSubTree.getRoot();
 				for(int i = 1; i < regex.length; i++){
-					System.out.println(regex[i]);
 					if(regex[i].equals(">")){
 						Node currentNode = new Node(Integer.parseInt(regex[i+2]));
 						if(regex[i+1].equals("L")){
@@ -78,7 +98,6 @@ public class SubTree {
 						i=i+2;
 					}
 					if(regex[i].equals("R")){
-						System.out.println("R: " + regex[i] + " " + regex[i+1]);
 						parentNode = parentNode.getParent();
 						Node currentNode = new Node(Integer.parseInt(regex[i+1]));
 						parentNode.addRightChild(currentNode);
