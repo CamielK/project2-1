@@ -2,6 +2,8 @@ package Library;
 
 import Helper.Logger;
 import Library.AI.RandomAI.RandomAI;
+import Uct.UCT_AI;
+
 import java.util.ArrayList;
 
 public class Board {
@@ -30,9 +32,9 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-//		players.get(0).SetAIAgent(new RandomAI());
-		players.get(1).SetAIAgent(new RandomAI());
-//		players.get(2).SetAIAgent(new RandomAI());
+		players.get(0).SetAIAgent(new RandomAI());
+		players.get(1).SetAIAgent(new UCT_AI(this));
+		players.get(2).SetAIAgent(new RandomAI());
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
     }
@@ -112,6 +114,9 @@ public class Board {
 		winnersString.append("Winners are: \n");
 		for(Player winner : winners) {
 			winnersString.append("Player " + winner.getID() + " with a score of " + (winner.getScore()-winner.getChips()) + " ( "+winner.getScore()+" card points - "+winner.getChips()+" chips)\n");
+		}
+		for(Player players : players){
+			players.gameIsFinished(winners);
 		}
 		return winnersString.toString();
 	}

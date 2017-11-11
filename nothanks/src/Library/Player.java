@@ -50,6 +50,10 @@ public class Player {
 		return false;
 	}
 	
+	public void gameIsFinished(ArrayList<Player> winners){
+		if(agent!=null)agent.gameIsFinished(winners);
+	}
+	
 	public int getID() {
 		return id;
 	}

@@ -11,7 +11,7 @@ public class Node implements Serializable{
 	
 	private int cardValue, timesPlayed, gamesWon;
 	private double winrate;
-	private boolean visited;
+	private transient boolean visited;
 	private ArrayList<Node> children = null;
 	private Node parent;
 	//True -> take card; False -> toss chip;
@@ -20,10 +20,13 @@ public class Node implements Serializable{
 	public Node(){
 		children = new ArrayList<Node>();
 		winrate = 0;
+		timesPlayed = 0;
+		gamesWon = 0;
+		visited = false;
 	}
 	
 	public void setCardValue(int cardValue){
-		
+		this.cardValue = cardValue;
 	}
 	
 	
@@ -32,6 +35,7 @@ public class Node implements Serializable{
 			gamesWon++;
 		}
 		timesPlayed++;
+		winrate = gamesWon/timesPlayed; 
 	}
 	
 	public boolean getVisited(){
@@ -40,6 +44,10 @@ public class Node implements Serializable{
 	
 	public void visit(){
 		visited = true;
+	}
+	
+	public void setTakeCard(boolean takeCard){
+		this.takeCard = takeCard;
 	}
 	
 	public boolean takeCard(){
@@ -56,13 +64,14 @@ public class Node implements Serializable{
 	
 	public void addChild(Node child){
 		children.add(child);
+		child.setParent(this);
 	}
 	
 	public ArrayList<Node> getChildren(){
 		return children;
 	}
 		
-	public void setParent(Node parent){
+	private void setParent(Node parent){
 		this.parent = parent;
 	}
 	
@@ -70,4 +79,8 @@ public class Node implements Serializable{
 		return parent;
 	}
 	
+	public String toString(){
+		String toString = "CardValue " + cardValue + ", Times played: " + timesPlayed + ", Games won: " + gamesWon + ", win rate: " + winrate;  
+		return toString;
+	}
 }

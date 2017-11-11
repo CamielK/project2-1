@@ -19,7 +19,6 @@ public class Tree implements Serializable{
 	private File f = new File(path);
 	
 	public Tree(){
-	
 	}
 	
 	public Tree(Node root){
@@ -28,17 +27,18 @@ public class Tree implements Serializable{
 	
 	public Node addNode(Node parent, int cardValue){
 		Node newNode = new Node();
+		parent.addChild(newNode);
+		newNode.setCardValue(cardValue);
+		for(int i = 0; i < parent.getChildren().size(); i++){
+			if(parent.getChildren().get(i).getCardValue() == newNode.getCardValue()){
+				newNode.setTakeCard(!parent.getChildren().get(i).takeCard());
+			}
+			else{
+				newNode.setTakeCard(0.5<Math.random());
+			}
+		}
 		
 		return newNode;
-	}
-	
-	/**
-	 * 
-	 * @param child
-	 * @return
-	 */
-	public Node getParent(Node child){
-		return child.getParent();
 	}
 	
 	/**
@@ -49,18 +49,25 @@ public class Tree implements Serializable{
 		return root;
 	}
 	
+	public String preOrder(Node v){
+		tree = "";
+		executePreOrder(v);
+		return tree;
+	}
+	
 	/**
 	 * 
 	 * @param v
 	 */
-	public void preOrder(Node v){
+	public void executePreOrder(Node v){
+		System.out.println(v.toString());
 		tree += (v.getCardValue() + " ");
 		if(v.getChildren().size() != 0){
 			tree += ("> ");
 		}
 		for(int i = 0; i < v.getChildren().size(); i++){
 			if(v.getChildren().size() != 0){
-				preOrder(v.getChildren().get(i));
+				executePreOrder(v.getChildren().get(i));
 			}
 			if(v.getChildren().size() == i+1){
 				tree += ("< ");

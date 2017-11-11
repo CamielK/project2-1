@@ -3,18 +3,25 @@ package Uct;
 import java.util.ArrayList;
 
 import Library.Board;
+import Library.Player;
 import Library.AI.AIInterface;
 
 public class UCT_AI implements AIInterface{
 	/*
 	 *TO DO:
 	 *
-	 *Merge with game
-	 *Link super and subtree maybe s and S
-	 *add win rate
+	 * Node addition
+	 *
 	 *Comment Tree and Node Classes
+	 *Children addidtion doesnt work good
 	 */
 	
+	
+	/*
+	 * Weakness of UCT
+	 * Train against one strategy will make it perform poorly against other strategies 
+	 * since the winrate is trimmed against that one
+	 */
 	private Board board;
 	private Tree tree;
 	private boolean addedNode;
@@ -29,53 +36,58 @@ public class UCT_AI implements AIInterface{
 		visitedNodes = new ArrayList<Node>();
 	}
 	
-	private void setCurrentCard(){
-		board.getCurrentCard();
-	}
-	
 	public boolean GetMove() {
+		System.out.println("My Move");
+		System.out.println("Compute: " + computeMove());
 		return computeMove();
 	}
 	
 	private boolean computeMove(){
-		visitedNodes.add(currentNode);
+		System.out.println(visitedNodes.size());
 		if(hasChildren()){
 			Node highestWinr = highestWinrate();
 			double hWinrate = highestWinr.getWinrate();
 			if(hWinrate < Math.random() || currentNode.getVisited()){
-				int nextNode = (int) ((Math.random()* hWinrate)+1);
-				currentNode = currentNode.getChildren().get(nextNode);		
+				int nextNode = (int) ((Math.random()* hWinrate));
+				
+				if(!currentNode.getVisited())visitedNodes.add(currentNode);
 				currentNode.visit();
+				currentNode = currentNode.getChildren().get(nextNode);		
 				return currentNode.takeCard();
 			}
 			else{
 				currentNode = highestWinr;
+				if(!currentNode.getVisited())visitedNodes.add(currentNode);
 				currentNode.visit();
 				return currentNode.takeCard();
 			}
 		}
 		else{
 			addNode();
+			if(!currentNode.getVisited())visitedNodes.add(currentNode);
 			currentNode.visit();
 			return Math.random() < 0.5;
 		}
 	}
 	
-	private void evaluate(){
-		String ai = "Player ";
+	@Override
+	public void gameIsFinished(ArrayList<Player> winner) {
+		evaluate(winner);
+	}
+	
+	private void evaluate(ArrayList<Player> winner){
 		boolean won = false;
-		for(int i = 0; i < board.getPlayers().size(); i++){
-			if(board.getPlayers().get(i).getAgent() == this){
-				int winner = board.getPlayers().get(i).getID();
-				ai += winner;
+		for(int i = 0; i < winner.size(); i++){
+			if(winner.get(i).getAgent() == this){
+				won = true;
 			}
 		}
-		if(board.getWinners().contains(ai)) won = true;
 		for(int i = 0; i < visitedNodes.size(); i++){
 			visitedNodes.get(i).addGame(won);
+			System.out.println("V nodes value: " + visitedNodes.get(i).getCardValue());
 		}
 		visitedNodes = null;
-		visitedNodes.add(tree.getRoot());
+		tree.save();
 	}
 	
 	private Node highestWinrate(){
