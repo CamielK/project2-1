@@ -18,7 +18,7 @@ public class Tree implements Serializable{
 	private String path = "nothanks/src/Uct/Tree.ser";
 	private File f = new File(path);
 	private int totalGames = 0, totalWins = 0;
-	
+	private int numberOfNodes = 1;
 	public Tree(){
 	}
 	
@@ -31,6 +31,7 @@ public class Tree implements Serializable{
 		parent.addChild(newNode);
 		newNode.setCardValue(cardValue);
 		newNode.setTakeCard(takeCard);
+		numberOfNodes++;
 		return newNode;
 
 		/*		for(int i = 0; i < parent.getChildren().size() && !secondNode; i++){
@@ -54,6 +55,7 @@ public class Tree implements Serializable{
 	
 	public String preOrder(Node v){
 		tree = "";
+		System.out.println("Number of Nodes: " + numberOfNodes);
 		executePreOrder(v);
 		return tree;
 	}
@@ -63,12 +65,14 @@ public class Tree implements Serializable{
 	 * @param v
 	 */
 	public void executePreOrder(Node v){
-		System.out.println(v.toString());
+		//System.out.println(v.toString());
+		System.out.print(v.getCardValue() + " ");
 		tree += (v.getCardValue() + "");
 		if(v.takeCard())tree += "t ";
 		else tree += "f ";
 		if(v.getChildren().size() != 0){
 			tree += ("> ");
+			System.out.print("> ");
 		}
 		for(int i = 0; i < v.getChildren().size(); i++){
 			if(v.getChildren().size() != 0){
@@ -76,12 +80,14 @@ public class Tree implements Serializable{
 			}
 			if(v.getChildren().size() == i+1){
 				tree += ("< ");
+				System.out.print("< ");
 			}
 		}
 	}
 	
 	public void save(){
 		try {
+			 f.createNewFile();
 	         FileOutputStream fileOut =
 	         new FileOutputStream(f);
 	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -98,7 +104,8 @@ public class Tree implements Serializable{
 	public Tree load(){
 		Tree tempTree = null;
 		try {
-	         FileInputStream fileIn = new FileInputStream(f);
+			 f.createNewFile(); 
+			 FileInputStream fileIn = new FileInputStream(f);
 	         ObjectInputStream in = new ObjectInputStream(fileIn);
 	         tempTree = (Tree) in.readObject();
 	         in.close();

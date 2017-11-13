@@ -24,5 +24,3 @@ public class Main extends Application {
     }
 
 }
-
-//PreOrder: -1 > 10 16 6 31 24 > 23 < 23 8 > 6 < 21 > 21 < 3 12 22 35 17 5 9 7 29 34 18 < 

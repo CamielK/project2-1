@@ -18,7 +18,7 @@ public class Deck extends ArrayList<Card> {
         for(int i = 3; i <= 35; i++) {
         	this.add(new Card(i));
         }
-        //shuffleCards();
+        shuffleCards();
         printCards();
         //sort();
         //System.out.println();

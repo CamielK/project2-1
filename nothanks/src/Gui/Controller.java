@@ -183,7 +183,7 @@ public class Controller implements Initializable {
             activeCardImg.setImage(newCardImgSource); // Skip animation on first run or if animate is set to false
         }
     }
-
+    int counter = 0;
     private void updateCurrentCardAndChips() {
         if (Board.getInstance().getIsFinished()) {
             takeCardBtn.setDisable(true);
@@ -193,8 +193,9 @@ public class Controller implements Initializable {
 
             // Call winner dialog
             updateScoreboard();
-            new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
-
+            if(counter > 5000)new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
+            counter++;
+            System.out.println(counter);
             // Reset game when winnerdialog returns
             Board.reset();
             updateInterface();

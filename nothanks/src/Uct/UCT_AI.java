@@ -62,9 +62,6 @@ public class UCT_AI implements AIInterface{
 				exists++;
 			}
 		}
-		for(int i = 0; i < choices.length; i++){
-			if(choices[i]!=null)System.out.println("CV: " + choices[i].getCardValue());
-		}
 		/*Both choices (take card and toss chip) already exists. 
 		 *Choose the one with the higher winrate and if a random number is smaller than the winrate
 		 *else choose the other one 
@@ -155,6 +152,7 @@ public class UCT_AI implements AIInterface{
 		}
 		visitedNodes = null;
 		System.out.println("PreOrder: " + tree.preOrder(tree.getRoot()));
+		System.out.println("Save the Trees!");
 		tree.save();
 	}
 	
