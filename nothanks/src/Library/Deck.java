@@ -18,7 +18,7 @@ public class Deck extends ArrayList<Card> {
         for(int i = 3; i <= 35; i++) {
         	this.add(new Card(i));
         }
-        shuffleCards();
+        //shuffleCards();
         printCards();
         //sort();
         //System.out.println();
@@ -30,7 +30,7 @@ public class Deck extends ArrayList<Card> {
      * Shuffles the cards in the deck
      */
     private void shuffleCards(){
-        Collections.shuffle(this);
+        Collections.shuffle(this);  
     }
     
     /**

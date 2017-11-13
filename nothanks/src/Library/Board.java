@@ -32,8 +32,8 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-		players.get(0).SetAIAgent(new RandomAI());
-		players.get(1).SetAIAgent(new UCT_AI(this));
+        players.get(0).SetAIAgent(new UCT_AI(this));
+        players.get(1).SetAIAgent(new RandomAI());
 		players.get(2).SetAIAgent(new RandomAI());
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
@@ -151,8 +151,10 @@ public class Board {
 	public void logGameProgress(boolean pickedCard) {
 		String csvProgress = "";
 
-		//Format: pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
-
+		//Format: playerID,pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
+		
+		csvProgress += currentPlayer.getID() + ",";
+		
 		// Classifier
 		if (pickedCard) csvProgress += "1,";
 		else csvProgress += "0,";

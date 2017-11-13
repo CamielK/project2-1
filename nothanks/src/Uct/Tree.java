@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Tree implements Serializable{
-	/**
+	/*
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -17,6 +17,7 @@ public class Tree implements Serializable{
 	private String tree = "";
 	private String path = "nothanks/src/Uct/Tree.ser";
 	private File f = new File(path);
+	private int totalGames = 0, totalWins = 0;
 	
 	public Tree(){
 	}
@@ -25,20 +26,22 @@ public class Tree implements Serializable{
 		this.root = root;
 	}
 	
-	public Node addNode(Node parent, int cardValue){
+	public Node addNode(Node parent, int cardValue, boolean takeCard){
 		Node newNode = new Node();
 		parent.addChild(newNode);
 		newNode.setCardValue(cardValue);
-		for(int i = 0; i < parent.getChildren().size(); i++){
-			if(parent.getChildren().get(i).getCardValue() == newNode.getCardValue()){
+		newNode.setTakeCard(takeCard);
+		return newNode;
+
+		/*		for(int i = 0; i < parent.getChildren().size() && !secondNode; i++){
+			if(parent.getChildren().get(i).getCardValue() == cardValue){
 				newNode.setTakeCard(!parent.getChildren().get(i).takeCard());
-			}
-			else{
-				newNode.setTakeCard(0.5<Math.random());
+				secondNode = true;
 			}
 		}
-		
-		return newNode;
+		if(!secondNode){
+			newNode.setTakeCard(0.5<Math.random());
+		}*/
 	}
 	
 	/**
@@ -61,7 +64,9 @@ public class Tree implements Serializable{
 	 */
 	public void executePreOrder(Node v){
 		System.out.println(v.toString());
-		tree += (v.getCardValue() + " ");
+		tree += (v.getCardValue() + "");
+		if(v.takeCard())tree += "t ";
+		else tree += "f ";
 		if(v.getChildren().size() != 0){
 			tree += ("> ");
 		}

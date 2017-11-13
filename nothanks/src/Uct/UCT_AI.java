@@ -1,5 +1,8 @@
 package Uct;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import Library.Board;
@@ -13,7 +16,7 @@ public class UCT_AI implements AIInterface{
 	 * Node addition
 	 *
 	 *Comment Tree and Node Classes
-	 *Children addidtion doesnt work good
+	 *Children addidtion doesnt work
 	 */
 	
 	
@@ -27,6 +30,9 @@ public class UCT_AI implements AIInterface{
 	private boolean addedNode;
 	private Node currentNode;
 	private ArrayList<Node> visitedNodes = null;
+	private String logpath = "nothanks/src/Uct/Gamelog.txt";
+	private File f = new File(logpath);
+	FileWriter fileWriter;
 	
 	public UCT_AI(Board board){
 		this.board = board;
@@ -37,44 +43,97 @@ public class UCT_AI implements AIInterface{
 	}
 	
 	public boolean GetMove() {
-		System.out.println("My Move");
-		System.out.println("Compute: " + computeMove());
 		return computeMove();
 	}
 	
 	private boolean computeMove(){
-		System.out.println(visitedNodes.size());
-		if(hasChildren()){
-			Node highestWinr = highestWinrate();
-			double hWinrate = highestWinr.getWinrate();
-			if(hWinrate < Math.random() || currentNode.getVisited()){
-				int nextNode = (int) ((Math.random()* hWinrate));
-				
+		if(!(board.getCurrentPlayer().getChips() > 0)){
+			System.out.println("No chips!");
+			return true;
+		}
+		System.out.println("UCT AI`s move:");
+		int exists = 0;
+		double threshold = Math.random();
+		Node[] choices = new Node[2];
+		for(int i = 0; i < currentNode.getChildren().size() && exists < 2; i++){
+			if(currentNode.getChildren().get(i).getCardValue() == board.getCurrentCard().getNumber()){
+				System.out.println("Existing: " + exists);
+				choices[exists] = currentNode.getChildren().get(i);
+				exists++;
+			}
+		}
+		for(int i = 0; i < choices.length; i++){
+			if(choices[i]!=null)System.out.println("CV: " + choices[i].getCardValue());
+		}
+		/*Both choices (take card and toss chip) already exists. 
+		 *Choose the one with the higher winrate and if a random number is smaller than the winrate
+		 *else choose the other one 
+		 */
+		if(exists == 2){
+			System.out.println("Two children");
+			if(choices[0].getWinrate() > choices[1].getWinrate()){
+				if(choices[0].getWinrate() < threshold){
+					currentNode = choices[1];
+				}
+				else currentNode = choices[0];
+			}
+			else{
+				if(choices[1].getWinrate() < threshold){
+					currentNode = choices[0];
+				}
+				else currentNode = choices[1];
+			}
+			if(!currentNode.getVisited())visitedNodes.add(currentNode);
+			currentNode.visit(true);
+			return currentNode.takeCard();
+		}
+		/*One choice already exists.
+		 *If win rate is bigger than random number choose this one.
+		 *else generate the other choice
+		 */
+		else if(exists == 1){
+			System.out.println("One Child");
+			if(choices[0].getWinrate() < threshold){
+				addNode(choices[0]);
+			}
+			else{
+				currentNode = choices[0];
+			}
+			if(!currentNode.getVisited())visitedNodes.add(currentNode);
+			currentNode.visit(true);
+			return currentNode.takeCard();
+		}
+		else if(exists == 0){
+			System.out.println("No child");
+			boolean takeCard;
+			takeCard = addNode(null);
+			if(!currentNode.getVisited())visitedNodes.add(currentNode);
+			currentNode.visit(true);
+			return takeCard;
+		}
+		return true;
+	}	/*
+			if(hWinrate < threshold && !currentNode.getVisited()){
+				/*int nextNode = (int) ((Math.random()* currentNode.getChildren().size()));
 				if(!currentNode.getVisited())visitedNodes.add(currentNode);
-				currentNode.visit();
+				currentNode.visit(true);
 				currentNode = currentNode.getChildren().get(nextNode);		
 				return currentNode.takeCard();
 			}
+			//pick node with highest winrate
 			else{
 				currentNode = highestWinr;
 				if(!currentNode.getVisited())visitedNodes.add(currentNode);
-				currentNode.visit();
+				currentNode.visit(true);
 				return currentNode.takeCard();
 			}
 		}
-		else{
-			addNode();
-			if(!currentNode.getVisited())visitedNodes.add(currentNode);
-			currentNode.visit();
-			return Math.random() < 0.5;
-		}
-	}
+*/
 	
 	@Override
 	public void gameIsFinished(ArrayList<Player> winner) {
 		evaluate(winner);
 	}
-	
 	private void evaluate(ArrayList<Player> winner){
 		boolean won = false;
 		for(int i = 0; i < winner.size(); i++){
@@ -82,12 +141,28 @@ public class UCT_AI implements AIInterface{
 				won = true;
 			}
 		}
+		
+		try {
+			logGame(won);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		for(int i = 0; i < visitedNodes.size(); i++){
 			visitedNodes.get(i).addGame(won);
+			visitedNodes.get(i).visit(false);
 			System.out.println("V nodes value: " + visitedNodes.get(i).getCardValue());
 		}
 		visitedNodes = null;
+		System.out.println("PreOrder: " + tree.preOrder(tree.getRoot()));
 		tree.save();
+	}
+	
+	private void logGame(boolean won) throws IOException{
+		fileWriter = new FileWriter(f,true);
+		if(won)fileWriter.write("Won\n");
+		else fileWriter.write("Lose\n");
+		fileWriter.close();
 	}
 	
 	private Node highestWinrate(){
@@ -109,11 +184,18 @@ public class UCT_AI implements AIInterface{
 		return !(currentNode.getChildren().isEmpty());
 	}
 	
-	private void addNode(){
-		if(addedNode)return;
+	private boolean addNode(Node existing){
+		if(addedNode)return true;
 		else{
-			currentNode = tree.addNode(currentNode, board.getCurrentCard().getNumber());
+			System.out.println("Add Node");
+			if(existing == null){
+				currentNode = tree.addNode(currentNode, board.getCurrentCard().getNumber(), Math.random()<0.5);
+			}
+			else{
+				currentNode = tree.addNode(currentNode, board.getCurrentCard().getNumber(), !existing.takeCard());
+			}
 			addedNode = true;
+			return currentNode.takeCard();
 		}
 	}
 

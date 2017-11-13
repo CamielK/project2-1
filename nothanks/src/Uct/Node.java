@@ -35,15 +35,15 @@ public class Node implements Serializable{
 			gamesWon++;
 		}
 		timesPlayed++;
-		winrate = gamesWon/timesPlayed; 
+		winrate = (double)gamesWon/timesPlayed; 
 	}
 	
 	public boolean getVisited(){
 		return visited;
 	}
 	
-	public void visit(){
-		visited = true;
+	public void visit(boolean visited){
+		this.visited = visited;
 	}
 	
 	public void setTakeCard(boolean takeCard){
@@ -80,7 +80,7 @@ public class Node implements Serializable{
 	}
 	
 	public String toString(){
-		String toString = "CardValue " + cardValue + ", Times played: " + timesPlayed + ", Games won: " + gamesWon + ", win rate: " + winrate;  
+		String toString = "CardValue " + cardValue + ", Times played: " + timesPlayed + ", Games won: " + gamesWon + ", win rate: " + winrate + ", takeCard: " + takeCard;  
 		return toString;
 	}
 }
