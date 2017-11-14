@@ -1,6 +1,7 @@
 package Library;
 
 import Helper.Logger;
+import Library.AI.AIInterface;
 import Library.AI.RandomAI.RandomAI;
 import Uct.UCT_AI;
 
@@ -26,7 +27,7 @@ public class Board {
         players = new ArrayList<Player>();
         
         //Temporary way to add players
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < 2; i++) {
     		players.add(new Player(11, i + 1));
     	}
         currentPlayer = players.get(0);
@@ -34,7 +35,6 @@ public class Board {
 		// TEMP: Init second player as AI player
         players.get(1).SetAIAgent(new UCT_AI(this));
 //        players.get(1).SetAIAgent(new RandomAI());
-//        players.get(2).SetAIAgent(new RandomAI());
 
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
@@ -47,7 +47,11 @@ public class Board {
 			return board;
 		}
 	}
-    
+
+	public void setPlayerAsAI(int id, AIInterface agent) {
+    	players.get(id).SetAIAgent(agent);
+	}
+
     public void nextTurn() {
     	if(players.indexOf(currentPlayer) + 1 >= players.size()) {
     		currentPlayer = players.get(0);
@@ -70,9 +74,9 @@ public class Board {
 			return;
 		}
 
-    	System.out.println("Current Card is " + currentCard.getNumber());
-    	
-    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
+//    	System.out.println("Current Card is " + currentCard.getNumber());
+//    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
+
     	logGameProgress(true);
     	currentCard = cardDeck.removeCards(1);
     	
@@ -190,6 +194,7 @@ public class Board {
 	}
 
 	public static void reset() {
+//		win();
 		board = new Board();
 	}
 }

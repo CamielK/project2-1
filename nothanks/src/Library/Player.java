@@ -45,7 +45,7 @@ public class Player {
 	 * @return boolean Pick card (true) or toss chip (false)
 	 */
 	public boolean GetAIMove() {
-		if (this.chips <= 0) return false;
+		if (this.chips <= 0) return true;
 		if (this.agent != null) return this.agent.GetMove();
 		return false;
 	}

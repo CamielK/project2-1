@@ -193,9 +193,12 @@ public class Controller implements Initializable {
 
             // Call winner dialog
             updateScoreboard();
-            if(counter > 5000)new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
-            counter++;
-            System.out.println(counter);
+            new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
+
+//            if(counter > 5000) new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
+//            counter++;
+//            System.out.println(counter);
+
             // Reset game when winnerdialog returns
             Board.reset();
             updateInterface();
