@@ -42,7 +42,7 @@ public class Controller {
         }
 
 //        board.setPlayerAsAI(0, new RandomAI());
-        board.setPlayerAsAI(1, new UCT_AI(board));
+//        board.setPlayerAsAI(1, new UCT_AI(board));
     }
 
     public void playRound()
