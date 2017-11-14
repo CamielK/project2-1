@@ -36,7 +36,8 @@ public class UCT_AI implements AIInterface{
 	
 	public UCT_AI(Board board){
 		this.board = board;
-		tree = new Tree().load();
+		tree = new Tree();
+		tree = tree.load();
 		currentNode = tree.getRoot();
 		addedNode = false;
 		visitedNodes = new ArrayList<Node>();
