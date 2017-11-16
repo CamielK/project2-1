@@ -11,7 +11,6 @@ public class TestMain {
 		Node tempNode = new Node();
 		tempNode.setCardValue(-1);
 		Tree temp = new Tree(tempNode);
-		temp = new Tree().load();
 		String preOrder = temp.preOrder(temp.getRoot());
 		System.out.println("PreOrder: " + preOrder);
 		temp.save();
