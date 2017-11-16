@@ -5,26 +5,52 @@ import java.util.ArrayList;
 import Library.Board;
 import Library.Card;
 import Library.Player;
+import Library.AI.AIInterface;
 
-public class TS {
-
-public boolean getMove(int Player) {
-	int Pnumber=2;
-	int[] values =new int[Pnumber+1];
+public class TS implements AIInterface{
+	
+@Override
+public boolean GetMove() {
 	Card card = Board.getInstance().getCurrentCard();
 	int cardnum =card.getNumber();
 	Player P0 = Board.getInstance().getCurrentPlayer();
+	ArrayList<Player> Playerlist = Board.getInstance().getPlayers();
+	double[] values =new double[Playerlist.size()];
+	int Pnum= P0.getID();
+	if(Pnum!=0) {
+	for(int i=0;i<Pnum-1;i++) {
+		Player X = Playerlist.remove(i); // removes element at I
+		Playerlist.add(X);        // adds element to end of list
+	}}
+	
 	int chips= Board.getInstance().getCurrentChips();
+	
 	for(int i=0;i<values.length;i++) {// needs to be fixed to find the value for each player, need to make order of players from 0 back to 0
-		ArrayList<Card> Pcards = P0.getCards();
+		Player playnum = Playerlist.get(i);
+		ArrayList<Card> Pcards = playnum.getCards();
 		int[] Pcard = new int[Pcards.size()];
 		 for(int k=0; k<Pcard.length;k++) {
 			 Pcard[k]=Pcards.get(k).getNumber();
 		 } // to get the number of the cards that is used to evaluate the player likelihood
-		int Pchips=P0.getChips();
+		int Pchips=playnum.getChips();
 		values[i]=valueP(cardnum,chips,Pcard,Pchips);
+		
 	}
-	
+	if(values[0]<3) {
+		return false;
+	}
+	else if(values[0]>6) {
+		return true;
+	}
+	else if(values[0] < 3 && values[0]>6) {
+		for(int i=1; i<values.length;i++) {
+			if(values[i]>5) {
+				return true;
+			}
+		}
+		return false;
+	}
+	throw new RuntimeException("this part of the code should not run :)");
 	
 }
 
@@ -47,6 +73,10 @@ public double valueP (int card, int chips, int[] Pcards, int Pchips) {
 	double Value =CenterValue*OwnedCard*OwnedChips;
 	return Value;		
 	}
+
+
+
+
 
 
 		
