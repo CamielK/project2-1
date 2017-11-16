@@ -77,6 +77,13 @@ public double valueP (int card, int chips, int[] Pcards, int Pchips) {
 	}
 
 
+@Override
+public void gameIsFinished(ArrayList<Player> winner) {
+	// TODO Auto-generated method stub
+	
+}
+
+
 
 
 

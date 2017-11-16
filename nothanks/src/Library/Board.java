@@ -3,6 +3,7 @@ package Library;
 import Helper.Logger;
 import Library.AI.AIInterface;
 import Library.AI.RandomAI.RandomAI;
+import TS.TS;
 import Uct.UCT_AI;
 
 import java.util.ArrayList;
@@ -30,11 +31,14 @@ public class Board {
         for(int i = 0; i < 2; i++) {
     		players.add(new Player(11, i + 1));
     	}
+        
+        players.get(0).SetAIAgent(new RandomAI());
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-        players.get(1).SetAIAgent(new UCT_AI(this));
+        //players.get(1).SetAIAgent(new UCT_AI(this));
 //        players.get(1).SetAIAgent(new RandomAI());
+        	players.get(1).SetAIAgent(new TS());
 
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
