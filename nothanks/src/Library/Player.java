@@ -26,6 +26,10 @@ public class Player {
 	public void SetAIAgent(AIInterface agent) {
 		this.agent = agent;
 	}
+	
+	public AIInterface getAgent(){
+		return agent;
+	}
 
 	/**
 	 * Returns true if the player has been initialized as an AI agent
@@ -41,9 +45,13 @@ public class Player {
 	 * @return boolean Pick card (true) or toss chip (false)
 	 */
 	public boolean GetAIMove() {
-		if (this.chips <= 0) return false;
+		if (this.chips <= 0) return true;
 		if (this.agent != null) return this.agent.GetMove();
 		return false;
+	}
+	
+	public void gameIsFinished(ArrayList<Player> winners){
+		if(agent!=null)agent.gameIsFinished(winners);
 	}
 	
 	public int getID() {

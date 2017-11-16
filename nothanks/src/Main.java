@@ -1,3 +1,4 @@
+import Simulate.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +9,15 @@ import javafx.stage.StageStyle;
 public class Main extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+
+        boolean simulate = false;
+//        boolean simulate = true;
+
+        if (simulate) {
+            new Controller().launch(3);
+        } else {
+            launch(args);
+        }
     }
 
     @Override

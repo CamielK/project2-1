@@ -30,7 +30,7 @@ public class Deck extends ArrayList<Card> {
      * Shuffles the cards in the deck
      */
     private void shuffleCards(){
-        Collections.shuffle(this);
+        Collections.shuffle(this);  
     }
     
     /**

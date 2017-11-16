@@ -1,5 +1,9 @@
 package Library.AI;
 
+import java.util.ArrayList;
+
+import Library.Player;
+
 public interface AIInterface {
 
     /**
@@ -7,4 +11,6 @@ public interface AIInterface {
      * @return boolean Pick card (true) or toss chip (false)
      */
     public boolean GetMove();
+    
+    public void gameIsFinished(ArrayList<Player> winner);
 }
