@@ -30,7 +30,7 @@ public class UCT_AI implements AIInterface{
 	private boolean addedNode;
 	private Node currentNode;
 	private ArrayList<Node> visitedNodes = null;
-	private String logpath = "nothanks/src/Uct/Gamelog.txt";
+	private String logpath = System.getProperty("user.dir") + "\\src\\Uct\\Gamelog.txt";
 	private File f = new File(logpath);
 	FileWriter fileWriter;
 	
@@ -53,6 +53,7 @@ public class UCT_AI implements AIInterface{
 			return true;
 		}
 		System.out.println("UCT AI`s move:");
+		
 		int exists = 0;
 		double threshold = Math.random();
 		Node[] choices = new Node[2];
@@ -145,15 +146,15 @@ public class UCT_AI implements AIInterface{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		for(int i = 0; i < visitedNodes.size(); i++){
-			visitedNodes.get(i).addGame(won);
-			visitedNodes.get(i).visit(false);
-			System.out.println("V nodes value: " + visitedNodes.get(i).getCardValue());
+
+		if(visitedNodes!=null) {
+			for(int i = 0; i < visitedNodes.size(); i++){
+				System.out.println("Nodes: " + visitedNodes.get(i).getCardValue());
+				visitedNodes.get(i).addGame(won);
+				visitedNodes.get(i).visit(false);
+			}
 		}
 		visitedNodes = null;
-		System.out.println("PreOrder: " + tree.preOrder(tree.getRoot()));
-		System.out.println("Save the Trees!");
 		tree.save();
 	}
 	
@@ -184,11 +185,18 @@ public class UCT_AI implements AIInterface{
 	}
 	
 	private boolean addNode(Node existing){
-		if(addedNode)return true;
+		if(addedNode) {
+			if(Math.random()<0.5)return true;
+			else return false;
+			
+		}
 		else{
 			System.out.println("Add Node");
 			if(existing == null){
-				currentNode = tree.addNode(currentNode, board.getCurrentCard().getNumber(), Math.random()<0.5);
+				boolean take;
+				if(Math.random()<0.5)take = true;
+				else take = false;
+				currentNode = tree.addNode(currentNode, board.getCurrentCard().getNumber(), take);
 			}
 			else{
 				currentNode = tree.addNode(currentNode, board.getCurrentCard().getNumber(), !existing.takeCard());

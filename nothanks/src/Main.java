@@ -10,8 +10,8 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        boolean simulate = false;
-//        boolean simulate = true;
+       boolean simulate = false;
+//       boolean simulate = true;
 
         if (simulate) {
             new Controller().launch(3);

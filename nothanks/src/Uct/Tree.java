@@ -15,28 +15,21 @@ public class Tree implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Node root;
 	private String tree = "";
-	private String path = System.getProperty("user.dir") + "\\src\\Uct\\Tree.ser";
-	private File f = null;
+	private transient String path = System.getProperty("user.dir") + "\\src\\Uct\\Tree.ser";
+	private transient File f = null;
 	private int totalGames = 0, totalWins = 0;
 	private int numberOfNodes = 1;
+	
 	public Tree(){
-	
+		this.root = new Node();
+		root.setCardValue(-1);
 		try {
 			this.f = new File(path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Tree(Node root){
-		this.root = root;
-		try {
-			this.f = new File(path);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+		
 	public Node addNode(Node parent, int cardValue, boolean takeCard){
 		Node newNode = new Node();
 		parent.addChild(newNode);
@@ -113,8 +106,9 @@ public class Tree implements Serializable{
 	
 	
 	public Tree load(){
-		Tree tempTree = null;
+		Tree tempTree = new Tree();
 		try {
+			 tempTree.save();
 			 f.createNewFile();
 			 FileInputStream fileIn = new FileInputStream(f);
 	         ObjectInputStream in = new ObjectInputStream(fileIn);
