@@ -36,15 +36,15 @@ public boolean GetMove() {
 		values[i]=valueP(cardnum,chips,Pcard,Pchips);
 		
 	}
-	if(values[0]<3) {
+	if(values[0]<0.7) {
 		return false;
 	}
-	else if(values[0]>6) {
+	else if(values[0]>1.3) {
 		return true;
 	}
-	else if(values[0] < 3 && values[0]>6) {
+	else if(values[0] < 0.7 && values[0]>1.3) {
 		for(int i=1; i<values.length;i++) {
-			if(values[i]>5) {
+			if(values[i]>1) {
 				return true;
 			}
 		}
@@ -59,7 +59,9 @@ public boolean GetMove() {
 
 // These numbers are arbitrary and subject to change when with adjustment. 
 public double valueP (int card, int chips, int[] Pcards, int Pchips) {
-	int CenterValue = chips/card;
+	int CenterValue;
+	if(chips==0) {CenterValue=-1;}
+	else {CenterValue = chips/card;}
 	double OwnedCard=0;
 		for (int i=0;i<Pcards.length;i++) {
 			if(Pcards[i]==card+1) {
