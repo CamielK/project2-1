@@ -15,12 +15,12 @@ public class Tree implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Node root;
 	private String tree = "";
-//	private String path = "nothanks/src/Uct/Tree.ser";
 	private String path = System.getProperty("user.dir") + "\\src\\Uct\\Tree.ser";
 	private File f = null;
 	private int totalGames = 0, totalWins = 0;
 	private int numberOfNodes = 1;
 	public Tree(){
+	
 		try {
 			this.f = new File(path);
 		} catch (Exception e) {

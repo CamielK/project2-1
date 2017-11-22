@@ -2,8 +2,7 @@ package Library;
 
 import Helper.Logger;
 import Library.AI.AIInterface;
-import Library.AI.RandomAI.RandomAI;
-import Uct.UCT_AI;
+import Library.AI.NevertakeAI.NevertakeAI;
 
 import java.util.ArrayList;
 
@@ -33,8 +32,8 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-        players.get(1).SetAIAgent(new UCT_AI(this));
-//        players.get(1).SetAIAgent(new RandomAI());
+//        players.get(1).SetAIAgent(new UCT_AI(this));
+        players.get(1).SetAIAgent(new NevertakeAI());
 
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());

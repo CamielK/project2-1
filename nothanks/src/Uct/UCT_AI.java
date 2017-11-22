@@ -1,13 +1,13 @@
 package Uct;
 
+import Library.AI.AIInterface;
+import Library.Board;
+import Library.Player;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import Library.Board;
-import Library.Player;
-import Library.AI.AIInterface;
 
 public class UCT_AI implements AIInterface{
 	/*
@@ -30,7 +30,7 @@ public class UCT_AI implements AIInterface{
 	private boolean addedNode;
 	private Node currentNode;
 	private ArrayList<Node> visitedNodes = null;
-	private String logpath = "nothanks/src/Uct/Gamelog.txt";
+	private String logpath = System.getProperty("user.dir") + "\\src\\Uct\\Gamelog.txt";
 	private File f = new File(logpath);
 	FileWriter fileWriter;
 	
