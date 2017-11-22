@@ -110,6 +110,8 @@ public class Controller implements Initializable {
 
         // Get AI move if next player is AI
         if (Board.getInstance().getCurrentPlayer().isAI()) {
+            // TODO: get move in a new thread, disable inputs while retrieving AI move
+
             System.out.println("Current player is AI agent " + Board.getInstance().getCurrentPlayer().getID() + ". Retrieving AI move...");
             boolean move = Board.getInstance().getCurrentPlayer().GetAIMove();
             System.out.println("AI move: '" + move + "'.");
@@ -236,7 +238,9 @@ public class Controller implements Initializable {
         ArrayList<Player> players = Board.getInstance().getPlayers();
         StringBuilder scoreboard = new StringBuilder();
         for (int i=0; i < players.size(); i++) {
-            scoreboard.append("Player " +  players.get(i).getID() + ". Score: " + players.get(i).getScore());
+            if (players.get(i).isAI()) scoreboard.append("AI: "+players.get(i).getAgent().getClass().getSimpleName()+" " + players.get(i).getID());
+            else scoreboard.append("Player " +  players.get(i).getID());
+            scoreboard.append(". Score: " + players.get(i).getScore());
             scoreboard.append(". Cards: ["+showCards(players.get(i).getCards())+"]");
             scoreboard.append("\n");
         }
