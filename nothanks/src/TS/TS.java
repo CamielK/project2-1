@@ -60,7 +60,7 @@ public boolean GetMove() {
 	else if(values[0]>1.3) {
 		return true;
 	}
-	else if(values[0] > 0.7 && values[0]<1.3) {
+	else if(values[0] >= 0.7 && values[0]<=1.3) {
 		for(int i=1; i<values.length;i++) {
 			if(values[i]>1) {
 				return true;
@@ -68,8 +68,8 @@ public boolean GetMove() {
 		}
 		return false;
 	}
-	return false;
-	//throw new RuntimeException("this part of the code should not run :)");
+	//return false;
+	throw new RuntimeException("this part of the code should not run :)");
 }
 
 
