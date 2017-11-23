@@ -110,6 +110,12 @@ public class Board {
     public void win() {
     	System.out.println(getWinners());
     	logger.getInstance().write("ENDOFGAME");
+    	try {
+			makeFile(getWinners()+"\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	isFinished = true;
     }
 
@@ -172,9 +178,6 @@ public class Board {
 		f.createNewFile();
 		fileWriter = new FileWriter(f,true);
 		fileWriter.write(info);
-		if(board.isFinished==true) {
-			fileWriter.write(board.getWinners());
-		}
 		fileWriter.close();	
     }
  

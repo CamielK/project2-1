@@ -14,7 +14,7 @@ public class Main extends Application {
         boolean simulate = true;
 
         if (simulate) {
-            new Controller().launch(1);
+            new Controller().launch(10);
         } else {
             launch(args);
         }
