@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import Library.Board;
 import Library.Player;
 import Library.AI.AIInterface;
+import TS.TS;
 
 public class UCT_AIClusterd implements AIInterface{
 	/*
@@ -40,6 +41,7 @@ public class UCT_AIClusterd implements AIInterface{
 	private long lastTime;
 	private FileWriter fileWriter;
 	private int numUnexploredNodes = 0;
+	private TS ts;
 	/**
 	 * Construct the AI, using the UCT adaption of MiniMax tree search
 	 * @param board the current borad. Needed for Information like playercount and currentCard
@@ -57,6 +59,7 @@ public class UCT_AIClusterd implements AIInterface{
 		currentNode = tree.getRoot();
 		addedNode = false;
 		visitedNodes = new ArrayList<Node>();
+		ts = new TS();
 	}
 	
 	/**
@@ -245,7 +248,8 @@ public class UCT_AIClusterd implements AIInterface{
 		
 		boolean take = false;
 			double random = Math.random();
-			if(board.getCurrentCard().getNumber() <=13) {
+			//unexplored node random play
+			/*if(board.getCurrentCard().getNumber() <=13) {
 				if(random<0.75) {
 					//if(print)System.out.println("Take " + board.getCurrentCard().getNumber() );
 					take = true;
@@ -263,9 +267,14 @@ public class UCT_AIClusterd implements AIInterface{
 					take = true;
 				}
 			}
+			if(addedNode) {
+			//return take;
+		}
+		*/
 			//if(print)System.out.println("Decline " + board.getCurrentCard().getNumber() );
 		if(addedNode) {
-			return take;
+			return ts.GetMove();
+			//return take;
 		}
 		else{
 			System.out.print("Add Node ");
@@ -290,45 +299,5 @@ public class UCT_AIClusterd implements AIInterface{
 	 * @param existing If a node with that value already exists. Add the node with the opposing move
 	 * @return returns the added node
 	 */
-	/*private boolean addNode(Node existing){
-		numUnexploredNodes++;
-		if(addedNode) {
-			double random = Math.random();
-			if(board.getCurrentCard().getNumber() <=13) {
-				if(random<0.75) {
-					if(print)System.out.println("Take " + board.getCurrentCard().getNumber() );
-					return true;
-				}
-			}
-			else if(board.getCurrentCard().getNumber() <=24) {
-				if(random<0.5) {
-					if(print)System.out.println("Take " + board.getCurrentCard().getNumber() );
-					return true;
-				}
-			}
-			else if(board.getCurrentCard().getNumber() <=35) {
-				if(random<0.25) {
-					if(print)System.out.println("Take " + board.getCurrentCard().getNumber() );
-					return true;
-				}
-			}
-			if(print)System.out.println("Decline " + board.getCurrentCard().getNumber() );
-			return false;
-		}
-		else{
-			//System.out.println("Add Node");
-			if(existing == null){
-				boolean take;
-				if(Math.random()>currentNode.getCardValue()*(1/36))take = true;
-				else take = false;
-				currentNode = tree.addNode(currentNode, clusterNode(), take);
-			}
-			else{
-				currentNode = tree.addNode(currentNode, clusterNode(), !existing.takeCard());
-			}
-			addedNode = true;
-			return currentNode.takeCard();
-		}
-	}*/	
 }
 

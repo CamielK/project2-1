@@ -31,14 +31,7 @@ public class Tree implements Serializable{
 		this.f = new File(path);
 		this.root = new Node();
 		root.setCardValue(-1);
-		try {
-			this.f = new File(path);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-		
-	
+	}		
 	/**
 	 * Add a Node to the tree
 	 * @param parent parent Node
@@ -58,7 +51,7 @@ public class Tree implements Serializable{
 	/**
 	 * Returns the root of the tree
 	 * @return root of the tree
-	 */
+	 **/
 	public Node getRoot(){
 		return root;
 	}
@@ -78,7 +71,7 @@ public class Tree implements Serializable{
 	/**
 	 * Executes Preorder on the Tree and makes a String out of the tree 
 	 * @param v node from where to start the preorder
-	 */
+	 **/
 	private void executePreOrder(Node v){
 		//System.out.println(v.toString());
 		if(!visualize) {
@@ -120,6 +113,7 @@ public class Tree implements Serializable{
 	         out.close();
 	         fileOut.close();
 	         //System.out.println("Serialized data is saved in " + path);
+	         System.out.printf("Serialized data is saved in " + path);
 	      } catch (IOException i) {
 	         i.printStackTrace();
 	      }

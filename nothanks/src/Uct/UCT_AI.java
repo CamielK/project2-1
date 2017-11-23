@@ -13,6 +13,7 @@ public class UCT_AI implements AIInterface{
 	/*
 	 *TO DO:
 	 *
+<<<<<<< HEAD
 	 * Comment Tree and Node Classes
 	 * Cluster Nodes (3-8),(9-13),(14-18),(19-23),(24-28)(29-33)
 	 * Tree with fixed order:2^16 = 65.536 nodes for every card order and always take "AI"
@@ -86,7 +87,6 @@ public class UCT_AI implements AIInterface{
 				exists++;
 			}
 		}
-
 		/*Both choices (take card and toss chip) already exists. 
 		 *Choose the one with the higher winrate and if a random number is smaller than the winrate
 		 *else choose the other one 
