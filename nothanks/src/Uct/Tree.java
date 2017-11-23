@@ -10,17 +10,25 @@ import java.io.Serializable;
 
 public class Tree implements Serializable{
 	/*
-	 * 
+	 * Optimize Tree as drawn on my block
 	 */
 	private static final long serialVersionUID = 1L;
 	private Node root;
 	private String tree = "";
-	private transient String path = System.getProperty("user.dir") + "\\src\\Uct\\Tree.ser";
-	private transient File f = null;
-	private int totalGames = 0, totalWins = 0;
-	private int numberOfNodes = 1;
-	
-	public Tree(){
+	private transient boolean visualize = true;
+	private transient String path; // = System.getProperty("user.dir") + "\\src\\Uct\\Tree.ser";
+	private File f = null;
+	private int numberOfNodes = 1, nrPlayers = 0;
+	private transient int layer = 0;
+	/**
+	 * Construct a Tree
+	 * @param nrPlayers the number of players, participating in this game.
+	 */
+	public Tree(int nrPlayers){
+		layer = 0;
+		this.nrPlayers = nrPlayers;
+		path = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Tree" + nrPlayers + ".ser";
+		this.f = new File(path);
 		this.root = new Node();
 		root.setCardValue(-1);
 		try {
@@ -30,6 +38,14 @@ public class Tree implements Serializable{
 		}
 	}
 		
+	
+	/**
+	 * Add a Node to the tree
+	 * @param parent parent Node
+	 * @param cardValue Value of the current Card
+	 * @param takeCard Wheter to take the card or not
+	 * @return returns the newly added node
+	 */
 	public Node addNode(Node parent, int cardValue, boolean takeCard){
 		Node newNode = new Node();
 		parent.addChild(newNode);
@@ -37,26 +53,21 @@ public class Tree implements Serializable{
 		newNode.setTakeCard(takeCard);
 		numberOfNodes++;
 		return newNode;
-
-		/*		for(int i = 0; i < parent.getChildren().size() && !secondNode; i++){
-			if(parent.getChildren().get(i).getCardValue() == cardValue){
-				newNode.setTakeCard(!parent.getChildren().get(i).takeCard());
-				secondNode = true;
-			}
-		}
-		if(!secondNode){
-			newNode.setTakeCard(0.5<Math.random());
-		}*/
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Returns the root of the tree
+	 * @return root of the tree
 	 */
 	public Node getRoot(){
 		return root;
 	}
 	
+	/**
+	 * Starts preorder traversal
+	 * @param v startnode (usually root)
+	 * @return the preordertraversal string
+	 */
 	public String preOrder(Node v){
 		tree = "";
 		System.out.println("Number of Nodes: " + numberOfNodes);
@@ -65,18 +76,23 @@ public class Tree implements Serializable{
 	}
 	
 	/**
-	 * 
-	 * @param v
+	 * Executes Preorder on the Tree and makes a String out of the tree 
+	 * @param v node from where to start the preorder
 	 */
-	public void executePreOrder(Node v){
+	private void executePreOrder(Node v){
 		//System.out.println(v.toString());
-		System.out.print(v.getCardValue() + " ");
+		if(!visualize) {
+			for(int i = 0; i < layer; i++) System.out.print("  ");
+			System.out.println(v.getCardValue() + " "); 
+		}
+		else System.out.print(v.getCardValue() + " ");
 		tree += (v.getCardValue() + "");
 		if(v.takeCard())tree += "t ";
 		else tree += "f ";
 		if(v.getChildren().size() != 0){
 			tree += ("> ");
 			System.out.print("> ");
+			layer ++;
 		}
 		for(int i = 0; i < v.getChildren().size(); i++){
 			if(v.getChildren().size() != 0){
@@ -85,11 +101,16 @@ public class Tree implements Serializable{
 			if(v.getChildren().size() == i+1){
 				tree += ("< ");
 				System.out.print("< ");
+				layer --;
 			}
 		}
 	}
 	
+	/**
+	 * Save the tree as a Treei.ser file, where i is the amount of players
+	 */
 	public void save(){
+		initFile();
 		try {
 			 f.createNewFile();
 	         FileOutputStream fileOut =
@@ -98,17 +119,23 @@ public class Tree implements Serializable{
 	         out.writeObject(this);
 	         out.close();
 	         fileOut.close();
-	         System.out.printf("Serialized data is saved in " + path);
+	         //System.out.println("Serialized data is saved in " + path);
 	      } catch (IOException i) {
 	         i.printStackTrace();
 	      }
 	}
 	
-	
+	/**
+	 * Loads the tree structure
+	 * @return returns the tree;
+	 */
 	public Tree load(){
-		Tree tempTree = new Tree();
-		try {
+		Tree tempTree = new Tree(nrPlayers);
+		initFile();
+		if(!f.exists()) {
 			 tempTree.save();
+		}
+		try {
 			 f.createNewFile();
 			 FileInputStream fileIn = new FileInputStream(f);
 	         ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -127,5 +154,53 @@ public class Tree implements Serializable{
 			e.printStackTrace();
 		}
 		return tempTree;
+	}
+	
+	/**
+	 * Resets all trees and all Gameplaylogs
+	 */
+	//Doesnt overwrite old savefiles
+	public void resetAllTrees(){
+		for(int i = 2; i<7;i++){
+			Tree temp = new Tree(i);
+			temp.save();
+		}
+		String logpath = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Gamelog";
+		File log;
+		for(int i = 2; i < 7; i++){
+			log = new File(logpath + i + ".txt");
+			try {
+				log.createNewFile();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			log.delete();
+			try {
+				log.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * initializes the File, where the trees are stored. The saved path is dependend on the amount of players
+	 */
+	private void initFile() {
+		if(nrPlayers > 6 || nrPlayers <2) {
+			if(nrPlayers > 6) nrPlayers = 6;
+			if(nrPlayers < 2) nrPlayers = 2;
+			
+			try {
+				throw new Exception("Number of players has to be between 2 and 6");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+		path = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Tree" + nrPlayers + ".ser";
+		f = new File(path);
+		}
 	}
 }

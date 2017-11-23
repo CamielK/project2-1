@@ -53,7 +53,7 @@ public class Controller {
                 System.out.println("Finished simulating " + maxRounds + " rounds.");
                 System.exit(0);
             }
-            System.out.println("Game simulation finished.. Resetting board");
+            System.out.println("Game simulation finished " + counter + "/" + maxRounds + " ("+ (double) 100*counter/maxRounds + "%) .. Resetting board");
             Board.reset();
             this.board = Board.getInstance();
             ensureAI();
