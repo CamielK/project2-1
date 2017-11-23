@@ -49,8 +49,8 @@ public class UCT_AIClusterd implements AIInterface{
 	public UCT_AIClusterd(Board board){
 		lastTime = System.currentTimeMillis();
 		this.board = board;
-		unexploredNodesLogpath = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\UnexploredNodes.txt";
-		logpath = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Gamelog" + board.getPlayers().size() + ".txt";
+		unexploredNodesLogpath = System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/UnexploredNodes.txt";
+		logpath = System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/Gamelog" + board.getPlayers().size() + ".txt";
 		f = new File(logpath);
 		uNodes = new File(unexploredNodesLogpath);
 		//System.out.println(uNodes.getAbsolutePath());
@@ -66,6 +66,10 @@ public class UCT_AIClusterd implements AIInterface{
 	 * retrieves the move, the AI will make
 	 */
 	public boolean GetMove() {
+		System.out
+		.println(
+		System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/UnexploredNodes.txt"
+		);
 		return computeMove();
 	}
 	

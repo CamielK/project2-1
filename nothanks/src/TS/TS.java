@@ -68,7 +68,8 @@ public boolean GetMove() {
 		}
 		return false;
 	}
-	throw new RuntimeException("this part of the code should not run :)");
+	return false;
+	//throw new RuntimeException("this part of the code should not run :)");
 }
 
 

@@ -175,7 +175,7 @@ public class Board {
 	 */
     
     public void makeFile(String info) throws IOException {
-    	f= new File(System.getProperty("user.dir")+"/Data/logs.txt");
+    	f= new File(System.getProperty("user.dir")+"/nothanks/Data/logs.txt");
 
 		f.createNewFile();
 		fileWriter = new FileWriter(f,true);

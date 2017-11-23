@@ -16,7 +16,7 @@ public class Tree implements Serializable{
 	private Node root;
 	private String tree = "";
 	private transient boolean visualize = true;
-	private transient String path; // = System.getProperty("user.dir") + "\\src\\Uct\\Tree.ser";
+	private transient String path; // = System.getProperty("user.dir") + "/src/Uct/Tree.ser";
 	private File f = null;
 	private int numberOfNodes = 1, nrPlayers = 0;
 	private transient int layer = 0;
@@ -27,7 +27,7 @@ public class Tree implements Serializable{
 	public Tree(int nrPlayers){
 		layer = 0;
 		this.nrPlayers = nrPlayers;
-		path = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Tree" + nrPlayers + ".ser";
+		path = System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/Tree" + nrPlayers + ".ser";
 		this.f = new File(path);
 		this.root = new Node();
 		root.setCardValue(-1);
@@ -159,7 +159,7 @@ public class Tree implements Serializable{
 			Tree temp = new Tree(i);
 			temp.save();
 		}
-		String logpath = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Gamelog";
+		String logpath = System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/Gamelog";
 		File log;
 		for(int i = 2; i < 7; i++){
 			log = new File(logpath + i + ".txt");
@@ -193,7 +193,7 @@ public class Tree implements Serializable{
 			}
 		}
 		else {
-		path = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Tree" + nrPlayers + ".ser";
+		path = System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/Tree" + nrPlayers + ".ser";
 		f = new File(path);
 		}
 	}
