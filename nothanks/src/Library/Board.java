@@ -4,6 +4,7 @@ import Helper.Logger;
 import Library.AI.AIInterface;
 import Library.AI.RandomAI.RandomAI;
 import Uct.UCT_AI;
+import Uct.UCT_AIClusterd;
 
 import java.util.ArrayList;
 
@@ -33,11 +34,11 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-        players.get(1).SetAIAgent(new UCT_AI(this));
-//        players.get(1).SetAIAgent(new RandomAI());
+        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
+        players.get(1).SetAIAgent(new RandomAI());
 
-        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-        System.out.println("Current Card is " + currentCard.getNumber());
+        //System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+        //System.out.println("Current Card is " + currentCard.getNumber());
     }
     
     public static Board getInstance() {
@@ -59,8 +60,8 @@ public class Board {
     		currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
     	}
     	
-    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
+    	//System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+    	//System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
     public void giveCardChips() {
@@ -180,7 +181,7 @@ public class Board {
 
 		// Strip last comma
 		csvProgress = csvProgress.substring(0, csvProgress.length()-1);
-		System.out.println(csvProgress);
+		//System.out.println(csvProgress);
 
 		logger.write(csvProgress);
 	}
