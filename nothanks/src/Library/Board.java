@@ -6,7 +6,12 @@ import Library.AI.RandomAI.RandomAI;
 import TS.TS;
 import Uct.UCT_AI;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+
+
 
 public class Board {
 	
@@ -15,6 +20,8 @@ public class Board {
     private Card currentCard;
     private Deck cardDeck = null;
     private Logger logger = null;
+    private File f;
+    FileWriter fileWriter;
     private ArrayList<Player> players;
 
 	private int currentChips = 0;
@@ -156,7 +163,23 @@ public class Board {
 	 * Writes the decision and current game status to disk
 	 *
 	 * @param pickedCard True if player picked a card, false if player tossed a chip.
+	 * @throws IOException 
 	 */
+    
+    public void makeFile(String info) throws IOException {
+    	f= new File(System.getProperty("user.dir")+"/nothanks/Data/logs.txt");
+
+		f.createNewFile();
+		fileWriter = new FileWriter(f,true);
+		fileWriter.write(info);
+		if(board.isFinished==true) {
+			fileWriter.write(board.getWinners());
+		}
+		fileWriter.close();	
+    }
+ 
+    
+    
 	public void logGameProgress(boolean pickedCard) {
 		String csvProgress = "";
 
@@ -187,6 +210,14 @@ public class Board {
 		System.out.println(csvProgress);
 
 		logger.write(csvProgress);
+		try {
+			makeFile(csvProgress+"\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	public Player getCurrentPlayer () {

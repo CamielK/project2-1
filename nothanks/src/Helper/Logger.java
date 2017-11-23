@@ -15,7 +15,7 @@ public class Logger {
         System.out.println("Logging to file: " + dataPath);
     }
 
-    public static void write(String message) {
+    public void write(String message) {
         if (dataPath != null) {
             try {
                 FileWriter fw = new FileWriter(dataPath, true);
