@@ -28,6 +28,7 @@ public class Board {
 	private int currentChips = 0;
 	private boolean isFinished = false;
     private Player currentPlayer;
+    private int winnerID;
 
     private Board() {
     	logger = Logger.getInstance();
@@ -118,6 +119,14 @@ public class Board {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	try {
+			winFile(winnerID==2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
     	isFinished = true;
     }
 
@@ -138,6 +147,7 @@ public class Board {
 		winnersString.append("Winners are: \n");
 		for(Player winner : winners) {
 			winnersString.append("Player " + winner.getID() + " with a score of " + (winner.getScore()-winner.getChips()) + " ( "+winner.getScore()+" card points - "+winner.getChips()+" chips)\n");
+		this.winnerID=winner.getID();
 		}
 		for(Player players : players){
 			players.gameIsFinished(winners);
@@ -176,13 +186,18 @@ public class Board {
     
     public void makeFile(String info) throws IOException {
     	f= new File(System.getProperty("user.dir")+"/nothanks/Data/logs.txt");
-
 		f.createNewFile();
 		fileWriter = new FileWriter(f,true);
 		fileWriter.write(info);
 		fileWriter.close();	
     }
- 
+    public void winFile(Boolean info) throws IOException {
+    	f= new File(System.getProperty("user.dir")+"/nothanks/Data/WLlogs.txt");
+		f.createNewFile();
+		fileWriter = new FileWriter(f,true);
+		fileWriter.write(info.toString()+"\n");
+		fileWriter.close();	
+    }
     
     
 	public void logGameProgress(boolean pickedCard) {

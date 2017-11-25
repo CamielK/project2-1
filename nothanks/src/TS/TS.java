@@ -54,21 +54,20 @@ public boolean GetMove() {
 		e.printStackTrace();
 	}
 	
-	if(values[0]<0.7) {
+	if(values[0]<0.03) {
 		return false;
 	}
-	else if(values[0]>1.3) {
+	else if(values[0]>0.07) {
 		return true;
 	}
-	else if(values[0] >= 0.7 && values[0]<=1.3) {
+	else if(values[0] >= 0.03 && values[0]<=0.07) {
 		for(int i=1; i<values.length;i++) {
-			if(values[i]>1) {
+			if(values[i]>0.04) {
 				return true;
 			}
 		}
 		return false;
 	}
-	//return false;
 	throw new RuntimeException("this part of the code should not run :)");
 }
 
