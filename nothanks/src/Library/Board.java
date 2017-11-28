@@ -34,7 +34,7 @@ public class Board {
 
 		// TEMP: Init second player as AI player
 //        players.get(1).SetAIAgent(new UCT_AI(this));
-        players.get(1).SetAIAgent(new RandomAI());
+//        players.get(1).SetAIAgent(new RandomAI());
 
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
@@ -98,7 +98,7 @@ public class Board {
     
     public void win() {
     	System.out.println(getWinners());
-//    	logger.getInstance().write("ENDOFGAME");
+    	logger.getInstance().write("ENDOFGAME");
     	isFinished = true;
     }
 
@@ -131,6 +131,10 @@ public class Board {
     public int getCurrentChips() {
     	return currentChips;
     }
+
+    public List<Card> getCurrentDeck() {
+    	return cardDeck;
+    }
     
     public void setCurrentChips(int currentChips) {
     	this.currentChips = currentChips;
@@ -154,43 +158,22 @@ public class Board {
 	 * @param pickedCard True if player picked a card, false if player tossed a chip.
 	 */
 	public void logGameProgress(boolean pickedCard) {
+		if (!Board.getInstance().getCurrentPlayer().isAI()) { Library.AI.MLR.Logger.logMlrGameProgress(pickedCard); }
 		String csvProgress = "";
 
-		//TODO log score diff between players
-
-		//TODO log true if card fits in a series, false if not
-
 		//Format: playerID,pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
-		
-		//csvProgress += currentPlayer.getID() + ",";
-		
+
+		csvProgress += currentPlayer.getID() + ",";
+
 		// Classifier
 		if (pickedCard) csvProgress += "1,";
 		else csvProgress += "0,";
 
-		// Current card num
-		csvProgress += currentCard.getNumber() + ",";
-
-		// Current chips on card
-		csvProgress += currentChips + ",";
-
-		// Cards left
-		List<Card> cardsLeft  = cardDeck;
-		int numLow = 0;
-		int numMedium = 0;
-		int numHigh = 0;
-		for(int i = 1; i < cardsLeft.size(); i++) {
-			if (cardsLeft.get(i).getNumber() < 15) numLow++;
-			else if (cardsLeft.get(i).getNumber() > 25) numHigh++;
-			else numMedium++;
-		}
-		csvProgress += numLow + ",";
-		csvProgress += numMedium + ",";
-		csvProgress += numHigh + ",";
+		// Global game state
+		csvProgress += currentCard.getNumber() + "," +
+				currentChips + "," +
+				cardDeck.getNumCards() + ",";
 		//TODO: use range of cards instead of num cards (e.g. there is 5 cards left in range 3-10, 2 cards left in range 10-20 and 4 cards left in range 10-35)
-
-		// TODO: my chips
-		// TODO: my cards
 
 		// Players state
 		for (int i=0; i < players.size(); i++) {
@@ -204,8 +187,7 @@ public class Board {
 		csvProgress = csvProgress.substring(0, csvProgress.length()-1);
 		System.out.println(csvProgress);
 
-		if (!Board.getInstance().getCurrentPlayer().isAI()) { logger.write(csvProgress); }
-//		logger.write(csvProgress);
+		logger.write(csvProgress);
 	}
 
 	public Player getCurrentPlayer () {

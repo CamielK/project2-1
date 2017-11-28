@@ -1,4 +1,4 @@
-package Library.AI.MLR;
+package Library.AI.MLR.Test;
 
 import Jama.Matrix;
 import Jama.QRDecomposition;

@@ -9,7 +9,9 @@ public class MultipleLinearRegressionAI implements AIInterface{
 
     @Override
     public boolean GetMove() {
-        return false;
+        boolean move = false;
+
+        return move;
     }
 
     @Override
