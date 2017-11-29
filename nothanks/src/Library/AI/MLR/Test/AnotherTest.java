@@ -2,7 +2,7 @@ package Library.AI.MLR.Test;
 
 import Jama.Matrix;
 import Jama.QRDecomposition;
-import Library.AI.MLR.Data.Reader.DbReader;
+import Library.AI.MLR.Data.Reader.DbReaderTest;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +15,7 @@ import java.util.List;
 public class AnotherTest extends Thread {
 
     //class variables
-    private final int trainingDataRows = 3693; //rows in mainDatabase.csv
+    private final int trainingDataRows = 3693; //rows in testDatabase.csv
     private boolean useIntercept;
     private String outputVar; //the variable to be predicted. can be either 'rating' or 'revenue'
     private String[][] detailsArray; //used to save calculation results
@@ -326,11 +326,11 @@ public class AnotherTest extends Thread {
             Connection conn = null;
 
             //get execution path to detect jar execution
-            String executionPath = this.getClass().getResource("/Library/AI/MLR/Data/mainDatabase.csv").toExternalForm();
+            String executionPath = this.getClass().getResource("/Library/AI/MLR/Data/testDatabase.csv").toExternalForm();
 
             //jar data connection
             if (executionPath.startsWith("jar:")) {
-                conn = DriverManager.getConnection("jdbc:relique:csv:class:" + DbReader.class.getName());
+                conn = DriverManager.getConnection("jdbc:relique:csv:class:" + DbReaderTest.class.getName());
             }
 
             //ide data connection

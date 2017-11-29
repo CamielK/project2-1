@@ -1,4 +1,4 @@
-//Format: bPickedCard, CardNumber, NumChipsOnCard, ScoreDiff, bFitsInSeries, bFitsInSeriesAlmost, NumOwnedChips, NumHighCardsLeft, NumMediumCardsLeft, NumLowCardsLeft,
+bPickedCard,CardNumber,NumChipsOnCard,ScoreDiff,bFitsInSeries,bFitsInSeriesAlmost,NumOwnedChips,NumHighCardsLeft,NumMediumCardsLeft,NumLowCardsLeft
 1,14,0,14,0,0,9,6,8,11
 0,25,0,-14,0,0,9,5,8,11
 0,25,1,14,0,0,9,5,8,11

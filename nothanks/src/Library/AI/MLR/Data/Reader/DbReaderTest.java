@@ -13,11 +13,11 @@ import java.util.Vector;
 /**
  * Created by user on 08-Apr-16.
  */
-public class DbReader implements TableReader {
+public class DbReaderTest implements TableReader {
 
     public Reader getReader(Statement statement, String tableName) throws SQLException {
         try {
-            URL path = new URL(this.getClass().getResource("/mit3prototype/data/mainDatabase.csv").toExternalForm());
+            URL path = new URL(this.getClass().getResource("/mit3prototype/data/testDatabase.csv").toExternalForm());
             JarURLConnection connection = (JarURLConnection) path.openConnection();
             //InputStream data = JarReader.class.getClassLoader().getResourceAsStream("/mit3prototype/data/ratingCalcDatabase.csv");
 
