@@ -24,9 +24,9 @@ public class MultipleLinearRegression extends Thread {
      * Format of data: bPickedCard, CardNumber, NumChipsOnCard, ScoreDiff, bFitsInSeries, bFitsInSeriesAlmost, NumHighCardsLeft, NumMediumCardsLeft, NumLowCardsLeft, NumOwnedChips
      * numParameters = 10
      */
-    private static int numParameters = 10;
-    //private final int trainingDataRows = 147; // Number of rows in the training set
-    private final int trainingDataRows = 393; // Number of rows in the training set
+    private static int numParameters = 4;
+    private final int trainingDataRows = 147; // Number of rows in the training set
+//    private final int trainingDataRows = 393; // Number of rows in the training set
     private List<Double> MLRdata = new ArrayList<>();
 
     /**
@@ -39,14 +39,14 @@ public class MultipleLinearRegression extends Thread {
 
         inputData.add(null);                              // bPickedCard [SPECIAL: ### = to be predicted]
         inputData.add(Double.parseDouble("12"));        // CardNumber
-        inputData.add(Double.parseDouble("0"));         // NumChipsOnCard
-        inputData.add(Double.parseDouble("30"));        // ScoreDiff
+//        inputData.add(Double.parseDouble("0"));         // NumChipsOnCard
+//        inputData.add(Double.parseDouble("30"));        // ScoreDiff
         inputData.add(Double.parseDouble("0"));         // bFitsInSeries
-        inputData.add(Double.parseDouble("0"));         // bFitsInSeriesAlmost
-        inputData.add(Double.parseDouble("6"));         // NumHighCardsLeft
-        inputData.add(Double.parseDouble("6"));         // NumMediumCardsLeft
-        inputData.add(Double.parseDouble("6"));         // NumLowCardsLeft
-        inputData.add(Double.parseDouble("10"));        // NumOwnedChips
+        inputData.add(Double.parseDouble("1"));         // bFitsInSeriesAlmost
+//        inputData.add(Double.parseDouble("6"));         // NumHighCardsLeft
+//        inputData.add(Double.parseDouble("6"));         // NumMediumCardsLeft
+//        inputData.add(Double.parseDouble("6"));         // NumLowCardsLeft
+//        inputData.add(Double.parseDouble("10"));        // NumOwnedChips
 
         new Library.AI.MLR.MultipleLinearRegression(inputData, true).start();
     }
@@ -217,14 +217,14 @@ public class MultipleLinearRegression extends Thread {
         List<String> dbColNames = new ArrayList<>();
         dbColNames.add("bPickedCard");
         dbColNames.add("CardNumber");
-        dbColNames.add("NumChipsOnCard");
-        dbColNames.add("ScoreDiff");
+//        dbColNames.add("NumChipsOnCard");
+//        dbColNames.add("ScoreDiff");
         dbColNames.add("bFitsInSeries");
         dbColNames.add("bFitsInSeriesAlmost");
-        dbColNames.add("NumHighCardsLeft");
-        dbColNames.add("NumMediumCardsLeft");
-        dbColNames.add("NumLowCardsLeft");
-        dbColNames.add("NumOwnedChips");
+//        dbColNames.add("NumHighCardsLeft");
+//        dbColNames.add("NumMediumCardsLeft");
+//        dbColNames.add("NumLowCardsLeft");
+//        dbColNames.add("NumOwnedChips");
         return dbColNames;
     }
 

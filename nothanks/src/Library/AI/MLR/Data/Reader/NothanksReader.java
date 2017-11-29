@@ -16,7 +16,7 @@ public class NothanksReader implements TableReader {
 
     public Reader getReader(Statement statement, String tableName) throws SQLException {
         try {
-            URL path = new URL(this.getClass().getResource("/mit3prototype/data/nothanksTraining.csv").toExternalForm());
+            URL path = new URL(this.getClass().getResource("/mit3prototype/data/nothanksTrainingBAK2.csv").toExternalForm());
             JarURLConnection connection = (JarURLConnection) path.openConnection();
             //InputStream data = JarReader.class.getClassLoader().getResourceAsStream("/mit3prototype/data/ratingCalcDatabase.csv");
 
@@ -35,14 +35,14 @@ public class NothanksReader implements TableReader {
 
         v.add("bPickedCard");
         v.add("CardNumber");
-        v.add("NumChipsOnCard");
-        v.add("ScoreDiff");
+//        v.add("NumChipsOnCard");
+//        v.add("ScoreDiff");
         v.add("bFitsInSeries");
         v.add("bFitsInSeriesAlmost");
-        v.add("NumHighCardsLeft");
-        v.add("NumMediumCardsLeft");
-        v.add("NumLowCardsLeft");
-        v.add("NumOwnedChips");
+//        v.add("NumHighCardsLeft");
+//        v.add("NumMediumCardsLeft");
+//        v.add("NumLowCardsLeft");
+//        v.add("NumOwnedChips");
 
         return v;
     }
