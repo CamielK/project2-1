@@ -2,9 +2,12 @@ package Library;
 
 import Helper.Logger;
 import Library.AI.AIInterface;
+import Library.AI.MinmaxAI.MinmaxAI;
 import Library.AI.NevertakeAI.NevertakeAI;
+import Library.AI.RandomAI.RandomAI;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
 	
@@ -33,7 +36,8 @@ public class Board {
 
 		// TEMP: Init second player as AI player
 //        players.get(1).SetAIAgent(new UCT_AI(this));
-        players.get(1).SetAIAgent(new NevertakeAI());
+        players.get(0).SetAIAgent(new MinmaxAI());
+//        players.get(1).SetAIAgent(new RandomAI());
 
         System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         System.out.println("Current Card is " + currentCard.getNumber());
@@ -130,6 +134,10 @@ public class Board {
     public int getCurrentChips() {
     	return currentChips;
     }
+
+	public List<Card> getCurrentDeck() {
+		return cardDeck;
+	}
     
     public void setCurrentChips(int currentChips) {
     	this.currentChips = currentChips;
