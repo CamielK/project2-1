@@ -23,30 +23,30 @@ public class MinmaxAI implements AIInterface {
             // Build gametree from deck
 //        List<Card> deck = Board.getInstance().getCurrentDeck();
 
-//            List<Card> deck = new ArrayList<>();
-//            List<Card> boardDeck = Board.getInstance().getCurrentDeck();
-//            int limit = boardDeck.size();
-//            if (limit > 20) limit = 20;
-//            for (int i = 0; i < limit; i++) deck.add(boardDeck.get(i));
+            List<Card> deck = new ArrayList<>();
+            List<Card> boardDeck = Board.getInstance().getCurrentDeck();
+            int limit = boardDeck.size();
+            if (limit > 18) limit = 18;
+            for (int i = 0; i < limit; i++) deck.add(boardDeck.get(i));
 
-        List<Card> deck = new ArrayList<>();
-        deck.add(new Card(10));
-        deck.add(new Card(5));
+//        List<Card> deck = new ArrayList<>();
+//        deck.add(new Card(10));
+//        deck.add(new Card(9));
 //        deck.add(new Card(7));
 //        deck.add(new Card(16));
 
-        List<Card> p1cards = Board.getInstance().getPlayers().get(0).getCards();
-        p1cards.add(new Card(3));
+//        List<Card> p1cards = Board.getInstance().getPlayers().get(0).getCards();
+//        p1cards.add(new Card(3));
+//
+//            this.gametree = buildMinimaxTree(deck, 1, p1cards, Board.getInstance().getPlayers().get(1).getCards(), false);
 
-            this.gametree = buildMinimaxTree(deck, 1, p1cards, Board.getInstance().getPlayers().get(1).getCards(), false);
-//            this.gametree = buildMinimaxTree(deck, 1, Board.getInstance().getPlayers().get(0).getCards(), Board.getInstance().getPlayers().get(1).getCards(), false);
+            this.gametree = buildMinimaxTree(deck, 1, Board.getInstance().getPlayers().get(0).getCards(), Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
 
 //        }
 
         int move = minimax(this.gametree, 1)[1];
         System.out.println("AI Move: " + move);
-        if (move == 1) return true;
-        else return false;
+        return move == 1;
     }
 
 	@Override
@@ -122,15 +122,21 @@ public class MinmaxAI implements AIInterface {
 
         Card scoreCard = cards.get(0);
         int score = scoreCard.getNumber();
+        int series = 0;
         for(Card card : cards) {
             if(card == scoreCard)
                 continue;
 
             if(card.getNumber() - scoreCard.getNumber() != 1) {
                 score += card.getNumber();
+            } else {
+                series += 1;
             }
             scoreCard = card;
         }
+
+//        score = score - (10 * cards.size());
+//        score = score - (100 * series);
 
         return score;
     }
@@ -145,8 +151,9 @@ public class MinmaxAI implements AIInterface {
      * @param mustPick Set to true if previous move was a toss. In order to minimize tree size we limit the max number of tosses to 1 for each card.
      * @return Returns the nothanks game tree based on the given deck.
      */
-	private NothanksTree buildMinimaxTree(List<Card> deck, int player, List<Card> p1_cards, List<Card> p2_cards, boolean mustPick) {
+	private NothanksTree buildMinimaxTree(List<Card> deck, int player, List<Card> p1_cards, List<Card> p2_cards, int p1_tosses, int p2_tosses, boolean mustPick) {
         NothanksTree tree = new NothanksTree();
+        int tossLimit = 8;
 
         // Reached bottom of path. Set leaf value using evaluation function
         if (deck.size() <= 0) {
@@ -172,18 +179,27 @@ public class MinmaxAI implements AIInterface {
 
         if (player == 1) { // Add current card to player 1's deck
             p1_cards_copy.add(currentCard);
-            tree.setPicked(buildMinimaxTree(deck_copy, 2, p1_cards_copy, p2_cards_copy, false));
+            tree.setPicked(buildMinimaxTree(deck_copy, 2, p1_cards_copy, p2_cards_copy, p1_tosses, p2_tosses, false));
         } else { // Add current card to player 2's deck
             p2_cards_copy.add(currentCard);
-            tree.setPicked(buildMinimaxTree(deck_copy, 1, p1_cards_copy, p2_cards_copy, false));
+            tree.setPicked(buildMinimaxTree(deck_copy, 1, p1_cards_copy, p2_cards_copy, p1_tosses, p2_tosses, false));
         }
 
         // Expand tossed tree: if previous move was not already a skip, skip the card and continue with the same deck but other player
         if (!mustPick) {
             List<Card> deck_copy_tossed = new ArrayList<>();
             deck_copy_tossed.addAll(deck);
-            if (player == 1) tree.setTossed(buildMinimaxTree(deck_copy_tossed, 2, p1_cards, p2_cards, true));
-            if (player == 2) tree.setTossed(buildMinimaxTree(deck_copy_tossed, 1, p1_cards, p2_cards, true));
+            if (player == 1 && p1_tosses < tossLimit) {
+                int p1_tossed = p1_tosses + 1;
+                tree.setTossed(buildMinimaxTree(deck_copy_tossed, 2, p1_cards, p2_cards, p1_tossed, p2_tosses, true));
+            }
+            else if (player == 2 && p2_tosses < tossLimit) {
+                int p2_tossed = p2_tosses + 1;
+                tree.setTossed(buildMinimaxTree(deck_copy_tossed, 1, p1_cards, p2_cards, p1_tosses, p2_tossed, true));
+            }
+            else {
+                tree.setTossed(null);
+            }
         } else {
             // We limit the number of tosses to 1 per card: stop expanding the toss tree after 1 toss
             tree.setTossed(null);
@@ -192,54 +208,4 @@ public class MinmaxAI implements AIInterface {
         return tree;
     }
 
-
-//    private NothanksTree buildMinmaxTreeToss(List<Card> deck, boolean mustPick) {
-//	    this.count++;
-//        NothanksTree tree = new NothanksTree();
-//
-//        if (deck.size() <= 0) {
-//            tree.setPicked(null);
-//            tree.setTossed(null);
-//            tree.setValue(0);
-//            return tree;
-//        }
-//
-//        Card card = deck.get(0);
-//        tree.setValue(card.getNumber());
-//
-//        // Strip 1 card
-//        List<Card> deck_copy = new ArrayList<>();
-//        for (int i = 1; i < deck.size(); i++) {
-//            deck_copy.add(deck.get(i));
-//        }
-//        tree.setPicked(buildMinmaxTree(deck_copy, false));
-//
-//        // Toss card only if previous move was not a toss
-//        if (!mustPick) {
-//            List<Card> deck_copy_tossed = deck;
-//            tree.setTossed(buildMinmaxTree(deck_copy_tossed, true));
-//        } else {
-//            tree.setTossed(null);
-//        }
-//
-//        return tree;
-//    }
-
-//	private NothanksTree buildMinmaxTreeOptimal(List<Card> deck, int score_1, int score_2) {
-//        NothanksTree tree = new NothanksTree();
-//        tree.setScoreDiff(score_2-score_1);
-//        if (deck.size() == 0) {
-//            tree.setPicked(null);
-//            tree.setTossed(null);
-//        } else {
-//            List<Card> deck_copy = new ArrayList<Card>();
-//            for (int i = 1; i < deck.size(); i++) {
-//                deck_copy.add(deck.get(i));
-//            }
-//            int cardValue = deck.get(0).getNumber();
-//            tree.setPicked(buildMinmaxTreeOptimal(deck_copy, score_1+cardValue, score_2));
-//            tree.setTossed(buildMinmaxTreeOptimal(deck_copy, score_1, score_2+cardValue));
-//        }
-//        return tree;
-//    }
 }
