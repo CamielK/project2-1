@@ -16,36 +16,26 @@ public class MinmaxAI implements AIInterface {
 
     @Override
     public boolean GetMove() {
-        System.out.println("Getting minimax move:");
-//        if (this.gametree == null) {
-
-
-            // Build gametree from deck
-//        List<Card> deck = Board.getInstance().getCurrentDeck();
-
-            List<Card> deck = new ArrayList<>();
-            List<Card> boardDeck = Board.getInstance().getCurrentDeck();
-            int limit = boardDeck.size();
-            if (limit > 18) limit = 18;
-            for (int i = 0; i < limit; i++) deck.add(boardDeck.get(i));
+        List<Card> deck = new ArrayList<>();
+        List<Card> boardDeck = Board.getInstance().getCurrentDeck();
+        int limit = boardDeck.size();
+        if (limit > 18) limit = 18;
+        for (int i = 0; i < limit; i++) deck.add(boardDeck.get(i));
 
 //        List<Card> deck = new ArrayList<>();
+//        deck.add(new Card(20));
 //        deck.add(new Card(10));
-//        deck.add(new Card(9));
 //        deck.add(new Card(7));
 //        deck.add(new Card(16));
 
 //        List<Card> p1cards = Board.getInstance().getPlayers().get(0).getCards();
-//        p1cards.add(new Card(3));
-//
-//            this.gametree = buildMinimaxTree(deck, 1, p1cards, Board.getInstance().getPlayers().get(1).getCards(), false);
+//        p1cards.add(new Card(11));
+//        this.gametree = buildMinimaxTree(deck, 1, p1cards, Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
 
-            this.gametree = buildMinimaxTree(deck, 1, Board.getInstance().getPlayers().get(0).getCards(), Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
-
-//        }
+        this.gametree = buildMinimaxTree(deck, 1, Board.getInstance().getPlayers().get(0).getCards(), Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
 
         int move = minimax(this.gametree, 1)[1];
-        System.out.println("AI Move: " + move);
+//        System.out.println("AI Move: " + move);
         return move == 1;
     }
 
@@ -53,7 +43,7 @@ public class MinmaxAI implements AIInterface {
 	public void gameIsFinished(ArrayList<Player> winner) {
 		// TODO Auto-generated method stub
         this.gametree = null;
-	}
+    }
 
     /**
      * Minimax search to determine next move
@@ -66,10 +56,10 @@ public class MinmaxAI implements AIInterface {
 	    int move = 1;
 
 	    if (tree.getPicked() == null && tree.getTossed() == null) {
-	        bestScore = tree.getValue();
+            bestScore = tree.getValue();
         }
-        if (player == 1) { //maximize scoreDiff for player 1
-            bestScore = Integer.MIN_VALUE;
+        else if (player == 1) { //maximize scoreDiff for player 1
+            bestScore = -100000;
 
             if (tree.getTossed() != null) {
                 int score = minimax(tree.getTossed(), 2)[0];
@@ -88,7 +78,7 @@ public class MinmaxAI implements AIInterface {
             }
         }
         else if (player == 2) { //minimize scoreDiff for player 2
-            bestScore = Integer.MAX_VALUE;
+            bestScore = 100000;
 
             if (tree.getTossed() != null) {
                 int score = minimax(tree.getTossed(), 1)[0];
@@ -111,32 +101,39 @@ public class MinmaxAI implements AIInterface {
     }
 
     /**
-     * Heuristic evaluation function to determine the value of a player's deck
+     * Heuristic evaluation function to determine the value of a player's deck.
+     * Lower score = better
      * @param cards List of cards owned by player
      * @return value awarded to this specific deck
      */
     private int evaluate(List<Card> cards) {
-	    if (cards.size() == 0) return 0;
+	    if (cards.size() == 0) {
+	        // Decks without cards are useless
+	        return 0;
+        }
 
+        // Get the general score from this deck as a basis for the heuristic function
+        // This is the same score as is used in the game scoreboard
         Collections.sort(cards);
-
         Card scoreCard = cards.get(0);
         int score = scoreCard.getNumber();
         int series = 0;
         for(Card card : cards) {
-            if(card == scoreCard)
-                continue;
+            if(card == scoreCard) continue;
 
-            if(card.getNumber() - scoreCard.getNumber() != 1) {
-                score += card.getNumber();
-            } else {
-                series += 1;
-            }
+            if(card.getNumber() - scoreCard.getNumber() != 1) score += card.getNumber();
+            else series += 1;
+
             scoreCard = card;
         }
 
-//        score = score - (10 * cards.size());
-//        score = score - (100 * series);
+        // Boost score based on the size of the deck
+        // (bigger decks are boosted to prevent minimax from converging to nevertake)
+        score = score - (10 * cards.size());
+
+        // Boost score based on the number of series in the deck
+        // Having a series of cards massively increases win chance: we favor decks that have more series
+        score = score - (50 * series);
 
         return score;
     }

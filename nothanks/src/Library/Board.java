@@ -12,6 +12,7 @@ import java.util.List;
 public class Board {
 	
 	private static Board board;
+	private static boolean logProgress = true;
 
     private Card currentCard;
     private Deck cardDeck = null;
@@ -38,9 +39,10 @@ public class Board {
 //        players.get(1).SetAIAgent(new UCT_AI(this));
         players.get(0).SetAIAgent(new MinmaxAI());
 //        players.get(1).SetAIAgent(new RandomAI());
+        players.get(1).SetAIAgent(new NevertakeAI());
 
-        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-        System.out.println("Current Card is " + currentCard.getNumber());
+//        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+//        System.out.println("Current Card is " + currentCard.getNumber());
     }
     
     public static Board getInstance() {
@@ -55,6 +57,14 @@ public class Board {
     	players.get(id).SetAIAgent(agent);
 	}
 
+	/**
+	 * Logstate setter. if logstate = false logging will be skipped
+	 * @param logstate
+	 */
+	public static void setLogState(boolean logstate) {
+    	logProgress = logstate;
+    }
+
     public void nextTurn() {
     	if(players.indexOf(currentPlayer) + 1 >= players.size()) {
     		currentPlayer = players.get(0);
@@ -62,8 +72,8 @@ public class Board {
     		currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
     	}
     	
-    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
+//    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+//    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
     public void giveCardChips() {
@@ -100,10 +110,26 @@ public class Board {
 	}
     
     public void win() {
-    	System.out.println(getWinners());
+		String winners = getWinners();
+    	if (logProgress) System.out.println(winners);
     	logger.getInstance().write("ENDOFGAME");
     	isFinished = true;
     }
+
+	public Player getWinner() {
+		Player winner = null;
+		int bestScore = 10000;
+
+		for (Player p : players) {
+			int score = p.getScore()-p.getChips();
+			if (score < bestScore) {
+				winner = p;
+				bestScore = score;
+			}
+		}
+
+		return winner;
+	}
 
     public String getWinners() {
 		ArrayList<Player> winners = new ArrayList<Player>();
@@ -161,6 +187,7 @@ public class Board {
 	 * @param pickedCard True if player picked a card, false if player tossed a chip.
 	 */
 	public void logGameProgress(boolean pickedCard) {
+		if (logProgress == false) return;
 		String csvProgress = "";
 
 		//Format: playerID,pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
