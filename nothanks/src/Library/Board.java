@@ -30,6 +30,9 @@ public class Board {
 	private boolean isFinished = false;
     private Player currentPlayer;
     private int winnerID;
+    
+    private int[] took= new int[100];
+	private int a=0;
 
     private Board() {
     	logger = Logger.getInstance();
@@ -91,6 +94,8 @@ public class Board {
     	currentPlayer.addCard(currentCard);
 		currentPlayer.addChips(currentChips);
 		currentChips = 0;
+		this.took[a]=1;
+		this.a =a+1;	
 
 		if(cardDeck.getNumCards() <= 1) {
 			win();
@@ -101,13 +106,17 @@ public class Board {
 //    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
 
     	logGameProgress(true);
+
     	currentCard = cardDeck.removeCards(1);
     	
     	nextTurn();
     }
     
     public void tossChip() {
+    	this.took[a]=0;
+        this.a =a+1;
     	logGameProgress(false);
+    
 
     	if(currentPlayer.addChips(-1)) {
     		currentChips++;
@@ -206,13 +215,6 @@ public class Board {
     	this.currentCard = currentCard;
     }
 
-	/**
-	 * Writes the decision and current game status to disk
-	 *
-	 * @param True if player picked a card, false if player tossed a chip.
-	 * @throws IOException 
-	 */
-    
     public void makeFile(String info) throws IOException {
     	f= new File(Config.logpath+"/Data/logs.txt");
 		f.createNewFile();
@@ -282,4 +284,10 @@ public class Board {
 //		win();
 		board = new Board();
 	}
+
+	public int[] takes() {	
+		return took;
+	}
+	
+	
 }

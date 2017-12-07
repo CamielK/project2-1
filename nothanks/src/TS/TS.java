@@ -15,17 +15,25 @@ import java.util.Arrays;
 public class TS implements AIInterface{
     private File f;
     FileWriter fileWriter;
+    private double[] valuess=null;
+	
     
+	private double lower=0.07;
+	private double upper=0.09;
+	private double Pmid=0.08;
 
 	
 @Override
 public boolean GetMove() {
+	//if(valuess!=null) {
+	//OPmoves();}
+	ArrayList<Player> Playerlist = Board.getInstance().getPlayers();
+	double[] values= new double[Playerlist.size()];
 	System.out.println("TS move");
 	Card card = Board.getInstance().getCurrentCard();
 	int cardnum =card.getNumber();
 	Player P0 = Board.getInstance().getCurrentPlayer();
-	ArrayList<Player> Playerlist = Board.getInstance().getPlayers();
-	double[] values =new double[Playerlist.size()];
+	
 	int Pnum= P0.getID();
 	if(Pnum!=0) {
 	for(int i=0;i<Pnum-1;i++) {
@@ -46,6 +54,7 @@ public boolean GetMove() {
 		values[i]=valueP(cardnum,chips,Pcard,Pchips);
 		//System.out.println("cardsnum:"+cardnum+" chips:"+chips+"Pchips"+Pchips);
 	}
+	this.valuess=values;
 	String pvalues=Arrays.toString(values);
 	//System.out.println(pvalues);
 	try {
@@ -55,16 +64,15 @@ public boolean GetMove() {
 		e.printStackTrace();
 	}
 	
-	if(values[0]<0.03) {
+	if(values[0]<lower) {
 		return false;
 	}
-	else if(values[0]>0.07) {
+	else if(values[0]>upper) {
 		return true;
 	}
-	else if(values[0] >= 0.03 && values[0]<=0.07) {
+	else if(values[0] >= lower && values[0]<=upper) {
 		for(int i=1; i<values.length;i++) {
-			if(values[i]>0.04) {
-
+			if(values[i]>Pmid) {
 				return true;
 			}
 		}
@@ -112,6 +120,29 @@ private void fileWrite(String info) throws IOException {
 @Override
 public void gameIsFinished(ArrayList<Player> winner) {
 	// TODO Auto-generated method stub
+	
+}
+
+public void OPmoves() {
+	int[] took =Board.getInstance().takes();
+	int[] taken = new int[valuess.length];
+	int a=0;
+	for (int i=(took.length-valuess.length-1);i<took.length;i++) {
+		taken[a]=took[i];		
+	}
+	int wrong=0;
+	for(int j =1;j<taken.length;j++) {
+		if(valuess[j]>Pmid && taken[j]==0 && valuess[0]<lower) {
+			wrong++;
+		}
+	}
+	if(wrong!=0) {
+		//change value of Pmid
+		this.Pmid=Pmid-0.005;
+		System.out.println("Pmid has increased to "+Pmid);
+	}
+	
+	
 	
 }
 
