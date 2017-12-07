@@ -29,7 +29,7 @@ public boolean GetMove() {
 	//OPmoves();}
 	ArrayList<Player> Playerlist = Board.getInstance().getPlayers();
 	double[] values= new double[Playerlist.size()];
-	System.out.println("TS move");
+	//System.out.println("TS move");
 	Card card = Board.getInstance().getCurrentCard();
 	int cardnum =card.getNumber();
 	Player P0 = Board.getInstance().getCurrentPlayer();
@@ -120,29 +120,6 @@ private void fileWrite(String info) throws IOException {
 @Override
 public void gameIsFinished(ArrayList<Player> winner) {
 	// TODO Auto-generated method stub
-	
-}
-
-public void OPmoves() {
-	int[] took =Board.getInstance().takes();
-	int[] taken = new int[valuess.length];
-	int a=0;
-	for (int i=(took.length-valuess.length-1);i<took.length;i++) {
-		taken[a]=took[i];		
-	}
-	int wrong=0;
-	for(int j =1;j<taken.length;j++) {
-		if(valuess[j]>Pmid && taken[j]==0 && valuess[0]<lower) {
-			wrong++;
-		}
-	}
-	if(wrong!=0) {
-		//change value of Pmid
-		this.Pmid=Pmid-0.005;
-		System.out.println("Pmid has increased to "+Pmid);
-	}
-	
-	
 	
 }
 

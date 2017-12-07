@@ -82,8 +82,6 @@ public class Controller {
                 System.exit(0);
             }
 
-            System.out.println("Game simulation finished " + counter + "/" + maxRounds + " ("+ (double) 100*counter/maxRounds + "%) .. Resetting board");
-
             if (counter%10==0) System.out.println("Progress: simulated " + counter + " out of " + maxRounds + " games.");
 
             Board.reset();

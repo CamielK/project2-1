@@ -4,7 +4,7 @@ import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
 import Library.AI.MinmaxAI.MinmaxAI;
-import Uct.UCT_AIClusterd;
+import Library.AI.StrategyAI.StrategyAI;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,9 +30,6 @@ public class Board {
 	private boolean isFinished = false;
     private Player currentPlayer;
     private int winnerID;
-    
-    private int[] took= new int[100];
-	private int a=0;
 
     private Board() {
     	logger = Logger.getInstance();
@@ -48,8 +45,13 @@ public class Board {
 
 		// TEMP: Init second player as AI player
 //        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
+
         players.get(1).SetAIAgent(new MinmaxAI());
-        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
+        players.get(0).SetAIAgent(new StrategyAI(this));
+
+//        players.get(0).SetAIAgent(new NevertakeAI());
+//		players.get(0).SetAIAgent(new RandomAI());
+//		players.get(1).SetAIAgent(new TS());
 
 //        players.get(1).SetAIAgent(new UCT_AI(this));
 //        players.get(0).SetAIAgent(new NevertakeAI());
@@ -94,8 +96,6 @@ public class Board {
     	currentPlayer.addCard(currentCard);
 		currentPlayer.addChips(currentChips);
 		currentChips = 0;
-		this.took[a]=1;
-		this.a =a+1;	
 
 		if(cardDeck.getNumCards() <= 1) {
 			win();
@@ -113,8 +113,6 @@ public class Board {
     }
     
     public void tossChip() {
-    	this.took[a]=0;
-        this.a =a+1;
     	logGameProgress(false);
     
 
@@ -277,7 +275,9 @@ public class Board {
 	}
 
 	public ArrayList<Player> getPlayers() {
-		return this.players;
+		ArrayList<Player> players_copy = new ArrayList<>();
+		players_copy.addAll(this.players);
+		return players_copy;
 	}
 
 	public static void reset() {
@@ -285,9 +285,5 @@ public class Board {
 		board = new Board();
 	}
 
-	public int[] takes() {	
-		return took;
-	}
-	
 	
 }
