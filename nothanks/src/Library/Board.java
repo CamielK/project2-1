@@ -2,9 +2,10 @@ package Library;
 
 import Helper.Logger;
 import Library.AI.AIInterface;
-import Library.AI.RandomAI.RandomAI;
+//import Library.AI.RandomAI.RandomAI;
+//import Library.AI.RandomAI.RandomAI;
 import TS.TS;
-import Uct.UCT_AI;
+//import Uct.UCT_AI;
 import Uct.UCT_AIClusterd;
 
 import java.io.File;
@@ -29,6 +30,9 @@ public class Board {
 	private boolean isFinished = false;
     private Player currentPlayer;
     private int winnerID;
+    
+    private int[] took= new int[100];
+	private int a=0;
 
     private Board() {
     	logger = Logger.getInstance();
@@ -44,9 +48,9 @@ public class Board {
 
 		// TEMP: Init second player as AI player
         players.get(0).SetAIAgent(new UCT_AIClusterd(this));
-        players.get(1).SetAIAgent(new RandomAI());
         //players.get(0).SetAIAgent(new RandomAI());
-    	//players.get(1).SetAIAgent(new TS());
+        //players.get(0).SetAIAgent(new RandomAI());
+    		players.get(1).SetAIAgent(new TS());
 
         //System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
         //System.out.println("Current Card is " + currentCard.getNumber());
@@ -82,6 +86,8 @@ public class Board {
     	currentPlayer.addCard(currentCard);
 		currentPlayer.addChips(currentChips);
 		currentChips = 0;
+		this.took[a]=1;
+		this.a =a+1;	
 
 		if(cardDeck.getNumCards() <= 1) {
 			win();
@@ -92,13 +98,17 @@ public class Board {
 //    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
 
     	logGameProgress(true);
+
     	currentCard = cardDeck.removeCards(1);
     	
     	nextTurn();
     }
     
     public void tossChip() {
+    	this.took[a]=0;
+        this.a =a+1;
     	logGameProgress(false);
+    
 
     	if(currentPlayer.addChips(-1)) {
     		currentChips++;
@@ -112,7 +122,7 @@ public class Board {
     
     public void win() {
     	System.out.println(getWinners());
-    	logger.getInstance().write("ENDOFGAME");
+    	//logger.getInstance().write("ENDOFGAME");
     	try {
 			makeFile(getWinners()+"\n");
 		} catch (IOException e) {
@@ -252,4 +262,10 @@ public class Board {
 //		win();
 		board = new Board();
 	}
+
+	public int[] takes() {	
+		return took;
+	}
+	
+	
 }

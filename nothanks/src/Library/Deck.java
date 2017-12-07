@@ -15,9 +15,12 @@ public class Deck extends ArrayList<Card> {
      * Construct the Deck and initialize the Cards from 3-35
      */
     public Deck() {
-        for(int i = 3; i <= 35; i++) {
+        for(int i = 34; i >= 3; i--) {
+        
         	this.add(new Card(i));
+        
         }
+        this.add(new Card(35));
         //shuffleCards();
         printCards();
         //sort();

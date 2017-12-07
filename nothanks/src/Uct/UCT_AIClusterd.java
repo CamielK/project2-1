@@ -42,6 +42,7 @@ public class UCT_AIClusterd implements AIInterface{
 	private FileWriter fileWriter;
 	private int numUnexploredNodes = 0;
 	private TS ts;
+	
 	/**
 	 * Construct the AI, using the UCT adaption of MiniMax tree search
 	 * @param board the current borad. Needed for Information like playercount and currentCard
@@ -129,7 +130,6 @@ public class UCT_AIClusterd implements AIInterface{
 				}
 				else {
 					currentNode = choices[1];
-					System.out.print("Good child ");
 					if(print)System.out.println("Chose good child");
 				}
 			}
@@ -148,12 +148,10 @@ public class UCT_AIClusterd implements AIInterface{
 			//if(choices[0].getWinrate() < threshold){
 			if(0.8 < threshold){
 				if(print)System.out.println("Add Child");
-				System.out.print("Add child ");
 				addNode(choices[0]);
 			}
 			else{
 				if(print)System.out.println("Chose good child");
-				System.out.print("Good child ");
 				currentNode = choices[0];
 			}
 			if(!currentNode.getVisited())visitedNodes.add(currentNode);
@@ -281,7 +279,7 @@ public class UCT_AIClusterd implements AIInterface{
 			//return take;
 		}
 		else{
-			System.out.print("Add Node ");
+			if(print)System.out.print("Add Node ");
 			if(existing == null){
 				//boolean take;
 
