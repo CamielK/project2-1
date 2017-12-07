@@ -1,16 +1,15 @@
 package Uct;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
-
+import Helper.Config;
+import Library.AI.AIInterface;
 import Library.Board;
 import Library.Player;
-import Library.AI.AIInterface;
 import TS.TS;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class UCT_AIClusterd implements AIInterface{
 	/*
@@ -49,8 +48,8 @@ public class UCT_AIClusterd implements AIInterface{
 	public UCT_AIClusterd(Board board){
 		lastTime = System.currentTimeMillis();
 		this.board = board;
-		unexploredNodesLogpath = System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/UnexploredNodes.txt";
-		logpath = System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/Gamelog" + board.getPlayers().size() + ".txt";
+		unexploredNodesLogpath = Config.logpath + "/src/Uct/Logs/UnexploredNodes.txt";
+		logpath = Config.logpath + "/src/Uct/Logs/Gamelog" + board.getPlayers().size() + ".txt";
 		f = new File(logpath);
 		uNodes = new File(unexploredNodesLogpath);
 		//System.out.println(uNodes.getAbsolutePath());
@@ -68,7 +67,7 @@ public class UCT_AIClusterd implements AIInterface{
 	public boolean GetMove() {
 		System.out
 		.println(
-		System.getProperty("user.dir") + "/nothanks/src/Uct/Logs/UnexploredNodes.txt"
+		Config.logpath + "/src/Uct/Logs/UnexploredNodes.txt"
 		);
 		return computeMove();
 	}

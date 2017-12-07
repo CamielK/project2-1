@@ -1,22 +1,23 @@
 package Library;
 
+import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
-import Library.AI.RandomAI.RandomAI;
-import TS.TS;
-import Uct.UCT_AI;
+import Library.AI.MinmaxAI.MinmaxAI;
 import Uct.UCT_AIClusterd;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 
 public class Board {
 	
 	private static Board board;
+	private static boolean logProgress = true;
 
     private Card currentCard;
     private Deck cardDeck = null;
@@ -43,14 +44,14 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
+//        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
+        players.get(1).SetAIAgent(new MinmaxAI());
         players.get(0).SetAIAgent(new UCT_AIClusterd(this));
-        players.get(1).SetAIAgent(new RandomAI());
-        //players.get(0).SetAIAgent(new RandomAI());
-    	//players.get(1).SetAIAgent(new TS());
 
-        //System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-        //System.out.println("Current Card is " + currentCard.getNumber());
-
+//        players.get(1).SetAIAgent(new UCT_AI(this));
+//        players.get(0).SetAIAgent(new NevertakeAI());
+//        players.get(1).SetAIAgent(new RandomAI());
+//        players.get(1).SetAIAgent(new MinmaxAI());
 
     }
     
@@ -66,15 +67,23 @@ public class Board {
     	players.get(id).SetAIAgent(agent);
 	}
 
+	/**
+	 * Logstate setter. if logstate = false logging will be skipped
+	 * @param logstate
+	 */
+	public static void setLogState(boolean logstate) {
+    	logProgress = logstate;
+    }
+
     public void nextTurn() {
     	if(players.indexOf(currentPlayer) + 1 >= players.size()) {
     		currentPlayer = players.get(0);
     	} else {
     		currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
     	}
-    	
-    	//System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-    	//System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
+
+//    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+//    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
     public void giveCardChips() {
@@ -111,7 +120,8 @@ public class Board {
 	}
     
     public void win() {
-    	System.out.println(getWinners());
+		String winners = getWinners();
+    	if (logProgress) System.out.println(winners);
     	logger.getInstance().write("ENDOFGAME");
     	try {
 			makeFile(getWinners()+"\n");
@@ -129,6 +139,21 @@ public class Board {
     	
     	isFinished = true;
     }
+
+	public Player getWinner() {
+		Player winner = null;
+		int bestScore = 10000;
+
+		for (Player p : players) {
+			int score = p.getScore()-p.getChips();
+			if (score < bestScore) {
+				winner = p;
+				bestScore = score;
+			}
+		}
+
+		return winner;
+	}
 
     public String getWinners() {
 		ArrayList<Player> winners = new ArrayList<Player>();
@@ -160,6 +185,10 @@ public class Board {
     public int getCurrentChips() {
     	return currentChips;
     }
+
+	public List<Card> getCurrentDeck() {
+		return cardDeck;
+	}
     
     public void setCurrentChips(int currentChips) {
     	this.currentChips = currentChips;
@@ -180,19 +209,19 @@ public class Board {
 	/**
 	 * Writes the decision and current game status to disk
 	 *
-	 * @param pickedCard True if player picked a card, false if player tossed a chip.
+	 * @param True if player picked a card, false if player tossed a chip.
 	 * @throws IOException 
 	 */
     
     public void makeFile(String info) throws IOException {
-    	f= new File(System.getProperty("user.dir")+"/nothanks/Data/logs.txt");
+    	f= new File(Config.logpath+"/Data/logs.txt");
 		f.createNewFile();
 		fileWriter = new FileWriter(f,true);
 		fileWriter.write(info);
 		fileWriter.close();	
     }
     public void winFile(Boolean info) throws IOException {
-    	f= new File(System.getProperty("user.dir")+"/nothanks/Data/WLlogs.txt");
+    	f= new File(Config.logpath+"/Data/WLlogs.txt");
 		f.createNewFile();
 		fileWriter = new FileWriter(f,true);
 		fileWriter.write(info.toString()+"\n");
@@ -201,6 +230,7 @@ public class Board {
     
     
 	public void logGameProgress(boolean pickedCard) {
+		if (logProgress == false) return;
 		String csvProgress = "";
 
 		//Format: playerID,pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score

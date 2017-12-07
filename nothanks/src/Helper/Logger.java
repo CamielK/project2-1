@@ -11,7 +11,7 @@ public class Logger {
     private static String dataPath = null;
 
     private Logger() {
-        dataPath = System.getProperty("user.dir") + "\\Data\\logs.txt";
+        dataPath = Config.logpath + "\\Data\\logs.txt";
         System.out.println("Logging to file: " + dataPath);
     }
 

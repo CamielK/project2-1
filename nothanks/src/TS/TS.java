@@ -1,15 +1,16 @@
 package TS;
 
+import Helper.Config;
+import Library.AI.AIInterface;
+import Library.Board;
+import Library.Card;
+import Library.Player;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import Library.Board;
-import Library.Card;
-import Library.Player;
-import Library.AI.AIInterface;
 
 public class TS implements AIInterface{
     private File f;
@@ -63,6 +64,7 @@ public boolean GetMove() {
 	else if(values[0] >= 0.03 && values[0]<=0.07) {
 		for(int i=1; i<values.length;i++) {
 			if(values[i]>0.04) {
+
 				return true;
 			}
 		}
@@ -72,7 +74,7 @@ public boolean GetMove() {
 }
 
 
-// These numbers are arbitrary and subject to change when with adjustment. 
+// These numbers are arbitrary and subject to change when with adjustment.
 public double valueP (int card, int chips, int[] Pcards, int Pchips) {
 	double CenterValue=(double)(chips+1)/card;
 	//System.out.println("CenterVAlue:" +CenterValue);
@@ -84,7 +86,7 @@ public double valueP (int card, int chips, int[] Pcards, int Pchips) {
 			if(Pcards[i]==card-1) {
 				OwnedCard=OwnedCard +0.5;// less valuable to take a card after
 			}
-		}	
+		}
 		//System.out.println("OwnedCards:" +OwnedCard);
 	double OwnedChips;
 	if(Pchips==0) {
@@ -95,12 +97,12 @@ public double valueP (int card, int chips, int[] Pcards, int Pchips) {
 	//System.out.println("OwnedChips:" +OwnedChips);
 	double Value =CenterValue*OwnedCard*OwnedChips;
 	//System.out.println("values"+Value);
-	return Value;		
+	return Value;
 	}
 
 
 private void fileWrite(String info) throws IOException {
-  	f= new File(System.getProperty("user.dir")+"/nothanks/Data/TSlogs.txt");
+  	f= new File(Config.logpath+"/Data/TSlogs.txt");
 		f.createNewFile();
 		fileWriter = new FileWriter(f,true);
 		fileWriter.write(info+"\n");

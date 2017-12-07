@@ -1,13 +1,14 @@
 package Uct;
 
+import Helper.Config;
+import Library.AI.AIInterface;
+import Library.Board;
+import Library.Player;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import Library.Board;
-import Library.Player;
-import Library.AI.AIInterface;
 
 public class UCT_AI implements AIInterface{
 	/*
@@ -34,7 +35,7 @@ public class UCT_AI implements AIInterface{
 	private boolean addedNode, print = false;
 	private Node currentNode;
 	private ArrayList<Node> visitedNodes = null;
-	private String logpath = System.getProperty("user.dir") + "\\src\\Uct\\Gamelog.txt";
+	private String logpath = Config.logpath + "\\src\\Uct\\Gamelog.txt";
 	private File f;
 	private long lastTime;
 	FileWriter fileWriter;
@@ -46,7 +47,7 @@ public class UCT_AI implements AIInterface{
 	public UCT_AI(Board board){
 		lastTime = System.currentTimeMillis();
 		this.board = board;
-		logpath = System.getProperty("user.dir") + "\\src\\Uct\\Logs\\Gamelog" + board.getPlayers().size() + ".txt";
+		logpath = Config.logpath + "\\src\\Uct\\Logs\\Gamelog" + board.getPlayers().size() + ".txt";
 		f = new File(logpath);
 		tree = new Tree(board.getPlayers().size());
 		tree = tree.load();
