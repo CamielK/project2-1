@@ -4,7 +4,6 @@ import Helper.Logger;
 import Library.AI.AIInterface;
 import Library.AI.MinmaxAI.MinmaxAI;
 import Library.AI.NevertakeAI.NevertakeAI;
-import Library.AI.RandomAI.RandomAI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +36,9 @@ public class Board {
 
 		// TEMP: Init second player as AI player
 //        players.get(1).SetAIAgent(new UCT_AI(this));
-        players.get(0).SetAIAgent(new MinmaxAI());
+        players.get(0).SetAIAgent(new NevertakeAI());
 //        players.get(1).SetAIAgent(new RandomAI());
-        players.get(1).SetAIAgent(new NevertakeAI());
+        players.get(1).SetAIAgent(new MinmaxAI());
 
 //        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
 //        System.out.println("Current Card is " + currentCard.getNumber());
