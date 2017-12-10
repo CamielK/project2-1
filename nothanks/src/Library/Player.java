@@ -1,7 +1,8 @@
 package Library;
 
 import Library.AI.AIInterface;
-import Uct.UCT_AI;
+import Library.AI.MinmaxAI.MinmaxAI;
+import Uct.UCT_AIClusterd;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +53,8 @@ public class Player {
 	}
 	
 	public void gameIsFinished(ArrayList<Player> winners){
-		if(agent instanceof UCT_AI) agent.gameIsFinished(winners);
+		if(agent instanceof UCT_AIClusterd) agent.gameIsFinished(winners);
+		if(agent instanceof MinmaxAI) agent.gameIsFinished(winners);
 	}
 	
 	public int getID() {

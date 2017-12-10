@@ -1,24 +1,33 @@
 package Library;
 
+import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
-import Library.AI.RandomAI.RandomAI;
+import Library.AI.MinmaxAI.MinmaxAI;
+import Library.AI.StrategyAI.StrategyAI;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
 	
 	private static Board board;
+	private static boolean logProgress = true;
 
     private Card currentCard;
     private Deck cardDeck = null;
     private Logger logger = null;
+    private File f;
+    FileWriter fileWriter;
     private ArrayList<Player> players;
 
 	private int currentChips = 0;
 	private boolean isFinished = false;
     private Player currentPlayer;
+    private int winnerID;
 
     private Board() {
     	logger = Logger.getInstance();
@@ -33,11 +42,21 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
+//        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
+
+        players.get(1).SetAIAgent(new MinmaxAI());
+        players.get(0).SetAIAgent(new StrategyAI(this));
+
+//        players.get(0).SetAIAgent(new NevertakeAI());
+//		players.get(0).SetAIAgent(new RandomAI());
+//		players.get(1).SetAIAgent(new TS());
+
 //        players.get(1).SetAIAgent(new UCT_AI(this));
 //        players.get(1).SetAIAgent(new RandomAI());
+//        players.get(0).SetAIAgent(new NevertakeAI());
+//        players.get(1).SetAIAgent(new RandomAI());
+//        players.get(1).SetAIAgent(new MinmaxAI());
 
-        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-        System.out.println("Current Card is " + currentCard.getNumber());
     }
     
     public static Board getInstance() {
@@ -52,15 +71,23 @@ public class Board {
     	players.get(id).SetAIAgent(agent);
 	}
 
+	/**
+	 * Logstate setter. if logstate = false logging will be skipped
+	 * @param logstate
+	 */
+	public static void setLogState(boolean logstate) {
+    	logProgress = logstate;
+    }
+
     public void nextTurn() {
     	if(players.indexOf(currentPlayer) + 1 >= players.size()) {
     		currentPlayer = players.get(0);
     	} else {
     		currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
     	}
-    	
-    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
+
+//    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+//    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
     public void giveCardChips() {
@@ -78,6 +105,7 @@ public class Board {
 //    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
 
     	logGameProgress(true);
+
     	currentCard = cardDeck.removeCards(1);
     	
     	nextTurn();
@@ -85,6 +113,7 @@ public class Board {
     
     public void tossChip() {
     	logGameProgress(false);
+    
 
     	if(currentPlayer.addChips(-1)) {
     		currentChips++;
@@ -97,10 +126,40 @@ public class Board {
 	}
     
     public void win() {
-    	System.out.println(getWinners());
+		String winners = getWinners();
+    	if (logProgress) System.out.println(winners);
     	logger.getInstance().write("ENDOFGAME");
+    	try {
+			makeFile(getWinners()+"\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	try {
+			winFile(winnerID==2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
     	isFinished = true;
     }
+
+	public Player getWinner() {
+		Player winner = null;
+		int bestScore = 10000;
+
+		for (Player p : players) {
+			int score = p.getScore()-p.getChips();
+			if (score < bestScore) {
+				winner = p;
+				bestScore = score;
+			}
+		}
+
+		return winner;
+	}
 
     public String getWinners() {
 		ArrayList<Player> winners = new ArrayList<Player>();
@@ -119,6 +178,7 @@ public class Board {
 		winnersString.append("Winners are: \n");
 		for(Player winner : winners) {
 			winnersString.append("Player " + winner.getID() + " with a score of " + (winner.getScore()-winner.getChips()) + " ( "+winner.getScore()+" card points - "+winner.getChips()+" chips)\n");
+		this.winnerID=winner.getID();
 		}
 		for(Player players : players){
 			players.gameIsFinished(winners);
@@ -152,13 +212,25 @@ public class Board {
     	this.currentCard = currentCard;
     }
 
-	/**
-	 * Writes the decision and current game status to disk
-	 *
-	 * @param pickedCard True if player picked a card, false if player tossed a chip.
-	 */
+    public void makeFile(String info) throws IOException {
+    	f= new File(Config.logpath+"/Data/logs.txt");
+		f.createNewFile();
+		fileWriter = new FileWriter(f,true);
+		fileWriter.write(info);
+		fileWriter.close();	
+    }
+    public void winFile(Boolean info) throws IOException {
+    	f= new File(Config.logpath+"/Data/WLlogs.txt");
+		f.createNewFile();
+		fileWriter = new FileWriter(f,true);
+		fileWriter.write(info.toString()+"\n");
+		fileWriter.close();	
+    }
+    
+    
 	public void logGameProgress(boolean pickedCard) {
-		if (!Board.getInstance().getCurrentPlayer().isAI()) { Library.AI.MLR.Logger.logMlrGameProgress(pickedCard); }
+		if (logProgress == false) return;
+		//if (!Board.getInstance().getCurrentPlayer().isAI()) { Library.AI.MLR.Logger.logMlrGameProgress(pickedCard); }
 		String csvProgress = "";
 
 		//Format: playerID,pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
@@ -188,6 +260,14 @@ public class Board {
 		System.out.println(csvProgress);
 
 		logger.write(csvProgress);
+		try {
+			makeFile(csvProgress+"\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	public Player getCurrentPlayer () {
@@ -195,11 +275,15 @@ public class Board {
 	}
 
 	public ArrayList<Player> getPlayers() {
-		return this.players;
+		ArrayList<Player> players_copy = new ArrayList<>();
+		players_copy.addAll(this.players);
+		return players_copy;
 	}
 
 	public static void reset() {
 //		win();
 		board = new Board();
 	}
+
+	
 }

@@ -111,10 +111,10 @@ public class Controller implements Initializable {
         // Get AI move if next player is AI
         if (Board.getInstance().getCurrentPlayer().isAI()) {
             // TODO: get move in a new thread, disable inputs while retrieving AI move
+            //System.out.println("Current player is AI agent " + Board.getInstance().getCurrentPlayer().getID() + ". Retrieving AI move...");
 
-            System.out.println("Current player is AI agent " + Board.getInstance().getCurrentPlayer().getID() + ". Retrieving AI move...");
             boolean move = Board.getInstance().getCurrentPlayer().GetAIMove();
-            System.out.println("AI move: '" + move + "'.");
+            //System.out.println("AI move: '" + move + "'.");
 
             if (move) processTakeCard(false);
             else if (!move) processTossChip();

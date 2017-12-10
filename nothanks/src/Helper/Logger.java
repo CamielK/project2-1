@@ -11,11 +11,11 @@ public class Logger {
     private static String dataPath = null;
 
     private Logger() {
-        dataPath = System.getProperty("user.dir") + "\\Data\\logs.txt";
+        dataPath = Config.logpath + "\\Data\\logs.txt";
         System.out.println("Logging to file: " + dataPath);
     }
 
-    public static void write(String message) {
+    public void write(String message) {
         if (dataPath != null) {
             try {
                 FileWriter fw = new FileWriter(dataPath, true);
