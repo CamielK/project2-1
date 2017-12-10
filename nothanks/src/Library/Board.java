@@ -3,8 +3,11 @@ package Library;
 import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
+import Library.AI.MLR.MultipleLinearRegressionAI;
 import Library.AI.MinmaxAI.MinmaxAI;
+import Library.AI.RandomAI.RandomAI;
 import Library.AI.StrategyAI.StrategyAI;
+import Uct.UCT_AIClusterd;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -44,8 +47,8 @@ public class Board {
 		// TEMP: Init second player as AI player
 //        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
 
-        players.get(1).SetAIAgent(new MinmaxAI());
-        players.get(0).SetAIAgent(new StrategyAI(this));
+        players.get(1).SetAIAgent(new UCT_AIClusterd(this));
+        players.get(0).SetAIAgent(new RandomAI());
 
 //        players.get(0).SetAIAgent(new NevertakeAI());
 //		players.get(0).SetAIAgent(new RandomAI());

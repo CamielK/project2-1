@@ -150,7 +150,7 @@ public class MinmaxAI implements AIInterface {
      */
 	private NothanksTree buildMinimaxTree(List<Card> deck, int player, List<Card> p1_cards, List<Card> p2_cards, int p1_tosses, int p2_tosses, boolean mustPick) {
         NothanksTree tree = new NothanksTree();
-        int tossLimit = 3;
+        int tossLimit = 8;
 
         // Reached bottom of path. Set leaf value using evaluation function
         if (deck.size() <= 0) {

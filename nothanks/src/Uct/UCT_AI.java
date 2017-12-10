@@ -162,7 +162,7 @@ public class UCT_AI implements AIInterface{
 		evaluate(winner);
 	}
 	private void evaluate(ArrayList<Player> winner){
-		System.out.println("Seconds needed: " + (System.currentTimeMillis()-lastTime)/1000);
+		//System.out.println("Seconds needed: " + (System.currentTimeMillis()-lastTime)/1000);
 		lastTime = System.currentTimeMillis();
 		
 		boolean won = false;

@@ -66,10 +66,6 @@ public class UCT_AIClusterd implements AIInterface{
 	 * retrieves the move, the AI will make
 	 */
 	public boolean GetMove() {
-		System.out
-		.println(
-		Config.logpath + "/src/Uct/Logs/UnexploredNodes.txt"
-		);
 		return computeMove();
 	}
 	
@@ -85,7 +81,7 @@ public class UCT_AIClusterd implements AIInterface{
 	 */
 	private boolean computeMove(){
 		if(!(board.getCurrentPlayer().getChips() > 0)){
-			System.out.println("No chips!");
+			//System.out.println("No chips!");
 			return true;
 		}
 		int exists = 0;
@@ -111,12 +107,12 @@ public class UCT_AIClusterd implements AIInterface{
 				//if(choices[0].getWinrate() < threshold){
 				if(0.8 < threshold){
 					if(print)System.out.println("Chose bad child");
-					System.out.print("Bad child ");
+					if(print)System.out.print("Bad child ");
 					currentNode = choices[1];
 				}
 				else {
 					if(print)System.out.println("Chose good child");
-					System.out.print("Good child ");
+					if(print)System.out.print("Good child ");
 					currentNode = choices[0];
 				}
 			}
@@ -124,7 +120,7 @@ public class UCT_AIClusterd implements AIInterface{
 				//if(choices[1].getWinrate() < threshold){
 				if(0.8 < threshold){
 					if(print)System.out.println("Chose bad child");
-					System.out.print("Bad child ");
+					//System.out.print("Bad child ");
 					currentNode = choices[0];
 				}
 				else {
@@ -178,8 +174,8 @@ public class UCT_AIClusterd implements AIInterface{
 		evaluate(winner);
 	}
 	private void evaluate(ArrayList<Player> winner){
-		System.out.println("\nUnexplored nodes: " + numUnexploredNodes);
-		System.out.println("Seconds needed: " + (System.currentTimeMillis()-lastTime)/1000);
+		//System.out.println("\nUnexplored nodes: " + numUnexploredNodes);
+		//System.out.println("Seconds needed: " + (System.currentTimeMillis()-lastTime)/1000);
 		lastTime = System.currentTimeMillis();
 		
 		boolean won = false;

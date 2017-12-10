@@ -22,7 +22,7 @@ public class Deck extends ArrayList<Card> {
         }
         
         shuffleCards();
-        printCards();
+        //printCards();
         //sort();
         //System.out.println();
         //printCards();

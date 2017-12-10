@@ -60,6 +60,12 @@ public class MultipleLinearRegressionAI implements AIInterface{
         // Apply MLR model
         // Note: the following model was created using Weka Linear Regression.
         // The model was build on training data gathered for this purpose. The training data consists of human plays.
+//        System.out.println("currentCardNum = " + currentCardNum);
+//        System.out.println("currentChipsNum = " + currentChipsNum);
+//        System.out.println("fitsInSeries = " + fitsInSeries);
+//        System.out.println("fitsInSeriesAlmost = " + fitsInSeriesAlmost);
+//        System.out.println("numHighCardsLeft = " + numHighCardsLeft);
+//        System.out.println("numMediumCardsLeft = " + numMediumCardsLeft);
         double pickCard =
                 (-0.0133    * currentCardNum) +
                 (-0.1662    * currentChipsNum) +
@@ -69,7 +75,7 @@ public class MultipleLinearRegressionAI implements AIInterface{
                 (0.0417     * numMediumCardsLeft) +
                 0.4805;
 
-        System.out.println(pickCard);
+//        System.out.println("pickCard = " + pickCard);
         return pickCard > 0.6;
     }
 

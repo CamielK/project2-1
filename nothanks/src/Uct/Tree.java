@@ -60,7 +60,7 @@ public class Tree implements Serializable{
 	public String preOrder(Node v){
 		tree = "";
 		executePreOrder(v);
-		System.out.println("Number of Nodes: " + numberOfNodes);
+		//System.out.println("Number of Nodes: " + numberOfNodes);
 		return tree;
 	}
 	
@@ -72,7 +72,7 @@ public class Tree implements Serializable{
 		//System.out.println(v.toString());
 		if(!visualize) {
 			for(int i = 0; i < layer; i++) System.out.print("  ");
-			System.out.println(v.getCardValue() + " "); 
+			//System.out.println(v.getCardValue() + " ");
 		}
 		else System.out.print(v.getCardValue() + " ");
 		tree += (v.getCardValue() + "");
@@ -101,7 +101,7 @@ public class Tree implements Serializable{
 	public void save(){
 		initFile();
 		try {
-			System.out.println(f.getAbsolutePath());
+			//System.out.println(f.getAbsolutePath());
 			 f.createNewFile();
 	         FileOutputStream fileOut =
 	         new FileOutputStream(f);
@@ -110,7 +110,6 @@ public class Tree implements Serializable{
 	         out.close();
 	         fileOut.close();
 	         //System.out.println("Serialized data is saved in " + path);
-	         System.out.printf("Serialized data is saved in " + path);
 	      } catch (IOException i) {
 	         i.printStackTrace();
 	      }
@@ -138,7 +137,7 @@ public class Tree implements Serializable{
 			i.printStackTrace();
 	    }
 		catch (ClassNotFoundException c) {
-	         System.out.println("Tree class not found");
+	         //System.out.println("Tree class not found");
 	         c.printStackTrace();
 	    }
 	    catch (Exception e) {
