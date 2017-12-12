@@ -9,8 +9,8 @@ public class RandomAI implements AIInterface {
 
     @Override
     public boolean GetMove() {
-   	return true;
-   	//return Math.random() < 0.5;
+   	//return true;
+   	return Math.random() < 0.5;
     }
 
 	@Override
