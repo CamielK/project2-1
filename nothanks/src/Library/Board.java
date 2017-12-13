@@ -3,24 +3,18 @@ package Library;
 import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
-import Library.AI.MinmaxAI.MinmaxAI;
-import Library.AI.NevertakeAI.NevertakeAI;
+import Library.AI.GA.GeneticAI;
 import Library.AI.RandomAI.RandomAI;
-import Library.AI.StrategyAI.StrategyAI;
-import Uct.UCT_AIClusterd;
+import Uct.UCT_AI;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
-
 
 public class Board {
 	
 	private static Board board;
-	private static boolean logProgress = true;
 
     private Card currentCard;
     private Deck cardDeck = null;
@@ -32,7 +26,8 @@ public class Board {
 	private int currentChips = 0;
 	private boolean isFinished = false;
     private Player currentPlayer;
-    private int winnerID;
+
+//    private int[] took= new int[100];
 
     private Board() {
     	logger = Logger.getInstance();
@@ -47,20 +42,17 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-        players.get(1).SetAIAgent(new UCT_AIClusterd(this));
-
-        //players.get(1).SetAIAgent(new MinmaxAI());
-        //players.get(0).SetAIAgent(new StrategyAI(this));
-
-//        players.get(0).SetAIAgent(new NevertakeAI());
-		players.get(0).SetAIAgent(new RandomAI());
-//		players.get(1).SetAIAgent(new TS());
-
-//        players.get(0).SetAIAgent(new NevertakeAI());
+        players.get(0).SetAIAgent(new UCT_AI(this));
 //        players.get(1).SetAIAgent(new RandomAI());
-//        players.get(1).SetAIAgent(new MinmaxAI());
+		GeneticAI ga = new GeneticAI();
+		ga.setGene(0, value);
+		ga.setGene(1, value);
+		ga.setGene(2, value);
+        players.get(1).SetAIAgent(ga);
 
-    }
+//        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+//        System.out.println("Current Card is " + currentCard.getNumber());
+	}
     
     public static Board getInstance() {
 		if (board == null) {
@@ -74,23 +66,15 @@ public class Board {
     	players.get(id).SetAIAgent(agent);
 	}
 
-	/**
-	 * Logstate setter. if logstate = false logging will be skipped
-	 * @param logstate
-	 */
-	public static void setLogState(boolean logstate) {
-    	logProgress = logstate;
-    }
-
     public void nextTurn() {
     	if(players.indexOf(currentPlayer) + 1 >= players.size()) {
     		currentPlayer = players.get(0);
     	} else {
     		currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
     	}
-
-//    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-//    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
+    	
+    //	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
+    //	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
     public void giveCardChips() {
@@ -108,7 +92,6 @@ public class Board {
 //    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
 
     	logGameProgress(true);
-
     	currentCard = cardDeck.removeCards(1);
     	
     	nextTurn();
@@ -116,7 +99,6 @@ public class Board {
     
     public void tossChip() {
     	logGameProgress(false);
-    
 
     	if(currentPlayer.addChips(-1)) {
     		currentChips++;
@@ -129,65 +111,58 @@ public class Board {
 	}
     
     public void win() {
-		String winners = getWinners();
-    	if (logProgress) System.out.println(winners);
+    	System.out.println(getWinners());
     	logger.getInstance().write("ENDOFGAME");
     	try {
-			makeFile(winners +"\n");
+			makeFile(getWinners()+"\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	try {
-			winFile(winnerID==2);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+    	if (Board.getInstance().getPlayers().get(1).getAgent() instanceof GeneticAI){
+            GeneticAI ga = (GeneticAI) Board.getInstance().getPlayers().get(1).getAgent();
+            String gene = new String("Fitness: " + ga.getFitness() + " || GENE: " + ga.getGene(0) + "/" +ga.getGene(1)+ "/" +ga.getGene(2));
+            logger.getInstance().write(gene);
+            try {
+    			makeFile(gene+"\n");
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+        }
     	
-    	
+
     	isFinished = true;
     }
 
-	public Player getWinner() {
-		Player winner = null;
-		int bestScore = 10000;
+    public ArrayList<Player> getWinnerList(){
+        ArrayList<Player> winners = new ArrayList<Player>();
+        winners.add(players.get(0));
 
-		for (Player p : players) {
-			int score = p.getScore()-p.getChips();
-			if (score < bestScore) {
-				winner = p;
-				bestScore = score;
-			}
-		}
-
-		return winner;
-	}
+        for(int i = 1; i < players.size(); i++) {
+            if((winners.get(0).getScore()-winners.get(0).getChips()) > (players.get(i).getScore()-players.get(i).getChips())) {
+                winners = new ArrayList<Player>();
+                winners.add(players.get(i));
+            } else if((winners.get(0).getScore()-winners.get(0).getChips()) == (players.get(i).getScore()-players.get(i).getChips())) {
+                winners.add(players.get(i));
+            }
+        }
+        return winners;
+    }
 
     public String getWinners() {
-		ArrayList<Player> winners = new ArrayList<Player>();
-		winners.add(players.get(0));
-
-		for(int i = 1; i < players.size(); i++) {
-			if((winners.get(0).getScore()-winners.get(0).getChips()) > (players.get(i).getScore()-players.get(i).getChips())) {
-				winners = new ArrayList<Player>();
-				winners.add(players.get(i));
-			} else if((winners.get(0).getScore()-winners.get(0).getChips()) == (players.get(i).getScore()-players.get(i).getChips())) {
-				winners.add(players.get(i));
-			}
-		}
+		ArrayList<Player> winners = getWinnerList();
 
 		StringBuilder winnersString = new StringBuilder();
-		winnersString.append("Winners are: \n");
+		winnersString.append("Winners is ");//are: \n");
 		for(Player winner : winners) {
-			winnersString.append("Player " + winner.getID() + " with a score of " + (winner.getScore()-winner.getChips()) + " ( "+winner.getScore()+" card points - "+winner.getChips()+" chips)\n");
-		this.winnerID=winner.getID();
+			winnersString.append("Player " + winner.getID()+"\n"); // + " with a score of " + (winner.getScore()-winner.getChips()) + " ( "+winner.getScore()+" card points - "+winner.getChips()+" chips)\n");
+			logger.getInstance().write("Winner : Player "+winner.getID());
 		}
-		for(Player players : players){
-			System.out.println("PlayerID: " + players.getID() + " " + players.getAgent().getClass());
+		/*for(Player players : players){
 			players.gameIsFinished(winners);
-		}
-		System.out.print(winnersString);
+		}*/
 		return winnersString.toString();
 	}
 
@@ -196,10 +171,7 @@ public class Board {
     public int getCurrentChips() {
     	return currentChips;
     }
-
-	public List<Card> getCurrentDeck() {
-		return cardDeck;
-	}
+   
     
     public void setCurrentChips(int currentChips) {
     	this.currentChips = currentChips;
@@ -217,24 +189,12 @@ public class Board {
     	this.currentCard = currentCard;
     }
 
-    public void makeFile(String info) throws IOException {
-    	f= new File(Config.logpath+"/Data/logs.txt");
-		f.createNewFile();
-		fileWriter = new FileWriter(f,true);
-		fileWriter.write(info);
-		fileWriter.close();	
-    }
-    public void winFile(Boolean info) throws IOException {
-    	f= new File(Config.logpath+"/Data/WLlogs.txt");
-		f.createNewFile();
-		fileWriter = new FileWriter(f,true);
-		fileWriter.write(info.toString()+"\n");
-		fileWriter.close();	
-    }
-    
-    
+	/**
+	 * Writes the decision and current game status to disk
+	 *
+	 * @param pickedCard True if player picked a card, false if player tossed a chip.
+	 */
 	public void logGameProgress(boolean pickedCard) {
-		if (logProgress == false) return;
 		String csvProgress = "";
 
 		//Format: playerID,pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
@@ -261,7 +221,7 @@ public class Board {
 
 		// Strip last comma
 		csvProgress = csvProgress.substring(0, csvProgress.length()-1);
-		System.out.println(csvProgress);
+//		System.out.println(csvProgress);
 
 		logger.write(csvProgress);
 		try {
@@ -271,7 +231,6 @@ public class Board {
 			e.printStackTrace();
 		}
 		
-		
 	}
 
 	public Player getCurrentPlayer () {
@@ -279,15 +238,42 @@ public class Board {
 	}
 
 	public ArrayList<Player> getPlayers() {
-		ArrayList<Player> players_copy = new ArrayList<>();
-		players_copy.addAll(this.players);
-		return players_copy;
+		return this.players;
 	}
+
+	///////// Added method
+
+	//Get the rank of a specific player
+	public int getRank(int id){
+		int score = players.get(id).getScore();
+		int rank = 1;
+		for (int i = 0; i < players.size(); i++) {
+			if (score > players.get(i).getScore()){
+				rank++;
+			}
+		}
+		return rank;
+	}
+	
+	public void makeFile(String info) throws IOException {
+    	f= new File(Config.logpath+"/Data/logs.txt");
+		f.createNewFile();
+		fileWriter = new FileWriter(f,true);
+		fileWriter.write(info);
+		fileWriter.close();	
+    }
+
+	///////////////////
 
 	public static void reset() {
 //		win();
 		board = new Board();
 	}
 
-	
+/*
+	public int[] takes() {
+		return took;
+	}
+*/
+
 }
