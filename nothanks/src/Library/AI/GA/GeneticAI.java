@@ -61,6 +61,11 @@ public class GeneticAI implements AIInterface{
     public boolean GetMove() {
         return ts.GetMove(getGene(0),getGene(1),getGene(2));
     }
+    public void setGenes(double gene1 , double gene2, double gene3){
+        genes[0] = gene1;
+        genes[1] = gene2;
+        genes[2] = gene3;
+    }
 
     public void gameIsFinished(ArrayList<Player> winner){
      //   if (board.getIsFinished()){

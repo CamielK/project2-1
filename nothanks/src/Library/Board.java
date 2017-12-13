@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
 	
@@ -44,11 +45,11 @@ public class Board {
 		// TEMP: Init second player as AI player
         players.get(0).SetAIAgent(new UCT_AI(this));
 //        players.get(1).SetAIAgent(new RandomAI());
-		GeneticAI ga = new GeneticAI();
-		ga.setGene(0, value);
-		ga.setGene(1, value);
-		ga.setGene(2, value);
-        players.get(1).SetAIAgent(ga);
+		//GeneticAI ga = new GeneticAI();
+		//ga.setGene(0, 0.249870129);
+		//ga.setGene(1, 0.269501);
+		//ga.setGene(2, 0.347935064);
+        //players.get(1).SetAIAgent(ga);
 
 //        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
 //        System.out.println("Current Card is " + currentCard.getNumber());
@@ -235,6 +236,9 @@ public class Board {
 
 	public Player getCurrentPlayer () {
 		return this.currentPlayer;
+	}
+	public List<Card> getCurrentDeck() {
+		return cardDeck;
 	}
 
 	public ArrayList<Player> getPlayers() {
