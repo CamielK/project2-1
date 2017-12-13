@@ -111,7 +111,6 @@ public class UCT_AIClusterd implements AIInterface{
 				//if(choices[0].getWinrate() < threshold){
 				if(0.8 < threshold){
 					if(print)System.out.println("Chose bad child");
-					System.out.print("Bad child ");
 					currentNode = choices[1];
 				}
 				else {
@@ -171,7 +170,6 @@ public class UCT_AIClusterd implements AIInterface{
 	/**
 	 * When the game is over notify the AI and start the evaluation
 	 */
-	static int ij = 0;
 	@Override
 	public void gameIsFinished(ArrayList<Player> winner) {
 		evaluate(winner);

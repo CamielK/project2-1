@@ -40,10 +40,10 @@ public class Deck extends ArrayList<Card> {
      * Prints out the cards contained in the deck in ascending index order
      */
     private void printCards(){
+        System.out.println("");
         for (int i = 0; i < this.size(); i++) {
             System.out.print(this.get(i).getNumber() + ", ");
         }
-        System.out.println("");
     }
     
     /**

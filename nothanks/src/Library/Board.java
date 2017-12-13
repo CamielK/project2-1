@@ -4,6 +4,7 @@ import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
 import Library.AI.MinmaxAI.MinmaxAI;
+import Library.AI.NevertakeAI.NevertakeAI;
 import Library.AI.RandomAI.RandomAI;
 import Library.AI.StrategyAI.StrategyAI;
 import Uct.UCT_AIClusterd;
@@ -186,7 +187,7 @@ public class Board {
 			System.out.println("PlayerID: " + players.getID() + " " + players.getAgent().getClass());
 			players.gameIsFinished(winners);
 		}
-		System.out.println(winnersString);
+		System.out.print(winnersString);
 		return winnersString.toString();
 	}
 

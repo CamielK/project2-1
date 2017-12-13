@@ -82,7 +82,8 @@ public class Controller {
                 System.exit(0);
             }
 
-            if (counter%10==0) System.out.println("Progress: simulated " + counter + " out of " + maxRounds + " games.");
+            //if (counter%10==0)
+			System.out.println("Progress: simulated " + counter + " out of " + maxRounds + " games.");
 
             Board.reset();
             this.board = Board.getInstance();

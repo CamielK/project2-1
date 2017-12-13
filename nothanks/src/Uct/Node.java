@@ -42,7 +42,7 @@ public class Node implements Serializable{
 	 * @param amount the weight of the game. Determined by the depth of the taken path. Nodes in deeper layers are weightend higher.
 	 */
 	public void addGame(boolean win, double amount){
-		System.out.println(gamesWon + " " + timesPlayed + " " + winrate + " " + this.takeCard);
+		//System.out.println(gamesWon + " " + timesPlayed + " " + winrate + " " + this.takeCard);
 		if(win){
 			gamesWon += amount;
 		}
