@@ -13,17 +13,21 @@ import java.util.List;
 public class MinmaxAI implements AIInterface {
 
     private NothanksTree gametree = null;
+    private static int maxTreeDepth = 15;
+    private static int maxTosses = 8;
+    private int nodes = 0;
+    private int leaves = 0;
 
     @Override
     public boolean GetMove() {
         List<Card> deck = new ArrayList<>();
         List<Card> boardDeck = Board.getInstance().getCurrentDeck();
         int limit = boardDeck.size();
-        if (limit > 18) limit = 18;
+        if (limit > maxTreeDepth) limit = maxTreeDepth;
         for (int i = 0; i < limit; i++) deck.add(boardDeck.get(i));
 
 //        List<Card> deck = new ArrayList<>();
-//        deck.add(new Card(20));
+//        deck.add(new Card(30));
 //        deck.add(new Card(10));
 //        deck.add(new Card(7));
 //        deck.add(new Card(16));
@@ -32,6 +36,8 @@ public class MinmaxAI implements AIInterface {
 //        p1cards.add(new Card(11));
 //        this.gametree = buildMinimaxTree(deck, 1, p1cards, Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
 
+        this.nodes = 0;
+        this.leaves = 0;
         this.gametree = buildMinimaxTree(deck, 1, Board.getInstance().getPlayers().get(0).getCards(), Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
 
         int move = minimax(this.gametree, 1)[1];
@@ -149,17 +155,20 @@ public class MinmaxAI implements AIInterface {
      * @return Returns the nothanks game tree based on the given deck.
      */
 	private NothanksTree buildMinimaxTree(List<Card> deck, int player, List<Card> p1_cards, List<Card> p2_cards, int p1_tosses, int p2_tosses, boolean mustPick) {
-        NothanksTree tree = new NothanksTree();
-        int tossLimit = 8;
+
+	    NothanksTree tree = new NothanksTree();
+        int tossLimit = maxTosses;
 
         // Reached bottom of path. Set leaf value using evaluation function
         if (deck.size() <= 0) {
+            this.leaves += 1;
             tree.setPicked(null);
             tree.setTossed(null);
             tree.setValue(evaluate(p2_cards) - evaluate(p1_cards)); // Leaf value = score diff [p2-p1]
             return tree;
         }
 
+        this.nodes += 1;
         // Get the next top card from the deck
         Card currentCard = deck.get(0);
         tree.setValue(0);

@@ -18,9 +18,9 @@ public class TS implements AIInterface{
     private double[] valuess=null;
 	
     
-	private double lower=0.07;
-	private double upper=0.09;
-	private double Pmid=0.08;
+	private double lower=0.24987012987012985;
+	private double upper=0.256;
+	private double Pmid=0.34793506493506493;
 
 	
 @Override

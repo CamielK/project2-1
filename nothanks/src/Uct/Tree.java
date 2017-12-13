@@ -60,7 +60,7 @@ public class Tree implements Serializable{
 	public String preOrder(Node v){
 		tree = "";
 		executePreOrder(v);
-		//System.out.println("Number of Nodes: " + numberOfNodes);
+		System.out.println("\nNumber of Nodes: " + numberOfNodes);
 		return tree;
 	}
 	
