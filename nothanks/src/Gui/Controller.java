@@ -114,7 +114,7 @@ public class Controller implements Initializable {
             //System.out.println("Current player is AI agent " + Board.getInstance().getCurrentPlayer().getID() + ". Retrieving AI move...");
 
             boolean move = Board.getInstance().getCurrentPlayer().GetAIMove();
-            //System.out.println("AI move: '" + move + "'.");
+            System.out.println("AI move: '" + move + "'.");
 
             if (move) processTakeCard(false);
             else if (!move) processTossChip();
@@ -196,10 +196,6 @@ public class Controller implements Initializable {
             // Call winner dialog
             updateScoreboard();
             new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
-
-//            if(counter > 5000) new WinnerDialog((Stage) takeCardBtn.getScene().getWindow());
-//            counter++;
-//            System.out.println(counter);
 
             // Reset game when winnerdialog returns
             Board.reset();

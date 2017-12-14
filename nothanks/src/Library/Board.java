@@ -7,6 +7,7 @@ import Library.AI.MLR.MultipleLinearRegressionAI;
 import Library.AI.MinmaxAI.MinmaxAI;
 import Library.AI.RandomAI.RandomAI;
 import Library.AI.StrategyAI.StrategyAI;
+import TS.TS;
 import Uct.UCT_AIClusterd;
 
 import java.io.File;
@@ -47,8 +48,9 @@ public class Board {
 		// TEMP: Init second player as AI player
 //        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
 
-        players.get(1).SetAIAgent(new UCT_AIClusterd(this));
-        players.get(0).SetAIAgent(new RandomAI());
+        players.get(0).SetAIAgent(new MinmaxAI());
+
+//        players.get(0).SetAIAgent(new RandomAI());
 
 //        players.get(0).SetAIAgent(new NevertakeAI());
 //		players.get(0).SetAIAgent(new RandomAI());
@@ -260,7 +262,7 @@ public class Board {
 
 		// Strip last comma
 		csvProgress = csvProgress.substring(0, csvProgress.length()-1);
-		System.out.println(csvProgress);
+		//System.out.println(csvProgress);
 
 		logger.write(csvProgress);
 		try {
