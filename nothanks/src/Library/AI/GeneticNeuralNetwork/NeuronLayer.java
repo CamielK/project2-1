@@ -1,15 +1,19 @@
 package Library.AI.GeneticNeuralNetwork;
 
+import java.util.Random;
+
 public class NeuronLayer {
 	
 	private Neuron neurons[];
+	private double minWeight = -1;
+	private double maxWeight = 1;
 	
 	public NeuronLayer(int inputSize, int size) {
 		neurons = new Neuron[size];
 		for (int i = 0; i < size; i++) {
 			double[] weights = new double[inputSize];
 			for (int j = 0; j < inputSize; j++) {
-				weights[j] = (Math.random()-0.5)*10;
+				weights[j] = randomWeight();
 			}
 			neurons[i] = new Neuron(weights);
 		}
@@ -30,4 +34,10 @@ public class NeuronLayer {
 	public Neuron getNeuron(int i) {
 		return neurons[i];
 	}
+	
+	private double randomWeight() {
+        Random random = new Random();
+        
+        return minWeight + (maxWeight - minWeight) * random.nextDouble();
+    }
 }

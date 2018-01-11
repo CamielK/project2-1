@@ -1,4 +1,3 @@
-import Helper.Config;
 import Simulate.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,13 +10,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        new Config();
-        
-//        boolean simulate = false;
         boolean simulate = true;
+//        boolean simulate = true;
 
         if (simulate) {
-            new Controller().launch(3000);
+            new Controller().launch(1000);
         } else {
             launch(args);
         }

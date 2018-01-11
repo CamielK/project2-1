@@ -3,7 +3,6 @@ package Library.AI.GeneticNeuralNetwork;
 public class Neuron {
 	private double inputWeights[];
 	private double lastInputs[];
-	private double error = 0;
 	private double lastOutput = 0;
 	
 	public Neuron(double inputWeights[]) {
@@ -22,14 +21,6 @@ public class Neuron {
 	
 	private double sigmoid(double input) {
 		return ( 1.0 / ( 1.0 + Math.exp(-input)));
-	}
-	
-	public double getError() {
-		return error;
-	}
-	
-	public void setError(double error) {
-		this.error = error;
 	}
 	
 	public double lastOutput() {

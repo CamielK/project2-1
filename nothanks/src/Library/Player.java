@@ -1,11 +1,12 @@
 package Library;
 
-import Library.AI.AIInterface;
-import Library.AI.MinmaxAI.MinmaxAI;
-import Uct.UCT_AIClusterd;
-
 import java.util.ArrayList;
 import java.util.Collections;
+
+import Library.AI.AIInterface;
+import Library.AI.GeneticNeuralNetwork.GeneticAlgorithm;
+import Library.AI.GeneticNeuralNetwork.NeuralNetwork;
+import Uct.UCT_AI;
 
 public class Player {
 	private int id;
@@ -53,8 +54,7 @@ public class Player {
 	}
 	
 	public void gameIsFinished(ArrayList<Player> winners){
-		if(agent instanceof UCT_AIClusterd) agent.gameIsFinished(winners);
-		if(agent instanceof MinmaxAI) agent.gameIsFinished(winners);
+		if(agent instanceof UCT_AI || agent instanceof GeneticAlgorithm || agent instanceof NeuralNetwork) agent.gameIsFinished(winners);
 	}
 	
 	public int getID() {

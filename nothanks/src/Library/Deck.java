@@ -15,12 +15,9 @@ public class Deck extends ArrayList<Card> {
      * Construct the Deck and initialize the Cards from 3-35
      */
     public Deck() {
-        for(int i = 35; i >= 3; i--) {
-        
+        for(int i = 3; i <= 35; i++) {
         	this.add(new Card(i));
-        
         }
-        
         shuffleCards();
         printCards();
         //sort();
@@ -40,10 +37,10 @@ public class Deck extends ArrayList<Card> {
      * Prints out the cards contained in the deck in ascending index order
      */
     private void printCards(){
-        System.out.println("");
         for (int i = 0; i < this.size(); i++) {
             System.out.print(this.get(i).getNumber() + ", ");
         }
+        System.out.println("");
     }
     
     /**

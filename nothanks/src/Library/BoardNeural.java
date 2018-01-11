@@ -2,27 +2,26 @@ package Library;
 
 import java.util.ArrayList;
 
-import Helper.Logger;
 import Library.AI.AIInterface;
 import Library.AI.GeneticNeuralNetwork.GeneticAlgorithm;
+import Library.AI.GeneticNeuralNetwork.NeuralNetwork;
 import Library.AI.NevertakeAI.NevertakeAI;
 
-public class Board {
-	
-	private static Board board;
+public class BoardNeural {
 
     private Card currentCard;
     private Deck cardDeck = null;
-    private Logger logger = null;
     private ArrayList<Player> players;
 
 	private int currentChips = 0;
 	private boolean isFinished = false;
     private Player currentPlayer;
 
-    private Board() {
-    	logger = Logger.getInstance();
-        cardDeck = new Deck();
+    public BoardNeural(NeuralNetwork network) {
+
+        this.cardDeck = new Deck();
+        System.out.println(cardDeck.get(0).getNumber() + " NUMBER");
+        System.out.println(cardDeck.size() + " SIZE");
         currentCard = cardDeck.get(0);
         players = new ArrayList<Player>();
         
@@ -32,22 +31,12 @@ public class Board {
     	}
         currentPlayer = players.get(0);
 
-		// TEMP: Init second player as AI player
-//        players.get(1).SetAIAgent(new UCT_AI(this));
         players.get(0).SetAIAgent(new NevertakeAI());
-        players.get(1).SetAIAgent(new GeneticAlgorithm());
+        players.get(1).SetAIAgent(network);
 
-        System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-        System.out.println("Current Card is " + currentCard.getNumber());
+        System.out.println("TEST: It's Player " + currentPlayer.getID() + "'s turn!");
+        System.out.println("TEST: Current Card is " + currentCard.getNumber());
     }
-    
-    public static Board getInstance() {
-		if (board == null) {
-			return (board = new Board());
-		} else {
-			return board;
-		}
-	}
 
 	public void setPlayerAsAI(int id, AIInterface agent) {
     	players.get(id).SetAIAgent(agent);
@@ -60,8 +49,8 @@ public class Board {
     		currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
     	}
     	
-    	System.out.println("It's Player " + currentPlayer.getID() + "'s turn!");
-    	System.out.println("Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
+    	//System.out.println("TEST: It's Player " + currentPlayer.getID() + "'s turn!");
+    	//System.out.println("TEST: Current Card: " + currentCard.getNumber() + " Current Chips: " + currentChips);
     }
     
     public void giveCardChips() {
@@ -75,18 +64,12 @@ public class Board {
 			return;
 		}
 
-//    	System.out.println("Current Card is " + currentCard.getNumber());
-//    	System.out.println("Cards in deck: " + cardDeck.getNumCards());
-
-    	logGameProgress(true);
     	currentCard = cardDeck.removeCards(1);
     	
     	nextTurn();
     }
     
     public void tossChip() {
-    	logGameProgress(false);
-
     	if(currentPlayer.addChips(-1)) {
     		currentChips++;
     		nextTurn();
@@ -99,7 +82,6 @@ public class Board {
     
     public void win() {
     	System.out.println(getWinners());
-    	logger.getInstance().write("ENDOFGAME");
     	isFinished = true;
     }
 
@@ -149,43 +131,6 @@ public class Board {
     	this.currentCard = currentCard;
     }
 
-	/**
-	 * Writes the decision and current game status to disk
-	 *
-	 * @param pickedCard True if player picked a card, false if player tossed a chip.
-	 */
-	public void logGameProgress(boolean pickedCard) {
-		String csvProgress = "";
-
-		//Format: playerID,pickedCard,CardNumber,ChipsOnCard,NumCardsLeft,Player0NumChips,Player0NumCards,Player0Score,Player1NumChips,Player1NumCards,Player1Score,Player2NumChips,Player2NumCards,Player2Score
-		
-		csvProgress += currentPlayer.getID() + ",";
-		
-		// Classifier
-		if (pickedCard) csvProgress += "1,";
-		else csvProgress += "0,";
-
-		// Global game state
-		csvProgress += currentCard.getNumber() + "," +
-				currentChips + "," +
-				cardDeck.getNumCards() + ",";
-		//TODO: use range of cards instead of num cards (e.g. there is 5 cards left in range 3-10, 2 cards left in range 10-20 and 4 cards left in range 10-35)
-
-		// Players state
-		for (int i=0; i < players.size(); i++) {
-			csvProgress += players.get(i).getChips()  + "," +
-					players.get(i).getCards().size() + "," +
-					players.get(i).getScore() + ",";
-			//TODO: use range of cards instead of num cards (e.g. player has 3 cards in range 3-10, 1 cards in range 10-20 and 2 cards in range 10-35)
-		}
-
-		// Strip last comma
-		csvProgress = csvProgress.substring(0, csvProgress.length()-1);
-		System.out.println(csvProgress);
-
-		logger.write(csvProgress);
-	}
-
 	public Player getCurrentPlayer () {
 		return this.currentPlayer;
 	}
@@ -194,11 +139,6 @@ public class Board {
 		return this.players;
 	}
 
-	public static void reset() {
-//		win();
-		board = new Board();
-	}
-	
 	public Deck getDeck() {
 		return cardDeck;
 	}

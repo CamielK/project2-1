@@ -1,29 +1,36 @@
 package Simulate;
 
-import Library.AI.RandomAI.RandomAI;
-import Library.Board;
-import Library.Player;
-import Uct.UCT_AI;
-
 import java.util.List;
 
-public class Controller {
+import Library.Board;
+import Library.BoardNeural;
+import Library.Deck;
+import Library.Player;
+import Library.AI.GeneticNeuralNetwork.NeuralNetwork;
+import Library.AI.RandomAI.RandomAI;
 
-    private Board board;
+public class ControllerNeural {
+
+    private BoardNeural board;
     private int counter = 0;
     private int maxRounds = 0;
+    
+    private NeuralNetwork network;
+    private boolean finished = false;
 
     /**
      * Start playing games until the max number of rounds is reached
      * @param numRounds max number of rounds
      */
-    public void launch(int numRounds)
+    public void launch(int numRounds, NeuralNetwork network)
     {
+    	this.network = network;
         this.maxRounds = numRounds;
-        this.board = Board.getInstance();
+        this.board = new BoardNeural(network);
+        network.setBoardNeural(board);
 
         ensureAI();
-        while (true) {
+        while (!finished) {
             playRound();
         }
     }
@@ -51,24 +58,24 @@ public class Controller {
             counter++;
             if (counter > maxRounds) {
                 System.out.println("Finished simulating " + maxRounds + " rounds.");
-                System.exit(0);
+                finished = true;
+                return;
             }
             System.out.println("Game simulation finished.. Resetting board");
-            Board.reset();
-            this.board = Board.getInstance();
+            this.board = new BoardNeural(network);
             ensureAI();
         } else {
-            boolean move = Board.getInstance().getCurrentPlayer().GetAIMove();
+            boolean move = this.board.getCurrentPlayer().GetAIMove();
             if (move) processTakeCard();
             else if (!move) processTossChip();
         }
     }
 
     public void processTakeCard() {
-        Board.getInstance().giveCardChips();
+        board.giveCardChips();
     }
 
     public void processTossChip() {
-        Board.getInstance().tossChip();
+        board.tossChip();
     }
 }

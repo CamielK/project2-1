@@ -21,7 +21,11 @@ public class Card implements Comparable<Card> {
 	public int getNumber(){
 		return number;
 	}
-
+	
+	/**
+	 * Set
+	 * @param value of the card
+	 */
 	public void setNumber(int number){
 		this.number = number;
 	}
