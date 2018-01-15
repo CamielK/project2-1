@@ -27,7 +27,10 @@ public class TS implements AIInterface{
 public boolean GetMove() {
 	//if(valuess!=null) {
 	//OPmoves();}
-	ArrayList<Player> Playerlist = Board.getInstance().getPlayers();
+	ArrayList<Player> Playerlist = new ArrayList<>();
+	for (int i = 0; i < Board.getInstance().getPlayers().size(); i++) {
+		Playerlist.add(Board.getInstance().getPlayers().get(i));
+	}
 	double[] values= new double[Playerlist.size()];
 	//System.out.println("TS move");
 	Card card = Board.getInstance().getCurrentCard();
