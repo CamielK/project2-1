@@ -47,8 +47,9 @@ public boolean GetMove() {
 
 	//Rearranges the Player_ID order according to the current player
 	if(Pnum!=0) {
+	//if (P0) {
 		for(int i=0;i<Pnum-1;i++) {
-			Player X = Playerlist.remove(i); // removes element at I
+			Player X = Playerlist.remove(0); // removes element at I
 			Playerlist.add(X);        // adds element to end of list
 		}
 	}
