@@ -196,10 +196,8 @@ public class StrategyAI implements Library.AI.AIInterface {
     		} else if(lowestScore > playerToCheck.getScore()){
     			lowestScore = playerToCheck.getScore();
     		}
-    		
-    		return lowestScore - player.getScore();
     	}
     	
-    	return lowestScore;
+    	return lowestScore - player.getScore();
     }
 }
