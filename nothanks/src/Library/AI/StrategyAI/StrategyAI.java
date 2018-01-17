@@ -12,8 +12,9 @@ public class StrategyAI implements Library.AI.AIInterface {
     private Board board;
     private Player player;
     private ArrayList<Card> cards;
-    private int takeThreshold = 15;
-    private int lowChipsThreshold = 10;
+    private int takeThreshold = 10;
+    private int lowChipsThreshold = 15;
+    private boolean debug = true;
     
     /* Rule 1:
      * 
@@ -27,18 +28,14 @@ public class StrategyAI implements Library.AI.AIInterface {
 	 * If the AI's chips are lower or equals than lowChipsThreshold and the score of the card minus chips is lower than 19
 	 */
     
-    /* Rule 3:
-     * 
-	 * If the card number is lower or equal to 10 => take card
-	 */
-    
     //Change the numbers of the rules around to change the order of the rules executed. Set to false to disable rule
-    private Object[][] rules = {
+    private static Object[][] rules = {
     		{"Rule1", true},
     		{"Rule2", true},
     		{"Rule3", true},
-    		//{"Rule4", true},
     };
+    
+    private static int[] rulesSayTake = new int[rules.length + 1];
 
     //StrategyAI constructor
     public StrategyAI(Board board) {
@@ -60,6 +57,7 @@ public class StrategyAI implements Library.AI.AIInterface {
     		
     		try {
 				if((boolean)StrategyAI.class.getMethod((String)rules[i][0]).invoke(this)) {
+					if(debug) rulesSayTake[i]++;
 					return true;
 				}
 			} catch (Exception exception) {
@@ -67,25 +65,27 @@ public class StrategyAI implements Library.AI.AIInterface {
 			}
     	}
     	
+    	if(debug) rulesSayTake[rulesSayTake.length - 1]++;
     	return false;
     }
 
-    //method to check whether the current card is a 'low' one
-    private boolean lowCard() {
-        boolean lowCard = false;
-
-        if(board.getCurrentCard().getNumber() < takeThreshold) {
-            lowCard = true;
-        }
-
-        return lowCard;
-    }
-
     public void gameIsFinished(ArrayList<Player> winner) {
+    	if(!debug) {
+    		return;
+    	}
+    	
+    	for(int i = 0; i < rulesSayTake.length; i ++) {
+    		if(i == rulesSayTake.length - 1) {
+    			System.out.println("We toss " + rulesSayTake[i] + " times");
+    		} else {
+    			System.out.println("Rule " + (i + 1) + " said take " + rulesSayTake[i] + " times");
+    		}
+    	}
     }
     
     //Rule 1
     public boolean Rule1() {
+    	
     	if(extendsSequence()) {
     		
     		if(playersOutOfChips()) {
@@ -101,22 +101,26 @@ public class StrategyAI implements Library.AI.AIInterface {
     
     //Rule 2
     public boolean Rule2() {
-    	if(lowChipsThreshold < player.getChips()) {
-    		return false;
+    	if(canAlsoExtend() && pointsInLead() > board.getCurrentCard().getNumber() - board.getCurrentChips() + Math.round(pointsInLead() / 2)) {
+    		return true;
     	}
-    		
-    	if(board.getCurrentCard().getNumber() - board.getCurrentChips() > 19 || board.getCurrentChips() < 1) {
-			return false;
-		}
     	
-    	return true;
+    	return false;
     }
     
     //Rule 3
     public boolean Rule3() {
-    	if(board.getCurrentCard().getNumber() > 10) {
+    	if(board.getCurrentCard().getNumber() <= takeThreshold) {
+    		return true;
+    	}
+    	
+    	if(lowChipsThreshold < player.getChips()) {
     		return false;
     	}
+    	
+    	if(board.getCurrentCard().getNumber() - board.getCurrentChips() > 19 || board.getCurrentChips() < 1) {
+			return false;
+		}
     	
     	return true;
     }
@@ -156,7 +160,7 @@ public class StrategyAI implements Library.AI.AIInterface {
         for(int i = 0; i < board.getPlayers().size(); i++) {
             for (int j = 0; j < board.getPlayers().get(i).getCards().size(); j++) {
             	
-                if (player == board.getCurrentPlayer()) {
+                if (player == board.getPlayers().get(i)) {
                 	continue;
                 }
                 
@@ -167,5 +171,34 @@ public class StrategyAI implements Library.AI.AIInterface {
         }
 
         return false;
+    }
+    
+    private int pointsInLead() {
+    	int lowestScore = 0;
+    	boolean first = true;
+    	for(int i = 0; i < board.getPlayers().size(); i++) {
+    		if(player == board.getPlayers().get(i)) {
+    			continue;
+    		}
+    		
+    		if(first) {
+    			lowestScore = board.getPlayers().get(i).getScore();
+    			first = false;
+    		} else if(lowestScore > board.getPlayers().get(i).getScore()){
+    			lowestScore = board.getPlayers().get(i).getScore();
+    		}
+    		
+    		return lowestScore - player.getScore();
+    	}
+    	
+    	return lowestScore;
+    }
+    
+    public void Sleep() {
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
 }
