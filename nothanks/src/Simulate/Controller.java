@@ -17,8 +17,10 @@ public class Controller {
     // Statistics
     private int p1_wins = 0;
     private int p2_wins = 0;
+    private int p3_wins = 0;
     private ArrayList<Long> p1_times = new ArrayList<>();
     private ArrayList<Long> p2_times = new ArrayList<>();
+    private ArrayList<Long> p3_times = new ArrayList<>();
 
     /**
      * Start playing games untill the max number of rounds is reached
@@ -60,18 +62,21 @@ public class Controller {
             Player winner = Board.getInstance().getWinner();
             if (winner.getID() == 1) p1_wins++;
             else if (winner.getID() == 2) p2_wins++;
+            else if (winner.getID() == 3) p3_wins++;
 
             counter++;
             if (counter > maxRounds) {
                 System.out.println("Finished simulating " + maxRounds + " rounds.");
 
-                // P1 stats
                 Collections.sort(p1_times);
                 Collections.sort(p2_times);
+                Collections.sort(p3_times);
                 List<Long> p1_times_top5 = new ArrayList<>();
                 List<Long> p2_times_top5 = new ArrayList<>();
+                List<Long> p3_times_top5 = new ArrayList<>();
                 for (int i = p1_times.size()-1; i>(p1_times.size()*0.95); i--) p1_times_top5.add(p1_times.get(i));
                 for (int i = p2_times.size()-1; i>(p2_times.size()*0.95); i--) p2_times_top5.add(p2_times.get(i));
+                for (int i = p3_times.size()-1; i>(p3_times.size()*0.95); i--) p3_times_top5.add(p3_times.get(i));
 
                 System.out.println("P1 ["+Board.getInstance().getPlayers().get(0).getAgent().getClass().getSimpleName()+"] wins: " + p1_wins
                         + ". Average move time: " + p1_times.stream().mapToDouble(a -> a).average().getAsDouble()
@@ -79,11 +84,13 @@ public class Controller {
                 System.out.println("P2 ["+Board.getInstance().getPlayers().get(1).getAgent().getClass().getSimpleName()+"] wins: " + p2_wins
                         + ". Average move time: " + p2_times.stream().mapToDouble(a -> a).average().getAsDouble()
                         + ". Avg move time (top 5% longest moves): " + p2_times_top5.stream().mapToDouble(a -> a).average().getAsDouble());
+                System.out.println("P3 ["+Board.getInstance().getPlayers().get(2).getAgent().getClass().getSimpleName()+"] wins: " + p3_wins
+                        + ". Average move time: " + p2_times.stream().mapToDouble(a -> a).average().getAsDouble()
+                        + ". Avg move time (top 5% longest moves): " + p2_times_top5.stream().mapToDouble(a -> a).average().getAsDouble());
                 System.exit(0);
             }
 
-            //if (counter%10==0)
-			System.out.println("Progress: simulated " + counter + " out of " + maxRounds + " games.");
+            if (counter%10==0) System.out.println("Progress: simulated " + counter + " out of " + maxRounds + " games.");
 
             Board.reset();
             this.board = Board.getInstance();
@@ -93,6 +100,7 @@ public class Controller {
             boolean move = Board.getInstance().getCurrentPlayer().GetAIMove();
             if (Board.getInstance().getCurrentPlayer().getID() == 1) p1_times.add(System.currentTimeMillis()-millis);
             else if (Board.getInstance().getCurrentPlayer().getID() == 2) p2_times.add(System.currentTimeMillis()-millis);
+            else if (Board.getInstance().getCurrentPlayer().getID() == 3) p3_times.add(System.currentTimeMillis()-millis);
 
             if (move) processTakeCard();
             else if (!move) processTossChip();
