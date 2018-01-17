@@ -5,7 +5,7 @@ import Library.*;
 import java.util.ArrayList;
 
 /**
- * Created by sandersalahmadibapost on 30/11/2017.
+ * Created by sandersalahmadibapost & benedikt on 30/11/2017.
  */
 public class StrategyAI implements Library.AI.AIInterface {
 
@@ -135,8 +135,8 @@ public class StrategyAI implements Library.AI.AIInterface {
     
     //method to check whether the current card can extend the sequence in the AI's current cards
     private boolean extendsSequence() {
-        for(int i = 0; i < cards.size() ; i++) {
-            int myCard = cards.get(i).getNumber();
+        for(Card card : cards) {
+            int myCard = card.getNumber();
             int deckCard = board.getCurrentCard().getNumber();
 
             if(myCard + 1 == deckCard || myCard - 1 == deckCard) {
@@ -149,13 +149,13 @@ public class StrategyAI implements Library.AI.AIInterface {
 
     //method to check whether there is a player that is out of chips
     private boolean playersOutOfChips() {
-        for(int i = 0; i < board.getPlayers().size() ; i++) {
+        for(Player playerToCheck : board.getPlayers()) {
         	
-        	if(player == board.getPlayers().get(i)) {
+        	if(player == playerToCheck) {
         		continue;
         	}
         	
-            if(board.getPlayers().get(i).getChips() == 0) {
+            if(playerToCheck.getChips() == 0) {
             	return true;
             }
         }
@@ -165,14 +165,14 @@ public class StrategyAI implements Library.AI.AIInterface {
     
     //method to check whether or not anybody else can also extend any of their sequences using the current card
     private boolean canAlsoExtend() {
-        for(int i = 0; i < board.getPlayers().size(); i++) {
-            for (int j = 0; j < board.getPlayers().get(i).getCards().size(); j++) {
+        for(Player playerToCheck : board.getPlayers()) {
+            for (Card card : playerToCheck.getCards()) {
             	
-                if (player == board.getPlayers().get(i)) {
+                if (player == playerToCheck) {
                 	continue;
                 }
                 
-                if (board.getPlayers().get(i).getCards().get(j).getNumber() + 1 == board.getCurrentCard().getNumber() || board.getPlayers().get(i).getCards().get(j).getNumber() - 1 == board.getCurrentCard().getNumber()) {
+                if (card.getNumber() + 1 == board.getCurrentCard().getNumber() || card.getNumber() - 1 == board.getCurrentCard().getNumber()) {
                 	return true;
                 }
             }
@@ -184,29 +184,22 @@ public class StrategyAI implements Library.AI.AIInterface {
     private int pointsInLead() {
     	int lowestScore = 0;
     	boolean first = true;
-    	for(int i = 0; i < board.getPlayers().size(); i++) {
-    		if(player == board.getPlayers().get(i)) {
+    	for(Player playerToCheck : board.getPlayers()) {
+    		
+    		if(player == playerToCheck) {
     			continue;
     		}
     		
     		if(first) {
-    			lowestScore = board.getPlayers().get(i).getScore();
+    			lowestScore = playerToCheck.getScore();
     			first = false;
-    		} else if(lowestScore > board.getPlayers().get(i).getScore()){
-    			lowestScore = board.getPlayers().get(i).getScore();
+    		} else if(lowestScore > playerToCheck.getScore()){
+    			lowestScore = playerToCheck.getScore();
     		}
     		
     		return lowestScore - player.getScore();
     	}
     	
     	return lowestScore;
-    }
-    
-    public void Sleep() {
-    	try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
     }
 }
