@@ -14,7 +14,7 @@ public class StrategyAI implements Library.AI.AIInterface {
     private ArrayList<Card> cards;
     private int takeThreshold = 10;
     private int lowChipsThreshold = 15;
-    private boolean debug = true;
+    private boolean debug = false;
     
     /* Rule 1:
      * 
@@ -25,7 +25,15 @@ public class StrategyAI implements Library.AI.AIInterface {
     
     /* Rule 2:
      * 
-	 * If the AI's chips are lower or equals than lowChipsThreshold and the score of the card minus chips is lower than 19
+	 * If someone can extend their series and after taking the card the AI's score lead is maximally halved => take the card
+	 */
+    
+    /* Rule 3:
+     * 
+	 * If the card number is lower than takeThreshold => take the card
+	 * If AI's chip are lower than lowChipsThreshold => toss chip
+	 * If the added score of taking the card is greater than 19 or there are no chips on the card => toss chip
+	 * If no rule applies => take card
 	 */
     
     //Change the numbers of the rules around to change the order of the rules executed. Set to false to disable rule
