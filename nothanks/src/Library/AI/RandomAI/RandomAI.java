@@ -1,14 +1,15 @@
 package Library.AI.RandomAI;
 
-import java.util.ArrayList;
-
-import Library.Player;
 import Library.AI.AIInterface;
+import Library.Player;
+
+import java.util.ArrayList;
 
 public class RandomAI implements AIInterface {
 
     @Override
     public boolean GetMove() {
+   	//return true;
    	return Math.random() < 0.5;
     }
 

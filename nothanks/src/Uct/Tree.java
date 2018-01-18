@@ -110,6 +110,7 @@ public class Tree implements Serializable{
 	         out.close();
 	         fileOut.close();
 	         //System.out.println("Serialized data is saved in " + path);
+	         //System.out.printf("Serialized data is saved in " + path);
 	      } catch (IOException i) {
 	         i.printStackTrace();
 	      }

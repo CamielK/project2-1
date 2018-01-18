@@ -66,6 +66,10 @@ public class UCT_AIClusterd implements AIInterface{
 	 * retrieves the move, the AI will make
 	 */
 	public boolean GetMove() {
+		/*System.out
+		.println(
+		Config.logpath + "/src/Uct/Logs/UnexploredNodes.txt"
+		);*/
 		return computeMove();
 	}
 	
@@ -107,12 +111,10 @@ public class UCT_AIClusterd implements AIInterface{
 				//if(choices[0].getWinrate() < threshold){
 				if(0.8 < threshold){
 					if(print)System.out.println("Chose bad child");
-					if(print)System.out.print("Bad child ");
 					currentNode = choices[1];
 				}
 				else {
 					if(print)System.out.println("Chose good child");
-					if(print)System.out.print("Good child ");
 					currentNode = choices[0];
 				}
 			}
@@ -120,7 +122,6 @@ public class UCT_AIClusterd implements AIInterface{
 				//if(choices[1].getWinrate() < threshold){
 				if(0.8 < threshold){
 					if(print)System.out.println("Chose bad child");
-					//System.out.print("Bad child ");
 					currentNode = choices[0];
 				}
 				else {
@@ -173,6 +174,7 @@ public class UCT_AIClusterd implements AIInterface{
 	public void gameIsFinished(ArrayList<Player> winner) {
 		evaluate(winner);
 	}
+	
 	private void evaluate(ArrayList<Player> winner){
 		//System.out.println("\nUnexplored nodes: " + numUnexploredNodes);
 		//System.out.println("Seconds needed: " + (System.currentTimeMillis()-lastTime)/1000);
@@ -246,29 +248,6 @@ public class UCT_AIClusterd implements AIInterface{
 		boolean take = false;
 			double random = Math.random();
 			//unexplored node random play
-			/*if(board.getCurrentCard().getNumber() <=13) {
-				if(random<0.75) {
-					//if(print)System.out.println("Take " + board.getCurrentCard().getNumber() );
-					take = true;
-				}
-			}
-			else if(board.getCurrentCard().getNumber() <=24) {
-				if(random<0.5) {
-					if(print)System.out.println("Take " + board.getCurrentCard().getNumber() );
-					take = true;
-				}
-			}
-			else if(board.getCurrentCard().getNumber() <=35) {
-				if(random<0.25) {
-					if(print)System.out.println("Take " + board.getCurrentCard().getNumber() );
-					take = true;
-				}
-			}
-			if(addedNode) {
-			//return take;
-		}
-		*/
-			//if(print)System.out.println("Decline " + board.getCurrentCard().getNumber() );
 		if(addedNode) {
 			return ts.GetMove();
 			//return take;

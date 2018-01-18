@@ -3,6 +3,8 @@ package Library;
 import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
+import Library.AI.RandomAI.RandomAI;
+import Uct.UCT_AIClusterd;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -40,21 +42,15 @@ public class Board {
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-//        players.get(0).SetAIAgent(new UCT_AIClusterd(this));
+        players.get(1).SetAIAgent(new UCT_AIClusterd(this));
 
-//        players.get(1).SetAIAgent(new UCT_AIClusterd(this));
-//		players.get(0).SetAIAgent(new TS());
-//		players.get(1).SetAIAgent(new UCT_AIClusterd(this));
-//		players.get(2).SetAIAgent(new StrategyAI(this));
+        //players.get(1).SetAIAgent(new MinmaxAI());
+        //players.get(0).SetAIAgent(new StrategyAI(this));
 
-//        players.get(0).SetAIAgent(new RandomAI());
-
-//        players.get(1).SetAIAgent(new NevertakeAI());
-//		players.get(3).SetAIAgent(new RandomAI());
+//        players.get(0).SetAIAgent(new NevertakeAI());
+		players.get(0).SetAIAgent(new RandomAI());
 //		players.get(1).SetAIAgent(new TS());
 
-//        players.get(1).SetAIAgent(new UCT_AI(this));
-//        players.get(1).SetAIAgent(new RandomAI());
 //        players.get(0).SetAIAgent(new NevertakeAI());
 //        players.get(1).SetAIAgent(new RandomAI());
 //        players.get(1).SetAIAgent(new MinmaxAI());
@@ -132,7 +128,7 @@ public class Board {
     	if (logProgress) System.out.println(winners);
     	logger.getInstance().write("ENDOFGAME");
     	try {
-			makeFile(getWinners()+"\n");
+			makeFile(winners +"\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -183,8 +179,10 @@ public class Board {
 		this.winnerID=winner.getID();
 		}
 		for(Player players : players){
+			System.out.println("PlayerID: " + players.getID() + " " + players.getAgent().getClass());
 			players.gameIsFinished(winners);
 		}
+		System.out.print(winnersString);
 		return winnersString.toString();
 	}
 
