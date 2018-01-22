@@ -3,7 +3,12 @@ package Library;
 import Helper.Config;
 import Helper.Logger;
 import Library.AI.AIInterface;
+import Library.AI.MinmaxAI.MinmaxAI;
 import Library.AI.RandomAI.RandomAI;
+import Library.AI.StrategyAI.StrategyAI;
+import TS.TS;
+import TS.TS_OM;
+import Uct.UCT_AI;
 import Uct.UCT_AIClusterd;
 
 import java.io.File;
@@ -36,19 +41,21 @@ public class Board {
         players = new ArrayList<Player>();
         
         //Temporary way to add players
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 4; i++) {
     		players.add(new Player(11, i + 1));
     	}
         currentPlayer = players.get(0);
 
 		// TEMP: Init second player as AI player
-        players.get(1).SetAIAgent(new UCT_AIClusterd(this));
+		players.get(3).SetAIAgent(new StrategyAI(this)); // 1
+		players.get(1).SetAIAgent(new MinmaxAI()); // 2
+		players.get(0).SetAIAgent(new TS()); // 3
+		players.get(2).SetAIAgent(new UCT_AIClusterd(this)); // 4
 
         //players.get(1).SetAIAgent(new MinmaxAI());
         //players.get(0).SetAIAgent(new StrategyAI(this));
 
 //        players.get(0).SetAIAgent(new NevertakeAI());
-		players.get(0).SetAIAgent(new RandomAI());
 //		players.get(1).SetAIAgent(new TS());
 
 //        players.get(0).SetAIAgent(new NevertakeAI());
@@ -179,10 +186,10 @@ public class Board {
 		this.winnerID=winner.getID();
 		}
 		for(Player players : players){
-			System.out.println("PlayerID: " + players.getID() + " " + players.getAgent().getClass());
+			//System.out.println("PlayerID: " + players.getID() + " " + players.getAgent().getClass());
 			players.gameIsFinished(winners);
 		}
-		System.out.print(winnersString);
+		//System.out.print(winnersString);
 		return winnersString.toString();
 	}
 

@@ -13,11 +13,11 @@ public class Main extends Application {
 
         new Config();
         
-        boolean simulate = false;
-//        boolean simulate = true;
+//        boolean simulate = false;
+        boolean simulate = true;
 
         if (simulate) {
-            new Controller().launch(3000);
+            new Controller().launch(299);
         } else {
             launch(args);
         }

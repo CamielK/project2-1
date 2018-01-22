@@ -22,6 +22,7 @@ public class MinmaxAI implements AIInterface {
     public boolean GetMove() {
         List<Card> deck = new ArrayList<>();
         List<Card> boardDeck = Board.getInstance().getCurrentDeck();
+        int currentPlayerId = Board.getInstance().getCurrentPlayer().getID();
         int limit = boardDeck.size();
         if (limit > maxTreeDepth) limit = maxTreeDepth;
         for (int i = 0; i < limit; i++) deck.add(boardDeck.get(i));
@@ -36,9 +37,27 @@ public class MinmaxAI implements AIInterface {
 //        p1cards.add(new Card(11));
 //        this.gametree = buildMinimaxTree(deck, 1, p1cards, Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
 
+        // switch player ids
+        int p1 = 0;
+        int p2 = 1;
+        if (currentPlayerId == 2) {
+            p1 = 1;
+            p2 = 0;
+        }
+
+        // multiplayer check
+        if (Board.getInstance().getPlayers().size() > 2) {
+            p1 = currentPlayerId-1;
+            if (currentPlayerId == Board.getInstance().getPlayers().size()) {
+                p2 = 0;
+            } else {
+                p2 = currentPlayerId;
+            }
+        }
+
         this.nodes = 0;
         this.leaves = 0;
-        this.gametree = buildMinimaxTree(deck, 1, Board.getInstance().getPlayers().get(0).getCards(), Board.getInstance().getPlayers().get(1).getCards(), 0, 0, false);
+        this.gametree = buildMinimaxTree(deck, 1, Board.getInstance().getPlayers().get(p1).getCards(), Board.getInstance().getPlayers().get(p2).getCards(), 0, 0, false);
 
         int move = minimax(this.gametree, 1)[1];
 //        System.out.println("AI Move: " + move);
@@ -54,7 +73,7 @@ public class MinmaxAI implements AIInterface {
     /**
      * Minimax search to determine next move
      * @param tree game tree
-     * @param player player=1 and player=2 correspond to player 1 and player 2 respectively. Used to alternate turns
+     * @param player player=1 and player=2 correspond to player 1 (the AI) and player 2 (opponent) respectively. Used to alternate turns
      * @return int[2] {value, move} move=1 corresponds to picking the card, move=0 corresponds to tossing the card
      */
 	private int[] minimax(NothanksTree tree, int player) {
@@ -148,8 +167,8 @@ public class MinmaxAI implements AIInterface {
      * Build the game tree from the given card deck.
      * Tree nodes have a value of 0, tree leafes contain the possible score difference determined by player 2 score - player 1 score
      * @param deck Deck of cards to build tree from
-     * @param player player=1 and player=2 correspond to player 1 and player 2 respectively. Used to alternate turns
-     * @param p1_cards List of cards owned by player 1 at the current node
+     * @param player player=1 and player=2 correspond to player 1 (the AI) and player 2 (opponent) respectively. Used to alternate turns
+     * @param p1_cards List of cards owned by player 1 (the AI) at the current node
      * @param p2_cards List of cards owned by player 2 at the current node
      * @param mustPick Set to true if previous move was a toss. In order to minimize tree size we limit the max number of tosses to 1 for each card.
      * @return Returns the nothanks game tree based on the given deck.
